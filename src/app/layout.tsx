@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import HamburgerIcon from "@/components/common/HambugIcon";
+import FloatingActionButton from "@/components/common/FloatingActionButton";
+import LoadingProgressCircle from "@/components/common/LoadingProgressCircle";
+import ProviderWrapper from "@/components/common/ProviderWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +28,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ProviderWrapper>
+          <HamburgerIcon />
+
+          {children}
+          <FloatingActionButton />
+          <LoadingProgressCircle />
+        </ProviderWrapper>
       </body>
     </html>
   );
