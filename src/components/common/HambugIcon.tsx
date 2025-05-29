@@ -2,11 +2,16 @@
 
 import { Fragment, useState } from "react";
 import { motion } from "framer-motion";
+import { useProgressing } from "@/stores/progressStore";
 
 export default function HamburgerIcon() {
+  const { setIsLoading } = useProgressing();
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen((prev) => !prev);
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev);
+    setIsLoading(isOpen ? !isOpen : false);
+  };
 
   return (
     <Fragment>
