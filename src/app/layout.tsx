@@ -5,6 +5,8 @@ import HamburgerIcon from "@/components/common/HambugIcon";
 import FloatingActionButton from "@/components/common/FloatingActionButton";
 import LoadingProgressCircle from "@/components/common/LoadingProgressCircle";
 import ProviderWrapper from "@/components/common/ProviderWrapper";
+import 'react-toastify/dist/ReactToastify.css'
+import {ToastContainer} from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,16 +29,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ProviderWrapper>
-          <HamburgerIcon />
-
-          {children}
-          <FloatingActionButton />
-          <LoadingProgressCircle />
-        </ProviderWrapper>
-      </body>
-    </html>
+     <>
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <ProviderWrapper>
+            <HamburgerIcon />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                closeOnClick
+                pauseOnFocusLoss
+                pauseOnHover
+                draggable
+                role="alert"
+                newestOnTop
+            />
+            {children}
+            <FloatingActionButton />
+            <LoadingProgressCircle />
+          </ProviderWrapper>
+        </body>
+      </html>
+     </>
   );
 }
