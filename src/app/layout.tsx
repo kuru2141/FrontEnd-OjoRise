@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import HamburgerIcon from "@/components/common/HambugIcon";
 import FloatingActionButton from "@/components/common/FloatingActionButton";
 import LoadingProgressCircle from "@/components/common/LoadingProgressCircle";
 import ProviderWrapper from "@/components/common/ProviderWrapper";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import LinearProgress from "@/components/common/LinearProgress";
+import HamburgerWithMenu from "@/components/common/HamburgerWithMenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +34,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ProviderWrapper>
-            <HamburgerIcon />
+            <HamburgerWithMenu />
             <ToastContainer
               position="top-right"
               autoClose={3000}
