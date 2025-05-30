@@ -36,7 +36,7 @@ export default function OffCanvas({ isOpen, onClose }: Props) {
                         duration: 0.6,
                         ease: [0.4, 0, 1, 1],
                     }}
-                    className="fixed inset-0 z-50 w-full h-full bg-white flex flex-col items-center justify-center"
+                    className="fixed top-[56px] xl:top-[80px] right-0 z-40 w-full h-[calc(100%-56px)] xl:h-[calc(100%-80px)] bg-white flex flex-col items-center justify-center"
                 >
                     {/* menu section */}
                     <nav className="flex flex-col gap-8 text-center">
