@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: pandoc/latex
     steps:
       - uses: actions/checkout@v2
       - name: Install mustache (to update the date)
@@ -20,9 +19,9 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.BOMIN_GITHUB_KEY }}
         with:
-          source-directory: 'output'
-          destination-github-username: 'kuru2141'
-          destination-repository-name: 'FrontEnd-OjoRise'
+          source-directory: "output"
+          destination-github-username: "kuru2141"
+          destination-repository-name: "FrontEnd-OjoRise"
           user-email: ${{ secrets.BOMIN_ACCOUNT_EMAIL }}
           commit-message: ${{ github.event.commits[0].message }}
           target-branch: main
