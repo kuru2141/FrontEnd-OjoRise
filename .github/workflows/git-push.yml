@@ -1,4 +1,4 @@
-name: git push into another repo to deploy to vercel
+name: push build output to personal repo for deployment
 
 on:
   push:
@@ -15,12 +15,12 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y ruby-full
-          gem install mustache
+          gem install mustache --user-install
 
       - name: creates output
         run: sh ./build.sh
 
-      - name: Pushes to another repository
+      - name: Pushes to personal repository
         id: push_directory
         uses: cpina/github-action-push-to-another-repository@main
         env:
