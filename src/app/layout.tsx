@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import FloatingActionButton from "@/components/common/FloatingActionButton";
-import LoadingProgressCircle from "@/components/common/LoadingProgressCircle";
 import ProviderWrapper from "@/components/common/ProviderWrapper";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
-import LinearProgress from "@/components/common/LinearProgress";
-import HamburgerWithMenu from "@/components/common/HamburgerWithMenu";
+import ClientLayoutWrapper from "@/components/common/ClientLayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,29 +25,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ProviderWrapper>
-            <HamburgerWithMenu />
-            <ToastContainer
-              position="top-right"
-              autoClose={3000}
-              closeOnClick
-              pauseOnFocusLoss
-              pauseOnHover
-              draggable
-              role="alert"
-              newestOnTop
-            />
-            {children}
-            <LinearProgress colorClassName="bg-[black]" />
-            <FloatingActionButton />
-            <LoadingProgressCircle />
+            <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
           </ProviderWrapper>
         </body>
       </html>
-    </>
   );
 }
