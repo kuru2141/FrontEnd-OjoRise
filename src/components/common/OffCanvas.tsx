@@ -48,7 +48,7 @@ export default function OffCanvas({ isOpen, onClose }: Props) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="text-2xl font-bold text-neutral-800 hover:text-yellow-600 transition"
+                                className="text-2xl font-bold text-neutral-800 hover:text-gray-600 transition"
                             >
                                 {item.label}
                             </motion.a>
