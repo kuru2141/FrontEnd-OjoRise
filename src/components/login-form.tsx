@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToastStore } from "@/stores/toastStore"; // ← Zustand toast store
+import { buildSearchParams } from "@/utils/requestHelper";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { showErrorFromApi, showToast } = useToastStore();
@@ -26,6 +27,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     } catch (error) {
       showErrorFromApi(error);
     }
+  };
+
+  const handleKakaoLogin = () => {
+    const params = buildSearchParams({
+      client_id: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY,
+      redirect_uri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI,
+      response_type: "code",
+    });
+
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize${params}`;
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
@@ -61,7 +73,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </div>
               <div className="grid grid-cols-3 gap-4">
                 {/* SSO 버튼들 */}
-                <Button variant="kakao" type="button" className="w-full">
+                <Button variant="kakao" type="button" onClick={handleKakaoLogin} className="w-full">
                   {/* Kakao icon */}
                   <img src="/kakao.png" className="w-6" />
                 </Button>
