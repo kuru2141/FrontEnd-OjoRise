@@ -1,0 +1,42 @@
+interface PlanCardProps {
+  label: string;
+  title: string;
+  description: string;
+  price: number;
+  discountedPrice?: number;
+}
+
+export default function PlanCard({
+  label,
+  title,
+  description,
+  price,
+  discountedPrice,
+}: PlanCardProps) {
+  return (
+    <div className="border border-gray-200 rounded-2xl shadow p-5 w-full mx-auto max-w-sm bg-white flex flex-col gap-4">
+      <span className="text-xs font-bold" style={{ color: "#B0006A" }}>
+        {label}
+      </span>
+      <h3 className="text-xl font-semibold">{title}</h3>
+
+      <p className="text-sm text-gray-600">{description}</p>
+
+      <div>
+        <p className="text-xl font-bold">월 {price.toLocaleString()}원</p>
+        {discountedPrice && (
+          <p className="text-sm text-gray-400">
+            약정 할인 시 월 {discountedPrice.toLocaleString()}원
+          </p>
+        )}
+      </div>
+
+      <div className="flex gap-2 mt-2">
+        <button className="border border-gray-300 rounded-full px-4 py-1 text-sm">비교하기</button>
+        <button className="bg-pink-500 text-white rounded-full px-4 py-1 text-sm hover:bg-pink-600">
+          신청하기
+        </button>
+      </div>
+    </div>
+  );
+}
