@@ -1,28 +1,42 @@
 import { NextResponse } from "next/server";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_SECRET_KEY,
+});
 
 export const POST = async (req: Request) => {
   try {
     const { message } = await req.json();
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: message }],
-        temperature: 1,
-        max_tokens: 200,
-      }),
+    const stream = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: message }],
+      stream: true,
     });
 
-    const responseData = await response.json();
-    const wordsData = responseData.choices?.[0]?.message?.content;
+    const encoder = new TextEncoder();
 
-    return NextResponse.json({ message: wordsData });
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const delta = chunk.choices?.[0]?.delta?.content;
+          if (delta) {
+            controller.enqueue(encoder.encode(delta));
+          }
+        }
+        controller.close();
+      },
+    });
+
+    return new Response(readableStream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+      },
+    });
   } catch (error) {
-    return NextResponse.json({ error: String(error) });
+    console.error(error);
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 };
