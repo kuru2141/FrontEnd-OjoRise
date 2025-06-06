@@ -1,3 +1,6 @@
+import { usePlanStore } from "@/stores/usePlanStore";
+import { CheckCircle } from "lucide-react";
+
 interface PlanCardProps {
   label: string;
   title: string;
@@ -13,8 +16,27 @@ export default function PlanCard({
   price,
   discountedPrice,
 }: PlanCardProps) {
+  const { selectedPlan, setSelectedPlan } = usePlanStore();
+
+  const isSelected = selectedPlan?.title === title && selectedPlan?.price === price;
+
+  const handleSelect = () => {
+    setSelectedPlan({ label, title, description, price, discountedPrice });
+  };
+
   return (
-    <div className="border border-gray-200 rounded-2xl shadow p-5 w-full mx-auto max-w-sm bg-white flex flex-col gap-4">
+    <div
+      onClick={handleSelect}
+      className={`relative rounded-2xl shadow p-5 w-full max-w-sm flex flex-col gap-4 cursor-pointer hover:shadow-lg transition-colors duration-200 ease-in-out border-2 ${
+        isSelected ? "border-pink-500 bg-pink-50" : "border-gray-200 bg-white"
+      }`}
+    >
+      {isSelected && (
+        <div className="absolute top-3 right-3">
+          <CheckCircle className="w-6 h-6 text-pink-500" />
+        </div>
+      )}
+
       <span className="text-xs font-bold" style={{ color: "#B0006A" }}>
         {label}
       </span>

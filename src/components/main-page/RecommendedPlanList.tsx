@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import PlanCard from "@/components/main-page/PlanCard";
+import SelectedPlanViewer from "./SelectedPlanViewer";
 
 const dummyPlans = [
   {
@@ -62,6 +63,7 @@ export default function RecommendedPlanList() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+      <SelectedPlanViewer />
     </section>
   );
 }
