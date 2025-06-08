@@ -16,7 +16,7 @@ export default function PlanCard({
   price,
   discountedPrice,
 }: PlanCardProps) {
-  const { selectedPlan, setSelectedPlan } = usePlanStore();
+  const { selectedPlan, setSelectedPlan, removePlan } = usePlanStore();
 
   const isSelected = selectedPlan?.title === title && selectedPlan?.price === price;
 
@@ -31,13 +31,23 @@ export default function PlanCard({
         isSelected ? "border-pink-500 bg-pink-50" : "border-gray-200 bg-white"
       }`}
     >
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          removePlan(title);
+        }}
+        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"
+      >
+        ✕
+      </button>
+
       {isSelected && (
-        <div className="absolute top-3 right-3">
-          <CheckCircle className="w-6 h-6 text-pink-500" />
+        <div className="absolute top-2 right-10">
+          <CheckCircle className="w-5 h-5 text-pink-500" />
         </div>
       )}
 
-      <span className="text-xs font-bold" style={{ color: "#B0006A" }}>
+      <span className="text-xs font-bold pt-4" style={{ color: "#B0006A" }}>
         {label}
       </span>
       <h3 className="text-xl font-semibold">{title}</h3>
