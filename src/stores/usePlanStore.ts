@@ -9,17 +9,49 @@ interface Plan {
 }
 
 interface PlanStore {
-  selectedPlan: Plan | null;
-  setSelectedPlan: (plan: Plan) => void;
+  isCompareWithMine: boolean;
+  setIsCompareWithMine: (flag: boolean) => void;
+
+  selectedPlans: Plan[];
+  //setSelectedPlan: (plan: Plan) => void;
+  togglePlanSelection: (plan: Plan) => void;
+  clearSelectedPlans: () => void;
+
   recommendedPlans: Plan[];
   setRecommendedPlans: (plans: Plan[]) => void;
   removePlan: (title: string) => void;
 }
 
-export const usePlanStore = create<PlanStore>((set) => ({
-  selectedPlan: null,
+export const usePlanStore = create<PlanStore>((set, get) => ({
+  isCompareWithMine: true,
+  setIsCompareWithMine: (flag) => {
+    set({ isCompareWithMine: flag });
+    set({ selectedPlans: [] });
+  },
+
+  selectedPlans: [],
+  //setSelectedPlan: (plan) => set({ selectedPlan: plan }),
+  togglePlanSelection: (plan) => {
+    const { selectedPlans, isCompareWithMine } = get();
+
+    const isAlreadySelected = selectedPlans?.some((p) => p.title === plan.title);
+    let newPlans: Plan[];
+
+    if (isAlreadySelected) {
+      newPlans = selectedPlans.filter((p) => p.title !== plan.title);
+    } else {
+      if (isCompareWithMine) {
+        newPlans = [plan];
+      } else {
+        if (selectedPlans.length >= 2) return;
+        newPlans = [...selectedPlans, plan];
+      }
+    }
+    set({ selectedPlans: newPlans });
+  },
+  clearSelectedPlans: () => set({ selectedPlans: [] }),
+
   recommendedPlans: [],
-  setSelectedPlan: (plan) => set({ selectedPlan: plan }),
   setRecommendedPlans: (plans) => set({ recommendedPlans: plans }),
   removePlan: (title) =>
     set((state) => ({
