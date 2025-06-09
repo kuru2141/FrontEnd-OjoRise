@@ -13,13 +13,13 @@ import {
   DrawerTrigger,
 } from "./ui/drawer";
 import { Input } from "./ui/input";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
 import { ScrollArea } from "./ui/scroll-area";
 
 interface DialogItem {
-  teller: string;
-  message: string;
+  teller: "user" | "chatbot";
+  block: (string | PlanItem)[];
   time: Date;
 }
 
@@ -31,11 +31,7 @@ interface PlanItem {
 function ChatBotModal() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [input, setInput] = useState("");
-  const [responseBlocks, setResponseBlocks] = useState<(string | PlanItem)[]>([]);
-  const [links, setLinks] = useState("");
-  const [response, setResponse] = useState("");
-
-  const dialog: DialogItem[] = useMemo(() => [], []);
+  const [dialog, setDialog] = useState<DialogItem[]>([]);
 
   const itemIndexRef = useRef(0);
   const itemsRef = useRef<PlanItem[]>([]);
@@ -45,22 +41,18 @@ function ChatBotModal() {
   const isNewLineRef = useRef(true);
 
   const handleClick = useCallback(async () => {
-    setResponse("");
-    setResponseBlocks([]);
+    const message = inputRef.current?.value ?? "";
+    if (!message.trim()) return;
+
+    setInput("");
     itemIndexRef.current = 0;
     itemsRef.current = [];
     textBufferRef.current = "";
     currentTextRef.current = "";
     jsonParsedRef.current = false;
     isNewLineRef.current = true;
-    setLinks("");
 
-    const message = inputRef.current?.value ?? "";
-    dialog.push({
-      teller: "user",
-      message,
-      time: new Date(),
-    });
+    setDialog((prev) => [...prev, { teller: "user", block: [message], time: new Date() }]);
 
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -69,29 +61,39 @@ function ChatBotModal() {
     });
 
     if (!res.body) {
-      setResponseBlocks(["❌ 응답이 없습니다."]);
+      const errorBlock = ["❌ 응답이 없습니다."];
+      setDialog((prev) => [...prev, { teller: "chatbot", block: errorBlock, time: new Date() }]);
       return;
     }
-
-    setInput("");
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
 
+    const botBlock: DialogItem["block"] = [];
+
+    const updateDialog = () => {
+      setDialog((prev): DialogItem[] => {
+        const lastIndex = prev.length - 1;
+        const newEntry: DialogItem = { teller: "chatbot", block: [...botBlock], time: new Date() };
+        if (prev[lastIndex].teller === "user") {
+          return [...prev, newEntry];
+        } else {
+          const updated = [...prev];
+          updated[lastIndex] = newEntry;
+          return updated;
+        }
+      });
+    };
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
-        dialog.push({
-          teller: "chatBot",
-          message: response,
-          time: new Date(),
-        });
+        updateDialog();
         break;
       }
 
       const chunk = decoder.decode(value, { stream: true });
 
-      // JSON 구문 분석 (첫 줄)
       if (!jsonParsedRef.current) {
         textBufferRef.current += chunk;
         const newlineIndex = textBufferRef.current.indexOf("\n");
@@ -111,7 +113,6 @@ function ChatBotModal() {
         continue;
       }
 
-      // 스트리밍된 텍스트 처리
       for (const char of chunk) {
         if (char === "\n") {
           const fullLine = currentTextRef.current;
@@ -120,45 +121,40 @@ function ChatBotModal() {
           isNewLineRef.current = true;
 
           if (trimmedLine) {
-            setResponseBlocks((prev) => {
-              const last = prev[prev.length - 1];
-              if (typeof last === "string" && last.trim() === trimmedLine) return prev;
-              return [...prev, fullLine];
-            });
+            const last = botBlock[botBlock.length - 1];
+            if (!(typeof last === "string" && last.trim() === trimmedLine)) {
+              botBlock.push(fullLine);
+              updateDialog();
+            }
 
             if (trimmedLine.startsWith("-") && itemIndexRef.current < itemsRef.current.length) {
               const plan = itemsRef.current[itemIndexRef.current];
-              setResponseBlocks((prev) => {
-                const last = prev[prev.length - 1];
-                if (typeof last !== "string" && last?.name === plan.name) return prev;
-                return [...prev, plan];
-              });
+              botBlock.push(plan);
               itemIndexRef.current++;
+              updateDialog();
             }
           }
         } else {
           currentTextRef.current += char;
 
           if (isNewLineRef.current) {
-            setResponseBlocks((prev) => [...prev, char]);
+            botBlock.push(char);
             isNewLineRef.current = false;
           } else {
-            setResponseBlocks((prev) => {
-              const last = prev[prev.length - 1];
-              if (typeof last === "string") {
-                return [...prev.slice(0, -1), last + char];
-              } else {
-                return [...prev, char];
-              }
-            });
+            const last = botBlock[botBlock.length - 1];
+            if (typeof last === "string") {
+              botBlock[botBlock.length - 1] = last + char;
+            } else {
+              botBlock.push(char);
+            }
           }
 
-          setResponse((prev) => prev + char);
+          updateDialog();
           await new Promise((r) => setTimeout(r, 5));
         }
       }
     }
-  }, [dialog, response, links]);
+  }, []);
 
   return (
     <Drawer modal={false}>
@@ -176,27 +172,19 @@ function ChatBotModal() {
               <X />
             </DrawerClose>
           </DrawerHeader>
-          <div className="p-4 pb-0 pt-8 h-[100%]">
-            <ScrollArea className="flex flex-col gap-2 w-full h-[50%]">
-              {dialog.map((item) => (
+          <div className="p-4 pb-0 pt-8 h-full">
+            <ScrollArea className="flex flex-col gap-2 w-full h-[80%]">
+              {dialog.map((item, i) => (
                 <ChatBotBubble
-                  key={`${item.time}_${item.teller}`}
-                  message={item.message}
+                  key={`dialog-${i}`}
                   teller={item.teller}
+                  block={item.block}
                   time={item.time}
                 />
               ))}
-              {responseBlocks && (
-                <ChatBotBubble
-                  key={`block-response`}
-                  block={responseBlocks}
-                  teller="chatBot"
-                  time={new Date()}
-                />
-              )}
             </ScrollArea>
           </div>
-          <DrawerFooter className="flex flex-row h-fit w-full absolute bottom-1">
+          <DrawerFooter className="flex flex-row h-fit w-full absolute bottom-1 bg-white">
             <Input
               ref={inputRef}
               value={input}
