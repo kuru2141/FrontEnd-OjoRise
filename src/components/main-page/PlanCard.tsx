@@ -1,5 +1,7 @@
 import { usePlanStore } from "@/stores/usePlanStore";
-import { CheckCircle } from "lucide-react";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import TextsmsIcon from "@mui/icons-material/Textsms";
+import FiveGIcon from "@mui/icons-material/FiveG";
 
 interface PlanCardProps {
   label: string;
@@ -27,8 +29,8 @@ export default function PlanCard({
   return (
     <div
       onClick={handleSelect}
-      className={`relative rounded-2xl shadow p-5 w-full max-w-sm flex flex-col gap-4 cursor-pointer hover:shadow-lg transition-colors duration-200 ease-in-out border-2 ${
-        isSelected ? "border-pink-500 bg-pink-50" : "border-gray-200 bg-white"
+      className={`relative w-full max-w-[320px] h-[340px] rounded-2xl border-2 p-6 border-gray-200 bg-white flex flex-col gap-3 cursor-pointer transition-colors duration-200 ease-in-out ${
+        isSelected ? "border-pink-500" : " shadow-md hover:shadow-lg"
       }`}
     >
       <button
@@ -41,34 +43,44 @@ export default function PlanCard({
         ✕
       </button>
 
-      {isSelected && (
-        <div className="absolute top-2 right-10">
-          <CheckCircle className="w-5 h-5 text-pink-500" />
-        </div>
-      )}
-
-      <span className="text-xs font-bold pt-4" style={{ color: "#B0006A" }}>
+      <span className="inline-block text-xs font-semibold px-3 py-1 bg-[#FAD0E1] text-[#E2217E] rounded w-fit">
         {label}
       </span>
-      <h3 className="text-xl font-semibold">{title}</h3>
 
-      <p className="text-sm text-gray-600">{description}</p>
+      <h3 className="text-2xl font-bold">{title}</h3>
 
-      <div>
+      <div className="flex gap-2 text-sm font-medium mt-1 mb-1">
+        <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
+          <FiveGIcon fontSize="small" style={{ color: "black" }} />
+          무제한
+        </span>
+        <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
+          <TextsmsIcon fontSize="small" style={{ color: "black" }} />
+          무제한
+        </span>
+        <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
+          <LocalPhoneIcon fontSize="small" style={{ color: "black" }} />
+          무제한
+        </span>
+      </div>
+
+      <p className="text-sm tracking-tighter text-gray-800">{description}</p>
+
+      <div className="flex justify-between items-end mt-3">
         <p className="text-xl font-bold">월 {price.toLocaleString()}원</p>
         {discountedPrice && (
-          <p className="text-sm text-gray-400">
+          <p className="text-xs text-gray-400 whitespace-nowrap">
             약정 할인 시 월 {discountedPrice.toLocaleString()}원
           </p>
         )}
       </div>
 
-      <div className="flex gap-2 mt-2">
-        <button className="border border-gray-300 rounded-full px-4 py-1 text-sm">비교하기</button>
-        <button className="bg-pink-500 text-white rounded-full px-4 py-1 text-sm hover:bg-pink-600">
-          신청하기
-        </button>
-      </div>
+      <button
+        className="mt-auto text-white font-semibold rounded-lg py-3 text-sm transition-colors"
+        style={{ backgroundColor: "#FF008C" }}
+      >
+        신청하기
+      </button>
     </div>
   );
 }

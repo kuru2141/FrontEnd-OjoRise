@@ -74,19 +74,26 @@ export default function RecommendedPlanList() {
   }
 
   return (
-    <section className="mt-10 px-6">
-      <h2 className="text-xl font-bold mb-4">00님께 추천하는 요금제</h2>
-      <Carousel className="w-full max-w-5xl mx-auto">
-        <CarouselContent className="flex">
-          {recommendedPlans.map((plan, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <PlanCard {...plan} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+    <section className="w-full mx-auto px-4">
+      <h2 className="text-2xl font-bold mb-4">추천하는 요금제</h2>
+      <div className="relative">
+        <Carousel className="w-full overflow-visible">
+          <CarouselContent className="flex -mx-[1px]">
+            {recommendedPlans.map((plan, index) => (
+              <CarouselItem
+                key={index}
+                className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center "
+              >
+                <div className="w-full max-w-[320px]">
+                  <PlanCard {...plan} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 z-10" />
+          <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 z-10" />
+        </Carousel>
+      </div>
       <SelectedPlanViewer />
     </section>
   );

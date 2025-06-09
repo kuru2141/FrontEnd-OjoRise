@@ -7,7 +7,7 @@ export default function SelectedPlanViewer() {
     return <p className="text-gray-500 mt-4">아직 선택된 요금제가 없습니다.</p>;
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="mt-10 space-y-4">
       <h4 className="font-bold text-lg">선택된 요금제</h4>
       {selectedPlans.map((plan, index) => (
         <div key={index} className="p-4 border border-gray-300 rounded-md bg-white shadow-sm">
