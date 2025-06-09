@@ -34,7 +34,16 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary: var(--primary-default);
+  --color-primary-medium: var(--primary-medium);
+  --color-primary-light: var(--primary-light);
+  --color-primary-bright: var(--primary-bright);
+  --color-gray-100: var(--gray-100);
+  --color-gray-60: var(--gray-60);
+  --color-gray-40: var(--gray-40);
+  --color-gray-20: var(--gray-20);
+  --color-gray-10: var(--gray-10);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -53,8 +62,16 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary-dark: #AF0130;
+  --primary-default: #E01F7C;
+  --primary-medium: #ff008c;
+  --primary-light: #EDB3D2;
+  --primary-bright: #FCE8F3;
+  --gray-100: #222022;
+  --gray-60: #7A797A;
+  --gray-40: #A7A6A7;
+  --gray-20: #EAEAEA;
+  --gray-10: #F8F8F8;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -123,7 +140,8 @@
   }
 }
 @media (max-width: 768px) {
-  html, body {
+  html,
+  body {
     overflow-y: scroll; /* 스크롤 기능은 유지 */
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -136,18 +154,17 @@
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/pretendard/PretendardVariable.woff2') format('woff2');
+  font-family: "Pretendard";
+  src: url("/fonts/pretendard/PretendardVariable.woff2") format("woff2");
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'SUIT';
-  src: url('/fonts/suit/SUIT-Variable.woff2') format('woff2');
+  font-family: "SUIT";
+  src: url("/fonts/suit/SUIT-Variable.woff2") format("woff2");
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
 }
-
