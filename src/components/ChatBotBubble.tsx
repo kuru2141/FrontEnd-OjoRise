@@ -1,8 +1,6 @@
 "use client";
 import { memo, PropsWithChildren } from "react";
 import { format } from "date-fns";
-import { useProgressing } from "@/stores/progressStore";
-import LoadingLine from "./common/LoadingLine";
 
 interface ChatBotBubbleProp {
   teller: "user" | "chatbot";
