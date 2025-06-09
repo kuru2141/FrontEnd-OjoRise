@@ -33,6 +33,8 @@ export default function ChatTestRoute() {
       headers: { "Content-Type": "application/json" },
     });
 
+    setInput("");
+
     if (!res.body) {
       setResponseBlocks(["❌ 응답이 없습니다."]);
       return;
