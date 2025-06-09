@@ -2,23 +2,40 @@
 
 import { useState } from "react";
 import { StepItem } from "./StepItem";
+import { DateInput } from "../ui/date-input";
+import { SelectCarrier } from "./SelectCarrier";
+import { PlanCombo } from "./PlanCombo";
+import { ContractRadioGroup } from "./ContractRadioGroup";
+import { FamilyPlanRadioGroup } from "./FamilyPlanRadioGroup";
 
 const steps = [
   {
     label: "생년월일을 작성해주세요.",
+    component: <DateInput />,
   },
   {
     label: "현재 사용 중인 요금제를 알려주세요.",
+    component: (
+      <>
+        <p>통신사 선택</p>
+        <SelectCarrier />
+        <div className="flex gap-2 mt-4" />
+        <p>요금제 선택</p>
+        <PlanCombo />
+      </>
+    ),
   },
   {
     label: "통신사 약정이 얼마나 남아있나요?",
+    component: <ContractRadioGroup />,
   },
   {
     label: "가족 결합을 하고 있거나 할 예정이신가요?",
+    component: <FamilyPlanRadioGroup />,
   },
 ];
 
-export default function VerticalStepper() {
+export default function VerticalLinearStepper() {
   const [step, setStep] = useState(0);
 
   const next = () => setStep((prev) => Math.min(prev + 1, steps.length));
@@ -37,7 +54,9 @@ export default function VerticalStepper() {
           onNext={next}
           onBack={back}
           showContent={step === i}
-        />
+        >
+          {s.component}
+        </StepItem>
       ))}
     </div>
   );
