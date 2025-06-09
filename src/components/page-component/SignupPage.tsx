@@ -2,6 +2,8 @@ import { SelectCarrier } from "../common/SelectCarrier";
 import VerticalLinearStepper from "../common/VerticalLinearStepper";
 import { PlanCombo } from "../common/PlanCombo";
 import { DateInput } from "../ui/date-input";
+import { ContractRadioGroup } from "../common/ContractRadioGroup";
+import { FamilyPlanRadioGroup } from "../common/FamilyPlanRadioGroup";
 
 export default function SignupPage() {
   return (
@@ -11,7 +13,8 @@ export default function SignupPage() {
         <DateInput />
         <SelectCarrier/>
         <PlanCombo />
-
+        <ContractRadioGroup />
+        <FamilyPlanRadioGroup/>
       </div>
     </div>
   );
