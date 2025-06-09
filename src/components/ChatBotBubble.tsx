@@ -1,6 +1,8 @@
 "use client";
-import { memo } from "react";
+import { memo, PropsWithChildren } from "react";
 import { format } from "date-fns";
+import { useProgressing } from "@/stores/progressStore";
+import LoadingLine from "./common/LoadingLine";
 
 interface ChatBotBubbleProp {
   teller: "user" | "chatbot";
@@ -14,9 +16,9 @@ interface ChatBotBubbleProp {
   time: Date;
 }
 
-function ChatBotBubble({ teller, block, time }: ChatBotBubbleProp) {
+function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<ChatBotBubbleProp>) {
   return (
-    <div className={!block || block.length === 0 ? "hidden" : ""}>
+    <div>
       <div className="flex flex-row pb-1 space-x-2">
         <div className="text-xs text-gray-600">{teller}</div>
         <div className="text-xs text-gray-500">{format(time, "HH:mm:ss")}</div>
@@ -28,6 +30,7 @@ function ChatBotBubble({ teller, block, time }: ChatBotBubbleProp) {
             : "bg-gray-300 ml-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded"
         }
       >
+        {children}
         {block.map((item, i) =>
           typeof item === "string" ? (
             <span key={`text-${i}`}>{item}</span>
