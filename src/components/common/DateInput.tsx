@@ -49,8 +49,8 @@ export function DateInput({ onChange }: { onChange: (value: string) => void }) {
           if (parsed) {
             setDate(parsed);
             setMonth(parsed);
+            onChange(formatDisplay(parsed));
           }
-          onChange(formatted);
         }}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") {
@@ -91,7 +91,9 @@ export function DateInput({ onChange }: { onChange: (value: string) => void }) {
               setValue(formatDisplay(selected));
               setOpen(false);
 
-              onChange(formatDisplay(selected));
+              if (selected) {
+                onChange(formatDisplay(selected));
+              }
             }}
           />
         </PopoverContent>
