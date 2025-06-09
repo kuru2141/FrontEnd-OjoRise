@@ -13,12 +13,13 @@ import {
   DrawerTrigger,
 } from "./ui/drawer";
 import { Input } from "./ui/input";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
 import { ScrollArea } from "./ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 import { useProgressing } from "@/stores/progressStore";
 import LoadingLine from "./common/LoadingLine";
+import { throttle } from "lodash";
 
 interface DialogItem {
   teller: "user" | "chatbot";
@@ -50,6 +51,22 @@ function ChatBotModal() {
   const isNewLineRef = useRef(true);
 
   const { setIsLoading } = useProgressing();
+
+  const throttledUpdateDialog = useRef(
+    throttle((botBlock: DialogItem["block"]) => {
+      setDialog((prev): DialogItem[] => {
+        const lastIndex = prev.length - 1;
+        const newEntry: DialogItem = {
+          teller: "chatbot",
+          block: [...botBlock],
+          time: new Date(),
+        };
+        const updated = [...prev];
+        updated[lastIndex] = newEntry;
+        return updated;
+      });
+    }, 200) // 100ms 주기로 setDialog 호출
+  ).current;
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (message: string) => {
@@ -86,25 +103,25 @@ function ChatBotModal() {
 
       const botBlock: DialogItem["block"] = [];
 
-      const updateDialog = () => {
-        setDialog((prev): DialogItem[] => {
-          const lastIndex = prev.length - 1;
-          const newEntry: DialogItem = {
-            teller: "chatbot",
-            block: [...botBlock],
-            time: new Date(),
-          };
+      // const updateDialog = () => {
+      //   setDialog((prev): DialogItem[] => {
+      //     const lastIndex = prev.length - 1;
+      //     const newEntry: DialogItem = {
+      //       teller: "chatbot",
+      //       block: [...botBlock],
+      //       time: new Date(),
+      //     };
 
-          const updated = [...prev];
-          updated[lastIndex] = newEntry;
-          return updated;
-        });
-      };
+      //     const updated = [...prev];
+      //     updated[lastIndex] = newEntry;
+      //     return updated;
+      //   });
+      // };
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
-          updateDialog();
+          throttledUpdateDialog(botBlock);
           break;
         }
 
@@ -140,14 +157,14 @@ function ChatBotModal() {
               const last = botBlock[botBlock.length - 1];
               if (!(typeof last === "string" && last.trim() === trimmedLine)) {
                 botBlock.push(fullLine);
-                updateDialog();
+                throttledUpdateDialog(botBlock);
               }
 
               if (trimmedLine.startsWith("-") && itemIndexRef.current < itemsRef.current.length) {
                 const plan = itemsRef.current[itemIndexRef.current];
                 botBlock.push(plan);
                 itemIndexRef.current++;
-                updateDialog();
+                throttledUpdateDialog(botBlock);
               }
             }
           } else {
@@ -165,7 +182,7 @@ function ChatBotModal() {
               }
             }
 
-            updateDialog();
+            throttledUpdateDialog(botBlock);
             await new Promise((r) => setTimeout(r, 5));
           }
         }
@@ -194,12 +211,17 @@ function ChatBotModal() {
     mutateAsync(message);
   }, [mutateAsync]);
 
+  const handleEnter = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleClick(),
+    [handleClick]
+  );
+
   return (
     <Drawer modal={false}>
       <DrawerTrigger asChild>
         <Button variant="outline">Open Drawer</Button>
       </DrawerTrigger>
-      <DrawerContent className="w-1/2 max-w-1/2 h-screen bg-gray-400">
+      <DrawerContent className="w-1/2 max-w-[650px] h-screen bg-gray-400">
         <div>
           <DrawerHeader className="flex flex-row justify-between">
             <div>
@@ -210,8 +232,8 @@ function ChatBotModal() {
               <X />
             </DrawerClose>
           </DrawerHeader>
-          <div className="p-4 pb-0 pt-8 h-full">
-            <ScrollArea className="flex flex-col gap-2 w-full h-[80%]">
+          <div className="p-4 pb-0 pt-5 h-full">
+            <ScrollArea className="flex flex-col gap-2 w-full h-[560px]">
               {dialog.map((item, i) => {
                 console.log("qqq", item);
                 return (
@@ -227,13 +249,14 @@ function ChatBotModal() {
               })}
             </ScrollArea>
           </div>
-          <DrawerFooter className="flex flex-row h-fit w-full absolute bottom-1 bg-white">
+          <DrawerFooter className="flex flex-row h-fit w-full absolute bottom-0 bg-white">
             <Input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="border px-2 py-1"
               placeholder="메시지를 입력하세요"
+              onKeyDown={handleEnter}
             />
             <Button className="hover:cursor-pointer" onClick={handleClick}>
               <Send />

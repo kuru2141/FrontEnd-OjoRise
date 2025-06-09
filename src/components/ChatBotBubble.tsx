@@ -16,15 +16,15 @@ interface ChatBotBubbleProp {
 
 function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<ChatBotBubbleProp>) {
   return (
-    <div>
-      <div className="flex flex-row pb-1 space-x-2">
+    <div className={`flex flex-col ${teller === "user" ? "items-end" : ""} pb-2`}>
+      <div className={`flex ${teller === "user" ? "flex-row-reverse" : "flex-row"} pb-1 space-x-2`}>
         <div className="text-xs text-gray-600">{teller}</div>
         <div className="text-xs text-gray-500">{format(time, "HH:mm:ss")}</div>
       </div>
       <div
         className={
           teller === "user"
-            ? "bg-yellow-300 mr-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded"
+            ? "bg-yellow-300 mr-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded items-end"
             : "bg-gray-300 ml-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded"
         }
       >
