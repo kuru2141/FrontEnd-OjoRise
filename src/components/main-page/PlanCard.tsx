@@ -18,12 +18,15 @@ export default function PlanCard({
   price,
   discountedPrice,
 }: PlanCardProps) {
-  const { selectedPlans, togglePlanSelection, removePlan } = usePlanStore();
+  const selectedPlans = usePlanStore((state) => state.selectedPlans);
+  const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
+  const removePlan = usePlanStore((state) => state.removePlan);
 
   const isSelected = selectedPlans.some((p) => p.title === title);
 
   const handleSelect = () => {
     togglePlanSelection({ label, title, description, price, discountedPrice });
+    console.log(selectedPlans);
   };
 
   return (

@@ -43,8 +43,11 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
       if (isCompareWithMine) {
         newPlans = [plan];
       } else {
-        if (selectedPlans.length >= 2) return;
-        newPlans = [...selectedPlans, plan];
+        if (selectedPlans.length >= 2) {
+          newPlans = [...selectedPlans.slice(1), plan];
+        } else {
+          newPlans = [...selectedPlans, plan];
+        }
       }
     }
     set({ selectedPlans: newPlans });
