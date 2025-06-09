@@ -10,12 +10,8 @@ import { FamilyPlanRadioGroup } from "./FamilyPlanRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
 
 export default function VerticalLinearStepper() {
-  const { data, setField } = useSurveyStore();
+  const { data } = useSurveyStore();
   const [step, setStep] = useState(0);
-
-  const handleChange = (key: keyof typeof data, value: string) => {
-    setField(key, value);
-  };
 
   const isNextDisabled = () => {
     switch (step) {
@@ -61,7 +57,7 @@ export default function VerticalLinearStepper() {
   ];
 
   return (
-    <div className="max-w-xl mx-auto mt-8">
+    <div>
       {steps.map((s, i) => (
         <StepItem
           key={i}
