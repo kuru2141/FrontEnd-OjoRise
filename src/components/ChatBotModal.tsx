@@ -47,6 +47,22 @@ function ChatBotModal() {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (message: string) => {
+      setDialog((prev): DialogItem[] => {
+        const lastIndex = prev.length - 1;
+        const newEntry: DialogItem = {
+          teller: "chatbot",
+          block: [],
+          time: new Date(),
+        };
+        if (prev[lastIndex].teller === "user") {
+          return [...prev, newEntry];
+        } else {
+          const updated = [...prev];
+          updated[lastIndex] = newEntry;
+          return updated;
+        }
+      });
+
       const res = await fetch("/api/chat", {
         method: "POST",
         body: JSON.stringify({ message }),
@@ -72,13 +88,10 @@ function ChatBotModal() {
             block: [...botBlock],
             time: new Date(),
           };
-          if (prev[lastIndex].teller === "user") {
-            return [...prev, newEntry];
-          } else {
-            const updated = [...prev];
-            updated[lastIndex] = newEntry;
-            return updated;
-          }
+
+          const updated = [...prev];
+          updated[lastIndex] = newEntry;
+          return updated;
         });
       };
 
