@@ -14,6 +14,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useSurveyStore } from "@/stores/surveyStore";
 
 const frameworks = [
   {
@@ -26,20 +27,17 @@ const frameworks = [
   },
 ];
 
-interface PlanComboProps {
-  onChange: (value: string) => void;
-}
-
-export function PlanCombo({ onChange }: PlanComboProps) {
+export function PlanCombo() {
+  const { data, setField } = useSurveyStore();
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === value ? "" : currentValue;
-    setValue(newValue);
-    onChange(newValue); // 상위 컴포넌트에 전달
+    const newValue = currentValue === data.plan ? "" : currentValue;
+    setField("plan", newValue);
     setOpen(false);
   };
+
+  const selectedLabel = frameworks.find((f) => f.value === data.plan)?.label;
 
   return (
     <div>
@@ -52,10 +50,8 @@ export function PlanCombo({ onChange }: PlanComboProps) {
             aria-expanded={open}
             className="w-[260px] h-[50px] justify-between text-[16px]"
           >
-            <span className={value ? "text-black" : "text-gray-60"}>
-              {value
-                ? frameworks.find((framework) => framework.value === value)?.label
-                : "요금제를 선택해 주세요."}
+            <span className={data.plan ? "text-black" : "text-gray-60"}>
+              {selectedLabel || "요금제를 선택해 주세요."}
             </span>
             <ChevronsUpDown className="opacity-50" />
           </Button>
@@ -80,7 +76,7 @@ export function PlanCombo({ onChange }: PlanComboProps) {
                     <Check
                       className={cn(
                         "ml-auto",
-                        value === framework.value ? "opacity-100" : "opacity-0"
+                        data.plan === framework.value ? "opacity-100" : "opacity-0"
                       )}
                     />
                   </CommandItem>

@@ -9,16 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSurveyStore } from "@/stores/surveyStore";
 
-interface SelectCarrierProps {
-  onChange: (value: string) => void;
-}
+export function SelectCarrier() {
+  const { data, setField } = useSurveyStore();
 
-export function SelectCarrier({ onChange }: SelectCarrierProps) {
   return (
     <div>
       <p className="font-bold text-[18px] mb-3">통신사 선택</p>
-      <Select onValueChange={onChange}>
+      <Select value={data.carrier} onValueChange={(value) => setField("carrier", value)}>
         <SelectTrigger className="w-[260px] text-[16px] px-3 py-6">
           <SelectValue placeholder="통신사를 선택해 주세요" />
         </SelectTrigger>

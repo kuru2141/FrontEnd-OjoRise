@@ -5,6 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useSurveyStore } from "@/stores/surveyStore";
 
 function formatDisplay(date: Date | undefined): string {
   if (!date) return "";
@@ -30,11 +31,20 @@ function formatWithDots(raw: string): string {
   return `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6, 8)}`;
 }
 
-export function DateInput({ onChange }: { onChange: (value: string) => void }) {
+export function DateInput() {
+  const { data, setField } = useSurveyStore();
+
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [month, setMonth] = React.useState<Date | undefined>(undefined);
-  const [value, setValue] = React.useState("");
+  const [date, setDate] = React.useState<Date | undefined>(
+    data.birthDate ? new Date(data.birthDate.replace(/\./g, "-")) : undefined
+  );
+  const [month, setMonth] = React.useState<Date | undefined>(date);
+  const [value, setValue] = React.useState(data.birthDate);
+
+  const handleChange = (formatted: string) => {
+    setValue(formatted);
+    setField("birthDate", formatted);
+  };
 
   return (
     <div className="relative w-[260px] h-[48px]">
@@ -49,7 +59,7 @@ export function DateInput({ onChange }: { onChange: (value: string) => void }) {
           if (parsed) {
             setDate(parsed);
             setMonth(parsed);
-            onChange(formatDisplay(parsed));
+            handleChange(formatDisplay(parsed));
           }
         }}
         onKeyDown={(e) => {
@@ -92,7 +102,7 @@ export function DateInput({ onChange }: { onChange: (value: string) => void }) {
               setOpen(false);
 
               if (selected) {
-                onChange(formatDisplay(selected));
+                handleChange(formatDisplay(selected));
               }
             }}
           />

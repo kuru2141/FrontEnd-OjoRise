@@ -7,31 +7,26 @@ import { SelectCarrier } from "./SelectCarrier";
 import { PlanCombo } from "./PlanCombo";
 import { ContractRadioGroup } from "./ContractRadioGroup";
 import { FamilyPlanRadioGroup } from "./FamilyPlanRadioGroup";
+import { useSurveyStore } from "@/stores/surveyStore";
 
 export default function VerticalLinearStepper() {
+  const { data, setField } = useSurveyStore();
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
-    birthDate: "",
-    carrier: "",
-    plan: "",
-    contract: "",
-    familyPlan: "",
-  });
 
-  const handleChange = (key: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+  const handleChange = (key: keyof typeof data, value: string) => {
+    setField(key, value);
   };
 
   const isNextDisabled = () => {
     switch (step) {
       case 0:
-        return !formData.birthDate;
+        return !data.birthDate;
       case 1:
-        return !(formData.carrier && formData.plan);
+        return !(data.carrier && data.plan);
       case 2:
-        return !formData.contract;
+        return !data.contract;
       case 3:
-        return !formData.familyPlan;
+        return !data.familyPlan;
       default:
         return true;
     }
@@ -43,25 +38,25 @@ export default function VerticalLinearStepper() {
   const steps = [
     {
       label: "생년월일을 작성해주세요.",
-      component: <DateInput onChange={(value) => handleChange("birthDate", value)} />,
+      component: <DateInput />,
     },
     {
       label: "현재 사용 중인 요금제를 알려주세요.",
       component: (
         <>
-          <SelectCarrier onChange={(value) => handleChange("carrier", value)} />
+          <SelectCarrier />
           <div className="flex gap-2 mt-4" />
-          <PlanCombo onChange={(value) => handleChange("plan", value)} />
+          <PlanCombo />
         </>
       ),
     },
     {
       label: "통신사 약정이 얼마나 남아있나요?",
-      component: <ContractRadioGroup onChange={(value) => handleChange("contract", value)} />,
+      component: <ContractRadioGroup />,
     },
     {
       label: "가족 결합을 하고 있거나 할 예정이신가요?",
-      component: <FamilyPlanRadioGroup onChange={(value) => handleChange("familyPlan", value)} />,
+      component: <FamilyPlanRadioGroup />,
     },
   ];
 

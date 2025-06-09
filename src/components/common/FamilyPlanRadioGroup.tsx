@@ -1,13 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useSurveyStore } from "@/stores/surveyStore";
 
-interface FamilyPlanRadioGroupProps {
-  onChange: (value: string) => void;
-}
-
-export function FamilyPlanRadioGroup({ onChange }: FamilyPlanRadioGroupProps) {
+export function FamilyPlanRadioGroup() {
+  const { data, setField } = useSurveyStore();
   return (
-    <RadioGroup defaultValue="no_contract" onValueChange={onChange}>
+    <RadioGroup value={data.familyPlan} onValueChange={(value) => setField("familyPlan", value)}>
       <div className="flex items-center gap-3">
         <RadioGroupItem value="no_family_bundle" id="r1" />
         <Label htmlFor="r1" className="text-[18px]">
