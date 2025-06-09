@@ -2,6 +2,9 @@
  * target의 타입을 확인해 unknown 형식의 type을 가진 대상의 타입을 지정해주는 function입니다.
  * @param target 타입을 확인할 target
  * @returns {boolean} target과 <T>의 type 일치 여부를 return합니다.
+ * @example
+ * const tmp:unknown = "abc";
+ * console.log(isTypeof<string>(tmp)); // true
  */
 function isTypeof<T = { [key: string]: unknown }>(target: unknown): target is T {
   if (target as T) return true;
