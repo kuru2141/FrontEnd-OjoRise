@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { StepItem } from "./StepItem";
-import { DateInput } from "../ui/date-input";
+import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
 import { PlanCombo } from "./PlanCombo";
 import { ContractRadioGroup } from "./ContractRadioGroup";
@@ -17,10 +17,8 @@ const steps = [
     label: "현재 사용 중인 요금제를 알려주세요.",
     component: (
       <>
-        <p>통신사 선택</p>
         <SelectCarrier />
         <div className="flex gap-2 mt-4" />
-        <p>요금제 선택</p>
         <PlanCombo />
       </>
     ),

@@ -37,7 +37,7 @@ export function DateInput() {
   const [value, setValue] = React.useState("");
 
   return (
-    <div className="relative w-[240px] h-[44px]">
+    <div className="relative w-[260px] h-[48px]">
       <input
         type="text"
         value={value}
@@ -69,7 +69,7 @@ export function DateInput() {
             variant="ghost"
             className="absolute top-1/2 right-2 size-6 -translate-y-1/2 p-0 text-gray-500"
           >
-            <CalendarIcon className="size-4" />
+            <CalendarIcon className="size-5" />
             <span className="sr-only">Select date</span>
           </Button>
         </PopoverTrigger>

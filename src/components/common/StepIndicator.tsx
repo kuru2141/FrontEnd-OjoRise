@@ -16,7 +16,7 @@ export const StepIndicator = ({
   return (
     <div className={`${baseClass} ${stateClass}`}>
       {completed ? (
-        <Check className="w-[18px] h-[18px]" strokeWidth={3} />
+        <Check className="w-[18px] h-[20px]" strokeWidth={3} />
       ) : (
         <span className="text-sm font-semibold">{step}</span>
       )}
