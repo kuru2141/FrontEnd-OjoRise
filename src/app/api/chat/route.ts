@@ -1,3 +1,4 @@
+import { YOPLE_PROMPT } from "@/prompt/yoplePrompt";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -10,9 +11,16 @@ export const POST = async (req: Request) => {
     const { message } = await req.json();
 
     const stream = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: message }],
+      model: "gpt-4.1-mini",
+      messages: [
+        { role: "user", content: message },
+        {
+          role: "system",
+          content: YOPLE_PROMPT,
+        },
+      ],
       stream: true,
+      max_tokens: 200,
     });
 
     const encoder = new TextEncoder();
