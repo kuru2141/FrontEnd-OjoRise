@@ -31,10 +31,16 @@ interface PlanItem {
   link: string;
 }
 
+const initialDialog: DialogItem = {
+  teller: "chatbot",
+  block: ["초기 프롬프트"],
+  time: new Date(),
+};
+
 function ChatBotModal() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [input, setInput] = useState("");
-  const [dialog, setDialog] = useState<DialogItem[]>([]);
+  const [dialog, setDialog] = useState<DialogItem[]>([initialDialog]);
 
   const itemIndexRef = useRef(0);
   const itemsRef = useRef<PlanItem[]>([]);
