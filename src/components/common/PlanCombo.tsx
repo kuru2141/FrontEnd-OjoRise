@@ -26,9 +26,20 @@ const frameworks = [
   },
 ];
 
-export function PlanCombo() {
+interface PlanComboProps {
+  onChange: (value: string) => void;
+}
+
+export function PlanCombo({ onChange }: PlanComboProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  const handleSelect = (currentValue: string) => {
+    const newValue = currentValue === value ? "" : currentValue;
+    setValue(newValue);
+    onChange(newValue); // 상위 컴포넌트에 전달
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -62,10 +73,7 @@ export function PlanCombo() {
                   <CommandItem
                     key={framework.value}
                     value={framework.value}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
-                      setOpen(false);
-                    }}
+                    onSelect={handleSelect}
                     className="text-[15px] py-2"
                   >
                     {framework.label}

@@ -8,36 +8,62 @@ import { PlanCombo } from "./PlanCombo";
 import { ContractRadioGroup } from "./ContractRadioGroup";
 import { FamilyPlanRadioGroup } from "./FamilyPlanRadioGroup";
 
-const steps = [
-  {
-    label: "생년월일을 작성해주세요.",
-    component: <DateInput />,
-  },
-  {
-    label: "현재 사용 중인 요금제를 알려주세요.",
-    component: (
-      <>
-        <SelectCarrier />
-        <div className="flex gap-2 mt-4" />
-        <PlanCombo />
-      </>
-    ),
-  },
-  {
-    label: "통신사 약정이 얼마나 남아있나요?",
-    component: <ContractRadioGroup />,
-  },
-  {
-    label: "가족 결합을 하고 있거나 할 예정이신가요?",
-    component: <FamilyPlanRadioGroup />,
-  },
-];
-
 export default function VerticalLinearStepper() {
   const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({
+    birthDate: "",
+    carrier: "",
+    plan: "",
+    contract: "",
+    familyPlan: "",
+  });
+
+  const handleChange = (key: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const isNextDisabled = () => {
+    switch (step) {
+      case 0:
+        return !formData.birthDate;
+      case 1:
+        return !(formData.carrier && formData.plan);
+      case 2:
+        return !formData.contract;
+      case 3:
+        return !formData.familyPlan;
+      default:
+        return true;
+    }
+  };
 
   const next = () => setStep((prev) => Math.min(prev + 1, steps.length));
   const back = () => setStep((prev) => Math.max(prev - 1, 0));
+
+  const steps = [
+    {
+      label: "생년월일을 작성해주세요.",
+      component: <DateInput onChange={(value) => handleChange("birthDate", value)} />,
+    },
+    {
+      label: "현재 사용 중인 요금제를 알려주세요.",
+      component: (
+        <>
+          <SelectCarrier onChange={(value) => handleChange("carrier", value)} />
+          <div className="flex gap-2 mt-4" />
+          <PlanCombo onChange={(value) => handleChange("plan", value)} />
+        </>
+      ),
+    },
+    {
+      label: "통신사 약정이 얼마나 남아있나요?",
+      component: <ContractRadioGroup onChange={(value) => handleChange("contract", value)} />,
+    },
+    {
+      label: "가족 결합을 하고 있거나 할 예정이신가요?",
+      component: <FamilyPlanRadioGroup onChange={(value) => handleChange("familyPlan", value)} />,
+    },
+  ];
 
   return (
     <div className="max-w-xl mx-auto mt-8">
@@ -52,6 +78,7 @@ export default function VerticalLinearStepper() {
           onNext={next}
           onBack={back}
           showContent={step === i}
+          isNextDisabled={isNextDisabled()}
         >
           {s.component}
         </StepItem>

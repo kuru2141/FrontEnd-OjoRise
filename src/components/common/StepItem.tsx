@@ -11,6 +11,7 @@ interface StepItemProps {
   onBack: () => void;
   showContent: boolean;
   children: React.ReactNode;
+  isNextDisabled: boolean;
 }
 
 export const StepItem = ({
@@ -23,6 +24,7 @@ export const StepItem = ({
   onBack,
   showContent,
   children,
+  isNextDisabled,
 }: StepItemProps) => {
   return (
     <div className="flex">
@@ -41,7 +43,7 @@ export const StepItem = ({
             <p className="text-sm text-gray-700 leading-relaxed"></p>
             <div className="mb-4">{children}</div>
             <div className="flex gap-5 mt-4 mb-10">
-              <Button onClick={onNext} variant="next" size="survey">
+              <Button onClick={onNext} variant="next" size="survey" disabled={isNextDisabled}>
                 {isLast ? "완료" : "다음"}
               </Button>
               <Button onClick={onBack} variant="back" size="survey" disabled={index === 0}>

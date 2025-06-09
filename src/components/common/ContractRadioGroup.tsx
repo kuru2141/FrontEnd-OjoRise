@@ -1,9 +1,13 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export function ContractRadioGroup() {
+interface ContractRadioGroupProps {
+  onChange: (value: string) => void;
+}
+
+export function ContractRadioGroup({ onChange }: ContractRadioGroupProps) {
   return (
-    <RadioGroup defaultValue="no_contract">
+    <RadioGroup defaultValue="no_contract" onValueChange={onChange}>
       <div className="flex items-center gap-3">
         <RadioGroupItem value="no_contract" id="r1" />
         <Label htmlFor="r1" className="text-[18px]">

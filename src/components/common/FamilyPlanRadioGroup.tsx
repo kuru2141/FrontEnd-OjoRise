@@ -1,9 +1,13 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export function FamilyPlanRadioGroup() {
+interface FamilyPlanRadioGroupProps {
+  onChange: (value: string) => void;
+}
+
+export function FamilyPlanRadioGroup({ onChange }: FamilyPlanRadioGroupProps) {
   return (
-    <RadioGroup defaultValue="no_contract">
+    <RadioGroup defaultValue="no_contract" onValueChange={onChange}>
       <div className="flex items-center gap-3">
         <RadioGroupItem value="no_family_bundle" id="r1" />
         <Label htmlFor="r1" className="text-[18px]">
