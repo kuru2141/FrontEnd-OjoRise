@@ -1,13 +1,5 @@
 import { create } from "zustand";
-
-interface Plan {
-  label: string;
-  title: string;
-  description: string;
-  price: number;
-  discountedPrice?: number;
-  onRemove?: () => void;
-}
+import type { Plan } from "@/types/plan";
 
 interface PlanStore {
   isCompareWithMine: boolean;

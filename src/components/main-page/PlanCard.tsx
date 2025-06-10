@@ -1,25 +1,12 @@
 import { usePlanStore } from "@/stores/usePlanStore";
+import type { Plan } from "@/types/plan";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import FiveGIcon from "@mui/icons-material/FiveG";
 
-interface PlanCardProps {
-  label: string;
-  title: string;
-  description: string;
-  price: number;
-  discountedPrice?: number;
-  onRemove?: () => void;
-}
+export default function PlanCard(props: Plan) {
+  const { label, title, description, price, discountedPrice, onRemove } = props;
 
-export default function PlanCard({
-  label,
-  title,
-  description,
-  price,
-  discountedPrice,
-  onRemove,
-}: PlanCardProps) {
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
 
@@ -27,7 +14,6 @@ export default function PlanCard({
 
   const handleSelect = () => {
     togglePlanSelection({ label, title, description, price, discountedPrice });
-    console.log(selectedPlans);
   };
 
   return (
