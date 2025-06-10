@@ -22,7 +22,6 @@ export default function PlanCard({
 }: PlanCardProps) {
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
-  const removePlan = usePlanStore((state) => state.removePlan);
 
   const isSelected = selectedPlans.some((p) => p.title === title);
 
