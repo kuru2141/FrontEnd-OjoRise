@@ -8,6 +8,7 @@ import LinearProgress from "@/components/common/LinearProgress";
 import FloatingActionButton from "@/components/common/FloatingActionButton";
 import LoadingProgressCircle from "@/components/common/LoadingProgressCircle";
 import ChatBotModal from "../ChatBotModal";
+import LoadingLine from "./LoadingLine";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       <LinearProgress colorClassName="bg-[black]" />
       <ChatBotModal />
       <FloatingActionButton />
+      <LoadingLine />
       <LoadingProgressCircle />
     </Fragment>
   );
