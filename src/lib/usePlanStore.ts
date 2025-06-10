@@ -1,18 +1,6 @@
 // /lib/usePlanStore.ts
 import { create } from 'zustand';
-
-interface Plan {
-    id: string;
-    name: string;
-    price: string;
-    call: string;
-    sms: string;
-    tech: string;
-    data: string;
-    speed: string;
-    extraCall: string;
-    numberChangeFee: string;
-}
+import {Plan} from '@/type/Plan';
 
 interface PlanStore {
     username: string | null;

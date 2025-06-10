@@ -4,7 +4,6 @@ import "./globals.css";
 import ProviderWrapper from "@/components/common/ProviderWrapper";
 import "react-toastify/dist/ReactToastify.css";
 import ClientLayoutWrapper from "@/components/common/ClientLayoutWrapper";
-import PlanBox from "@/components/page-component/Plan/PlanBox";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +30,6 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ProviderWrapper>
-            <PlanBox />
             <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
           </ProviderWrapper>
         </body>
