@@ -6,6 +6,7 @@ interface Plan {
   description: string;
   price: number;
   discountedPrice?: number;
+  onRemove?: () => void;
 }
 
 interface PlanStore {
@@ -13,13 +14,16 @@ interface PlanStore {
   setIsCompareWithMine: (flag: boolean) => void;
 
   selectedPlans: Plan[];
-  //setSelectedPlan: (plan: Plan) => void;
   togglePlanSelection: (plan: Plan) => void;
   clearSelectedPlans: () => void;
 
   recommendedPlans: Plan[];
   setRecommendedPlans: (plans: Plan[]) => void;
   removePlan: (title: string) => void;
+
+  likedPlans: Plan[];
+  setLikedPlans: (plans: Plan[]) => void;
+  removeLikedPlan: (title: string) => void;
 }
 
 export const usePlanStore = create<PlanStore>((set, get) => ({
@@ -30,7 +34,6 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   },
 
   selectedPlans: [],
-  //setSelectedPlan: (plan) => set({ selectedPlan: plan }),
   togglePlanSelection: (plan) => {
     const { selectedPlans, isCompareWithMine } = get();
 
@@ -59,5 +62,12 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   removePlan: (title) =>
     set((state) => ({
       recommendedPlans: state.recommendedPlans.filter((plan) => plan.title !== title),
+    })),
+
+  likedPlans: [],
+  setLikedPlans: (plans) => set({ likedPlans: plans }),
+  removeLikedPlan: (title) =>
+    set((state) => ({
+      likedPlans: state.likedPlans.filter((plan) => plan.title !== title),
     })),
 }));

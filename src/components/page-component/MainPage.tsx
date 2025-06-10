@@ -1,5 +1,7 @@
 import RecommendedPlanList from "@/components/main-page/RecommendedPlanList";
 import CompareModeToggle from "../main-page/CompareModeToggle";
+import SelectedPlanViewer from "../main-page/SelectedPlanViewer";
+import LikedPlansList from "../main-page/LikedPlansList";
 
 export default function MainPage() {
   return (
@@ -8,6 +10,8 @@ export default function MainPage() {
         <h2 className="text-3xl font-bold mb-4 mt-10">요금제 비교하기</h2>
         <CompareModeToggle />
         <RecommendedPlanList />
+        <LikedPlansList />
+        <SelectedPlanViewer />
       </section>
     </main>
   );

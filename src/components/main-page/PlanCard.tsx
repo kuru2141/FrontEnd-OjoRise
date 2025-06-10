@@ -9,6 +9,7 @@ interface PlanCardProps {
   description: string;
   price: number;
   discountedPrice?: number;
+  onRemove?: () => void;
 }
 
 export default function PlanCard({
@@ -17,6 +18,7 @@ export default function PlanCard({
   description,
   price,
   discountedPrice,
+  onRemove,
 }: PlanCardProps) {
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
@@ -36,15 +38,17 @@ export default function PlanCard({
         isSelected ? "border-pink-500" : " shadow-md hover:shadow-lg"
       }`}
     >
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          removePlan(title);
-        }}
-        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"
-      >
-        ✕
-      </button>
+      {onRemove && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          className="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"
+        >
+          ✕
+        </button>
+      )}
 
       <span className="inline-block text-xs font-semibold px-3 py-1 bg-[#FAD0E1] text-[#E2217E] rounded w-fit">
         {label}
