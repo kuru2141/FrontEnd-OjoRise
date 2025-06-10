@@ -1,18 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ProviderWrapper from "@/components/common/ProviderWrapper";
 import "react-toastify/dist/ReactToastify.css";
 import ClientLayoutWrapper from "@/components/common/ClientLayoutWrapper";
+import localFont from 'next/font/local';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const pretendard = localFont({
+  src: "../fonts/pretendard/PretendardVariable.woff2",
+  display: "swap",
+  weight: "100 900",
+  variable: "--font-pretendard",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const suit = localFont({
+  src: "../fonts/suit/SUIT-Variable.woff2",
+  display: "swap",
+  weight: "100 900",
+  variable: "--font-suit",
 });
 
 export const metadata: Metadata = {
@@ -25,14 +29,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <ProviderWrapper>
-            <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
-          </ProviderWrapper>
-        </body>
-      </html>
+    <html lang="en">
+      <body className={`${pretendard.variable} ${suit.variable} font-pretendard`}>
+        <ProviderWrapper>
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+        </ProviderWrapper>
+      </body>
+    </html>
   );
 }
