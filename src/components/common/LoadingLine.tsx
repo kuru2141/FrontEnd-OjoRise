@@ -2,7 +2,7 @@ import { useProgressing } from "@/stores/progressStore";
 import Image from "next/image";
 
 interface LoadingLineProps {
-  isShow: boolean;
+  isShow?: boolean;
 }
 
 export default function LoadingLine({ isShow }: LoadingLineProps) {
