@@ -49,8 +49,13 @@ function ChatBotModal() {
   const textBufferRef = useRef("");
   const currentTextRef = useRef("");
   const isNewLineRef = useRef(true);
+  const messageField = useRef<HTMLDivElement>(null);
 
   const { setIsLoading } = useProgressing();
+
+  const scrollToBottom = () => {
+    messageField.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const throttledUpdateDialog = useRef(
     throttle((botBlock: DialogItem["block"]) => {
@@ -194,6 +199,8 @@ function ChatBotModal() {
     setIsLoading(isPending);
   }, [isPending, setIsLoading]);
 
+  useEffect(() => scrollToBottom(), [dialog]);
+
   const handleClick = useCallback(async () => {
     const message = inputRef.current?.value ?? "";
     if (!message.trim()) return;
@@ -221,7 +228,7 @@ function ChatBotModal() {
       <DrawerTrigger asChild>
         <Button variant="outline">Open Drawer</Button>
       </DrawerTrigger>
-      <DrawerContent className="w-1/2 max-w-[650px] h-screen bg-gray-400">
+      <DrawerContent className="w-1/2  max-w-[650px] h-screen ml-auto">
         <div>
           <DrawerHeader className="flex flex-row justify-between">
             <div>
@@ -232,7 +239,7 @@ function ChatBotModal() {
               <X />
             </DrawerClose>
           </DrawerHeader>
-          <div className="p-4 pb-0 pt-5 h-full">
+          <div className="p-4 pb-0 pt-5 h-full  bg-gray-400 ">
             <ScrollArea className="flex flex-col gap-2 w-full h-[560px]">
               {dialog.map((item, i) => {
                 console.log("qqq", item);
@@ -247,6 +254,7 @@ function ChatBotModal() {
                   </ChatBotBubble>
                 );
               })}
+              <div ref={messageField} />
             </ScrollArea>
           </div>
           <DrawerFooter className="flex flex-row h-fit w-full absolute bottom-0 bg-white">
