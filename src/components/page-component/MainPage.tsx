@@ -1,7 +1,8 @@
-import RecommendedPlanList from "@/components/main-page/RecommendedPlanList";
-import CompareModeToggle from "../main-page/CompareModeToggle";
-import SelectedPlanViewer from "../main-page/SelectedPlanViewer";
-import LikedPlansList from "../main-page/LikedPlansList";
+import RecommendedPlanList from "@/components/page-component/main-page/RecommendedPlanList";
+import CompareModeToggle from "./main-page/CompareModeToggle";
+import SelectedPlanViewer from "./main-page/SelectedPlanViewer";
+import LikedPlansList from "./main-page/LikedPlansList";
+import CompareChart from "../CompareChart";
 
 export default function MainPage() {
   return (
@@ -12,6 +13,9 @@ export default function MainPage() {
         <RecommendedPlanList />
         <LikedPlansList />
         <SelectedPlanViewer />
+        <div style={{width: '569px', height: '406.5px'}}>
+          <CompareChart />
+        </div>
       </section>
     </main>
   );
