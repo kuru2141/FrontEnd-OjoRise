@@ -1,14 +1,14 @@
 // /lib/usePlanStore.ts
 import { create } from 'zustand';
-import {Plan} from '@/type/Plan';
+import {MyPlan} from '@/types/plan';
 
 interface PlanStore {
     username: string | null;
     isGuest: boolean;
-    selectedPlan: Plan | null;
+    selectedPlan: MyPlan | null;
     setUsername: (name: string | null) => void;
     setGuest: (value: boolean) => void;
-    setSelectedPlan: (plan: Plan | null) => void;
+    setSelectedPlan: (plan: MyPlan | null) => void;
 }
 
 export const usePlanStore = create<PlanStore>((set) => ({
