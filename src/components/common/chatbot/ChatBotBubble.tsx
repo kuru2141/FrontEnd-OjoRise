@@ -19,7 +19,7 @@ function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<Chat
     <div className={`flex flex-col ${teller === "user" ? "items-end" : ""} pb-2`}>
       <div className={`flex ${teller === "user" ? "flex-row-reverse" : "flex-row"} pb-1 space-x-2`}>
         <div className="text-xs text-gray-600">{teller}</div>
-        <div className="text-xs text-gray-500">{format(time, "HH:mm:ss")}</div>
+        <div className="pr-2 text-xs text-gray-500">{format(time, "HH:mm:ss")}</div>
       </div>
       <div
         className={
