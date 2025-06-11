@@ -1,6 +1,6 @@
 "use client"
 
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { ChartOptions, ChartData } from "chart.js/auto";
 import {
   Chart as ChartJS,
@@ -24,6 +24,11 @@ function RadarChart() {
     Tooltip,
     Legend
   );
+  const [dpr, setDpr] = useState<number>();
+
+  useEffect(() => {
+    setDpr(window.devicePixelRatio);
+  },[]);
   
   const labels = ['월정액', '혜택', '문자', '음성통화', '데이터'];
 
@@ -64,7 +69,7 @@ function RadarChart() {
   const options: ChartOptions<'radar'> = {
     responsive: true, // 부모 넓이 따라감
     maintainAspectRatio: false, // 부모의 가로세로 비율 따라감
-    devicePixelRatio: 1, //DPR 대응 끄기
+    devicePixelRatio: dpr, // 화질 개선
     plugins: {
       title: {
         display: false
