@@ -1,7 +1,7 @@
-import CompareModeToggle from "./main-page/recommanded-list/CompareModeToggle";
-import LikedPlansList from "./main-page/recommanded-list/LikedPlansList";
-import RecommendedPlanList from "./main-page/recommanded-list/RecommendedPlanList";
-import SelectedPlanViewer from "./main-page/recommanded-list/SelectedPlanViewer";
+import CompareModeToggle from "./recommanded-list/CompareModeToggle";
+import LikedPlansList from "./recommanded-list/LikedPlansList";
+import RecommendedPlanList from "./recommanded-list/RecommendedPlanList";
+import SelectedPlanViewer from "./recommanded-list/SelectedPlanViewer";
 
 export default function MainPage() {
   return (

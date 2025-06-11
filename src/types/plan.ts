@@ -6,3 +6,16 @@ export interface Plan {
   discountedPrice?: number;
   onRemove?: () => void;
 }
+
+export interface MyPlan {
+  id: string;
+  name: string;
+  price: string;
+  call: string;
+  sms: string;
+  tech: string;
+  data: string;
+  speed: string;
+  extraCall: string;
+  numberChangeFee: string;
+}
