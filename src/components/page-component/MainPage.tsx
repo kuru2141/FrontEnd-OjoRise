@@ -13,7 +13,7 @@ export default function MainPage() {
         <RecommendedPlanList />
         <LikedPlansList />
         <SelectedPlanViewer />
-        <div style={{width: '569px', height: '406.5px'}}>
+        <div className="w-full h-[432px]">
           <CompareChart />
         </div>
       </section>
