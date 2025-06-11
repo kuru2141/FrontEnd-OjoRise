@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ProviderWrapper from "@/components/common/ProviderWrapper";
+import ProviderWrapper from "@/components/common/wrapper/ProviderWrapper";
 import "react-toastify/dist/ReactToastify.css";
-import ClientLayoutWrapper from "@/components/common/ClientLayoutWrapper";
-import localFont from 'next/font/local';
+import localFont from "next/font/local";
+import ClientLayoutWrapper from "@/components/common/wrapper/ClientLayoutWrapper";
 
 const pretendard = localFont({
   src: "../fonts/pretendard/PretendardVariable.woff2",

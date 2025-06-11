@@ -1,6 +1,6 @@
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
-import PlanBox from "@/components/page-component/Plan/PlanBox";
+import PlanBox from "@/components/page-component/main-page/plan/PlanBox";
 
 export default function Home() {
   return (

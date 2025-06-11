@@ -11,9 +11,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
-import {Plan} from '@/type/Plan';
+import {MyPlan} from "@/types/plan";
 
-const mockPlans : Plan[] = [
+const mockPlans : MyPlan[] = [
     {
         id: 'plan_1',
         name: '유쓰 5G 데이터 플러스',
@@ -54,7 +54,7 @@ const mockPlans : Plan[] = [
 
 export default function GuestPlanSelector() {
     const [open, setOpen] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+    const [selectedPlan, setSelectedPlan] = useState<MyPlan | null>(null);
 
     return (
         <div className="relative w-[758px] h-[371px] bg-[#FAFAFA] rounded-xl shadow">
@@ -153,17 +153,17 @@ export default function GuestPlanSelector() {
             >
                 <div className="text-gray-500">데이터 제공량</div>
                 <div className="text-[#EF3E7D]">
-                    {selectedPlan ? selectedPlan.data : <Skeleton className="w-32 h-4" />}
+                    {selectedPlan ? selectedPlan.data : <Skeleton className="w-20 h-4" />}
                 </div>
 
                 <div className="text-gray-500">부가 통화</div>
                 <div className="text-[#EF3E7D]">
-                    {selectedPlan ? selectedPlan.extraCall : <Skeleton className="w-24 h-4" />}
+                    {selectedPlan ? selectedPlan.extraCall : <Skeleton className="w-20 h-4" />}
                 </div>
 
                 <div className="text-gray-500">데이터 소진시</div>
                 <div className="text-[#EF3E7D]">
-                    {selectedPlan ? selectedPlan.speed : <Skeleton className="w-32 h-4" />}
+                    {selectedPlan ? selectedPlan.speed : <Skeleton className="w-20 h-4" />}
                 </div>
 
                 <div className="text-gray-500">번호이동 수수료</div>
