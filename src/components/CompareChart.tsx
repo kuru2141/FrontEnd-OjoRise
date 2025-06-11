@@ -10,6 +10,7 @@ import {
   Filler,
   Tooltip,
   Legend,
+  Chart,
 } from 'chart.js';
 import { Radar } from "react-chartjs-2";
 
@@ -24,7 +25,7 @@ function CompareChart() {
     Legend
   );
   
-  const labels = ['월정액', '데이터', '음성통화', '문자', '혜택'];
+  const labels = ['월정액', '혜택', '문자', '음성통화', '데이터'];
 
   const data: ChartData<'radar'> = {
     labels,
@@ -44,15 +45,32 @@ function CompareChart() {
     ]
   };
 
+  const legendPositionPlugin = {
+    id: 'legendPositionPlugin',
+    afterLayout(chart: Chart<'radar', number[], string>) {
+      const scale = chart.scales.r as unknown as {
+        yCenter: number;
+        drawingArea: number;
+        getPointPosition: (index: number, distance: number) => { x: number; y: number };
+      };
+
+      if (chart.legend) {
+        chart.legend.left = chart.width - chart.legend.width - 84;
+        chart.legend.top = scale.getPointPosition(2, scale.drawingArea).y - 14 - 52;
+      } 
+    }
+  };
+
   const options: ChartOptions<'radar'> = {
     responsive: true, // 부모 넓이 따라감
     maintainAspectRatio: false, // 부모의 가로세로 비율 따라감
+    devicePixelRatio: 1, //DPR 대응 끄기
     plugins: {
       title: {
         display: false
       },
       legend: {
-        position: 'right',
+        position: 'chartArea',
         labels: {
           font: {
             family: 'Pretendard',
@@ -73,6 +91,9 @@ function CompareChart() {
         }
       }
     },
+    layout: {
+      padding: 0
+    },
     elements: {
       line: {
         borderWidth: 1
@@ -85,15 +106,17 @@ function CompareChart() {
       r: {
         backgroundColor: 'white',
         pointLabels: {
+          padding: 5,
           font: {
             family: 'Pretendard',
             weight: 'bold',
-            size: 18
+            size: 18,
           },
           color: '#222022',
         },
         ticks: {
-          display: false
+          stepSize: 20,
+          display: false,
         },
         beginAtZero: true,
         max: 100
@@ -104,7 +127,7 @@ function CompareChart() {
     },
   }
   return (
-    <Radar options={options} data={data}/>
+    <Radar options={options} data={data} plugins={[legendPositionPlugin]}/>
   )
 }
 
