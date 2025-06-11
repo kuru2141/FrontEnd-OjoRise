@@ -125,7 +125,7 @@ function TableBox() {
     <>
     <table className="w-full h-[60px] table-fixed text-center">
     <thead>
-      <tr>
+      <tr className="font-pretendard font-bold text-lg">
         <th>기준 요금제</th>
         <th></th>
         <th>비교 요금제</th>
@@ -139,10 +139,10 @@ function TableBox() {
               <React.Fragment key={idx}>
                 <tr className="bg-[#EAEAEA] h-[60px]">
                   <td></td>
-                  <td>{item.label}</td>
+                  <td className="font-pretendard font-bold text-lg">{item.label}</td>
                   <td></td>
                 </tr>
-                <tr className="bg-white">
+                <tr className="bg-white font-pretendard text-lg">
                   <td className={item.label === '혜택' ? "py-[40px]" : "py-[20px]"}>{item.base}</td>
                   <td className={item.label === '혜택' ? "py-[40px] border-[#EAEAEA] border-x-[1px]" : "py-[20px] border-[#EAEAEA] border-x-[1px]"}>{item.result}</td>
                   <td className={item.label === '혜택' ? "py-[40px]" : "py-[20px]"}>{item.compare}</td>
