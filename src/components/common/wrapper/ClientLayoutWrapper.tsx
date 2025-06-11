@@ -3,13 +3,12 @@
 import { Fragment } from "react";
 import AppHeader from "@/components/common/AppHeader";
 import { ToastContainer } from "react-toastify";
-import LinearProgress from "@/components/common/LinearProgress";
+import LinearProgress from "@/components/common/progress/LinearProgress";
 import FloatingActionButton from "@/components/common/FloatingActionButton";
-import LoadingProgressCircle from "@/components/common/LoadingProgressCircle";
-import ChatBotModal from "../ChatBotModal";
+import LoadingProgressCircle from "@/components/common/progress/LoadingProgressCircle";
+import ChatBotModal from "../chatbot/ChatBotModal";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
-
   return (
     <Fragment>
       <AppHeader />

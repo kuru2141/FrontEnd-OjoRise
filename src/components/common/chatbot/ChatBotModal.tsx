@@ -1,25 +1,16 @@
 "use client";
 
 import { Send, X } from "lucide-react";
-import { Button } from "./ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "./ui/drawer";
-import { Input } from "./ui/input";
 import { KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
-import { ScrollArea } from "./ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 import { useProgressing } from "@/stores/progressStore";
-import LoadingLine from "./common/LoadingLine";
 import { throttle } from "lodash";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import LoadingLine from "../progress/LoadingLine";
+import { Input } from "@/components/ui/input";
 
 interface DialogItem {
   teller: "user" | "chatbot";
