@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { StepItem } from "../../common/StepItem";
-import { DateInput } from "../../common/DateInput";
-import { SelectCarrier } from "../../common/SelectCarrier";
-import { PlanCombo } from "../main-page/plan/PlanCombo";
-import { ContractRadioGroup } from "../../common/ContractRadioGroup";
-import { FamilyPlanRadioGroup } from "../../common/FamilyPlanRadioGroup";
+import { StepItem } from "../StepItem";
+import { DateInput } from "./DateInput";
+import { SelectCarrier } from "./SelectCarrier";
+import { PlanCombo } from "./PlanCombo";
+import { ContractRadioGroup } from "./ContractRadioGroup";
+import { FamilyPlanRadioGroup } from "./FamilyPlanRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
 
 export default function VerticalLinearStepper() {
