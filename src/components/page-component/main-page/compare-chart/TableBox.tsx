@@ -29,7 +29,7 @@ function TableBox() {
     present: '혜택',
   };
 
-  const itemList = Object.keys(labelList).map((key) => {    
+  const itemList = Object.keys(labelList).map((key) => {
     const label = labelList[key as keyof typeof labelList];
     const base = baseItem[key as keyof typeof baseItem];
     const compare = compareItem[key as keyof typeof compareItem];
@@ -39,12 +39,21 @@ function TableBox() {
     if (key === 'voiceCallPrice') unit = '원(1초 당)';
 
     //표현 
-    const getDisplayValue = (value: string | number): string => {
+    const getDisplayValue = (value: string | number) : string | JSX.Element => {
       if ((key === 'baseDataGb' || key === 'voiceCallPrice') && value === 1000) {
         return '무제한';
       }
       if (key === 'smsIncluded') {
         return value === 1 ? '기본 제공' : '문자 제한';
+      }
+      if (key === 'present') {
+        const arr: string[] = [];
+        arr.push(...String(value).split(","));
+        return (<div className="w-full">
+          {arr.map((item, idx) => (
+            <p key={idx}>{item}</p>
+          ))}
+        </div>);
       }
       if (typeof value === 'number') {
         return value.toLocaleString() + unit;
@@ -72,19 +81,19 @@ function TableBox() {
     if (base === compare) {
       result = <p>-</p>;
     } else if (key === 'monthlyFee') {
-      result = getDiffValue(Number(base), Number(compare))  
+      result = getDiffValue(Number(base), Number(compare));
     } else if (key === 'baseDataGb' || key === 'voiceCallPrice') {
       if (base === 1000) {
-        result = (key === 'baseDataGb') ? <p>무제한 → {compare}GB</p> : <p>무제한 → 1초 당 {compare}원</p> 
+        result = (key === 'baseDataGb') ? <p>무제한 → {compare}GB</p> : <p>무제한 → 1초 당 {compare}원</p>;
       }
       else if (compare === 1000) {
-        result = (key === 'baseDataGb') ? <p>{base}GB → 무제한</p> : <p>1초 당 {base}원 → 무제한</p>
+        result = (key === 'baseDataGb') ? <p>{base}GB → 무제한</p> : <p>1초 당 {base}원 → 무제한</p>;
       }
       else {
-        result = getDiffValue(Number(base), Number(compare))
+        result = getDiffValue(Number(base), Number(compare));
       }
     } else if (key === 'smsIncluded') {
-      result = (compare === 1) ? <p>기본 제공</p> : <p>문자 건수 제한</p>
+      result = (compare === 1) ? <p>기본 제공</p> : <p>문자 건수 제한</p>;
     } else if (key === 'present') {
       const baseArr: string[] = [];
       const compareArr: string[] = [];
