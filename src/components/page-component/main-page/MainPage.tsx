@@ -1,3 +1,5 @@
+import RadarChart from "./compare-chart/RadarChart";
+import TableBox from "./compare-chart/TableBox";
 import CompareModeToggle from "./recommanded-list/CompareModeToggle";
 import LikedPlansList from "./recommanded-list/LikedPlansList";
 import RecommendedPlanList from "./recommanded-list/RecommendedPlanList";
@@ -12,6 +14,10 @@ export default function MainPage() {
         <RecommendedPlanList />
         <LikedPlansList />
         <SelectedPlanViewer />
+        <div className='w-full h-[432px]'>
+          <RadarChart />
+        </div>
+        <TableBox/>
       </section>
     </main>
   );
