@@ -32,12 +32,12 @@ export function PlanCombo() {
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === data.plan ? "" : currentValue;
-    setField("plan", newValue);
+    const newValue = currentValue === data.planName ? "" : currentValue;
+    setField("planName", newValue);
     setOpen(false);
   };
 
-  const selectedLabel = frameworks.find((f) => f.value === data.plan)?.label;
+  const selectedLabel = frameworks.find((f) => f.value === data.planName)?.label;
 
   return (
     <div>
@@ -50,7 +50,7 @@ export function PlanCombo() {
             aria-expanded={open}
             className="w-[260px] h-[50px] justify-between text-[16px]"
           >
-            <span className={data.plan ? "text-black" : "text-gray-60"}>
+            <span className={data.planName ? "text-black" : "text-gray-60"}>
               {selectedLabel || "요금제를 선택해 주세요."}
             </span>
             <ChevronsUpDown className="opacity-50" />
@@ -76,7 +76,7 @@ export function PlanCombo() {
                     <Check
                       className={cn(
                         "ml-auto",
-                        data.plan === framework.value ? "opacity-100" : "opacity-0"
+                        data.planName === framework.value ? "opacity-100" : "opacity-0"
                       )}
                     />
                   </CommandItem>

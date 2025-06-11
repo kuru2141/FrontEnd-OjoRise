@@ -18,11 +18,11 @@ export default function VerticalLinearStepper() {
       case 0:
         return !data.birthDate;
       case 1:
-        return !(data.carrier && data.plan);
+        return !(data.telecomProvider && data.planName);
       case 2:
-        return !data.contract;
+        return !data.contractTerm;
       case 3:
-        return !data.familyPlan;
+        return !data.familyBundle;
       default:
         return true;
     }

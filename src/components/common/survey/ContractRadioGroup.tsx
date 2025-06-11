@@ -5,7 +5,10 @@ import { useSurveyStore } from "@/stores/surveyStore";
 export function ContractRadioGroup() {
   const { data, setField } = useSurveyStore();
   return (
-    <RadioGroup value={data.contract} onValueChange={(value) => setField("contract", value)}>
+    <RadioGroup
+      value={data.contractTerm}
+      onValueChange={(value) => setField("contractTerm", value)}
+    >
       <div className="flex items-center gap-3">
         <RadioGroupItem value="no_contract" id="r1" />
         <Label htmlFor="r1" className="text-[18px]">

@@ -5,7 +5,10 @@ import { useSurveyStore } from "@/stores/surveyStore";
 export function FamilyPlanRadioGroup() {
   const { data, setField } = useSurveyStore();
   return (
-    <RadioGroup value={data.familyPlan} onValueChange={(value) => setField("familyPlan", value)}>
+    <RadioGroup
+      value={data.familyBundle}
+      onValueChange={(value) => setField("familyBundle", value)}
+    >
       <div className="flex items-center gap-3">
         <RadioGroupItem value="no_family_bundle" id="r1" />
         <Label htmlFor="r1" className="text-[18px]">
