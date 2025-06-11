@@ -153,17 +153,17 @@ export default function GuestPlanSelector() {
             >
                 <div className="text-gray-500">데이터 제공량</div>
                 <div className="text-[#EF3E7D]">
-                    {selectedPlan ? selectedPlan.data : <Skeleton className="w-32 h-4" />}
+                    {selectedPlan ? selectedPlan.data : <Skeleton className="w-20 h-4" />}
                 </div>
 
                 <div className="text-gray-500">부가 통화</div>
                 <div className="text-[#EF3E7D]">
-                    {selectedPlan ? selectedPlan.extraCall : <Skeleton className="w-24 h-4" />}
+                    {selectedPlan ? selectedPlan.extraCall : <Skeleton className="w-20 h-4" />}
                 </div>
 
                 <div className="text-gray-500">데이터 소진시</div>
                 <div className="text-[#EF3E7D]">
-                    {selectedPlan ? selectedPlan.speed : <Skeleton className="w-32 h-4" />}
+                    {selectedPlan ? selectedPlan.speed : <Skeleton className="w-20 h-4" />}
                 </div>
 
                 <div className="text-gray-500">번호이동 수수료</div>
