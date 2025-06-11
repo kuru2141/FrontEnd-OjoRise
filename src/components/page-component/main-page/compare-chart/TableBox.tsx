@@ -15,7 +15,7 @@ function TableBox() {
     name: '유쓰 5G 데이터 플러스2',
     monthlyFee: 65000,
     baseDataGb: 1000,
-    voiceCallPrice: 300,
+    voiceCallPrice: 500,
     smsIncluded: 1,
     present: '네이버 페이 매월 20000원 제공'
   }
@@ -113,31 +113,37 @@ function TableBox() {
   })
 
   return (
-    <table className="w-full table-fixed text-center">
-      <thead>
-        <tr>
-          <th>기준 요금제</th>
-          <th></th>
-          <th>비교 요금제</th>
-        </tr>
+    <>
+    <table className="w-full h-[60px] table-fixed text-center">
+    <thead>
+      <tr>
+        <th>기준 요금제</th>
+        <th></th>
+        <th>비교 요금제</th>
+      </tr>
       </thead>
-      <tbody>
-        {itemList.map((item, idx) => (
-          <React.Fragment key={idx}>
-            <tr>
-              <td></td>
-              <td>{item.label}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>{item.base}</td>
-              <td>{item.result}</td>
-              <td>{item.compare}</td>
-            </tr>
-          </React.Fragment>
-        ))}
-      </tbody>
-    </table>
+      </table>
+      <div className="rounded-[20px] overflow-hidden border-[#EAEAEA] border-[1px]">
+        <table className="w-full table-fixed text-center rounded-[20px] overflow-hidden border-collapse">
+          <tbody>
+            {itemList.map((item, idx) => (
+              <React.Fragment key={idx}>
+                <tr className="bg-[#EAEAEA] h-[60px]">
+                  <td></td>
+                  <td>{item.label}</td>
+                  <td></td>
+                </tr>
+                <tr className="bg-white">
+                  <td className={item.label === '혜택' ? "py-[40px]" : "py-[20px]"}>{item.base}</td>
+                  <td className={item.label === '혜택' ? "py-[40px] border-[#EAEAEA] border-x-[1px]" : "py-[20px] border-[#EAEAEA] border-x-[1px]"}>{item.result}</td>
+                  <td className={item.label === '혜택' ? "py-[40px]" : "py-[20px]"}>{item.compare}</td>
+                </tr>
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   )
 }
 
