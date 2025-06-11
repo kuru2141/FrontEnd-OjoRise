@@ -15,7 +15,7 @@ import {
 import { Radar } from "react-chartjs-2";
 
 
-function CompareChart() {
+function RadarChart() {
   ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -131,4 +131,4 @@ function CompareChart() {
   )
 }
 
-export default memo(CompareChart);
+export default memo(RadarChart);
