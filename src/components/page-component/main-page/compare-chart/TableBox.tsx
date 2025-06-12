@@ -1,3 +1,4 @@
+import { presentParsing } from "@/utils/presentParsing";
 import Image from "next/image";
 import React, { JSX, memo } from "react";
 
@@ -7,7 +8,7 @@ function TableBox() {
     monthlyFee: 75000,
     baseDataGb: -1,
     voiceCallPrice: 400,
-    smsIncluded: '기본 제공',
+    sms: '기본 제공',
     present: '넷플릭스/티빙/웨이브 택 1,네이버 페이 매월 20000원 제공'
   }
 
@@ -16,7 +17,7 @@ function TableBox() {
     monthlyFee: 65000,
     baseDataGb: 100,
     voiceCallPrice: 500,
-    smsIncluded: '기본 제공',
+    sms: '기본 제공',
     present: '네이버 페이 매월 20000원 제공'
   }
   
@@ -25,7 +26,7 @@ function TableBox() {
     monthlyFee: '월정액',
     baseDataGb: '데이터',
     voiceCallPrice: '음성통화',
-    smsIncluded: '문자',
+    sms: '문자',
     present: '혜택',
   };
 
@@ -38,14 +39,13 @@ function TableBox() {
     if (key === 'baseDataGb') unit = 'Gb';
     if (key === 'voiceCallPrice') unit = '원(1초 당)';
 
-    //표현 
+    //일괄적으로 쓰는 표현 함수
     const getDisplayValue = (value: string | number) : string | JSX.Element => {
       if ((key === 'baseDataGb' || key === 'voiceCallPrice') && value === -1) {
         return '무제한';
       }
       if (key === 'present') {
-        const arr: string[] = [];
-        arr.push(...String(value).split(","));
+        const arr = presentParsing(String(value));
         return (<div className="w-full">
           {arr.map((item, idx) => (
             <p key={idx}>{item}</p>
@@ -58,7 +58,7 @@ function TableBox() {
       return String(value);
     };
     
-    //숫자 비교 표현
+    //base, compare 값이 number일 때, 비교하는 함수
     const getDiffValue = (base: number, compare: number): JSX.Element => {
       const isCompare = compare > base;
       const icon = isCompare ? "/increase.svg" : "/decrease.svg";
@@ -73,7 +73,7 @@ function TableBox() {
       return result;
     }
 
-    //비교 결과
+    //compare result 함수
     let result:JSX.Element;
     if (base === compare) {
       result = <p>-</p>;
@@ -89,13 +89,11 @@ function TableBox() {
       else {
         result = getDiffValue(Number(base), Number(compare));
       }
-    } else if (key === 'smsIncluded') {
+    } else if (key === 'sms') {
       result = <p>{base} → {compare}</p>;
     } else if (key === 'present') {
-      const baseArr: string[] = [];
-      const compareArr: string[] = [];
-      baseArr.push(...String(base).split(','));
-      compareArr.push(...String(compare).split(','));
+      const baseArr = presentParsing(String(base));
+      const compareArr = presentParsing(String(compare));
 
       result =
         <div>
