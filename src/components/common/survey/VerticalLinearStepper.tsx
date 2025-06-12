@@ -41,8 +41,12 @@ export default function VerticalLinearStepper() {
       component: (
         <>
           <SelectCarrier />
-          <div className="flex gap-2 mt-4" />
-          <PlanCombo />
+          {data.telecomProvider && (
+            <>
+              <div className="flex gap-2 mt-4" />
+              <PlanCombo />
+            </>
+          )}
         </>
       ),
     },

@@ -16,19 +16,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSurveyStore } from "@/stores/surveyStore";
 
-const frameworks = [
-  {
-    value: "너겟26",
-    label: "너겟 26",
-  },
-  {
-    value: "너겟36",
-    label: "너겟 36",
-  },
-];
-
 export function PlanCombo() {
-  const { data, setField } = useSurveyStore();
+  const { data, planList, setField } = useSurveyStore();
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (currentValue: string) => {
@@ -37,7 +26,7 @@ export function PlanCombo() {
     setOpen(false);
   };
 
-  const selectedLabel = frameworks.find((f) => f.value === data.planName)?.label;
+  const selectedLabel = planList.find((p) => p.value === data.planName)?.label;
 
   return (
     <div>
@@ -58,25 +47,22 @@ export function PlanCombo() {
         </PopoverTrigger>
         <PopoverContent className="w-[260px] p-0">
           <Command>
-            <CommandInput
-              placeholder="요금제를 선택해 주세요."
-              className="text-[15px] placeholder:text-gray-60"
-            />
+            <CommandInput placeholder="요금제를 선택해 주세요." className="text-[15px]" />
             <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandEmpty>해당 요금제가 없습니다.</CommandEmpty>
               <CommandGroup>
-                {frameworks.map((framework) => (
+                {planList.map((plan) => (
                   <CommandItem
-                    key={framework.value}
-                    value={framework.value}
+                    key={plan.value}
+                    value={plan.value}
                     onSelect={handleSelect}
                     className="text-[15px] py-2"
                   >
-                    {framework.label}
+                    {plan.label}
                     <Check
                       className={cn(
                         "ml-auto",
-                        data.planName === framework.value ? "opacity-100" : "opacity-0"
+                        data.planName === plan.value ? "opacity-100" : "opacity-0"
                       )}
                     />
                   </CommandItem>
