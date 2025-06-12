@@ -1,25 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useProgressing } from "@/stores/progressStore";
 
 type Props = {
     isOpen: boolean;
-    toggleMenu: () => void;
+    toggleMenuAction: () => void;
 };
 
-export default function HamburgerIcon({ isOpen, toggleMenu }: Props) {
-    const { setIsLoading } = useProgressing();
+export default function HamburgerIcon({ isOpen, toggleMenuAction }: Props) {
 
-    // 로딩 상태 업데이트
     const handleClick = () => {
-        toggleMenu();
-        setIsLoading(isOpen);
+        toggleMenuAction();
     };
 
     return (
         <button
-            className="xl:hidden fixed top-4 right-4 w-10 h-10 flex items-center justify-center group p-2 hover:cursor-pointer z-55"
+            className="w-10 h-10 flex items-center justify-center group p-2 hover:cursor-pointer z-50"
             onClick={handleClick}
             aria-label="Toggle menu"
         >
