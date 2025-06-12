@@ -56,7 +56,7 @@ export default function VerticalLinearStepper() {
         component: <PlanPrice />,
       },
       {
-        label: "가족 결합을 하고 있거나 할 예정인가요?",
+        label: "새로운 요금제 가입 시 가족 결합을 할 예정인가요?",
         component: <FamilyBundleGroup />,
       },
       {
