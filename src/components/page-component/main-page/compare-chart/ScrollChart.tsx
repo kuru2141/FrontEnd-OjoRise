@@ -27,9 +27,7 @@ function ScrollChart() {
   
   return (
     <div ref={scrollRef} className="flex flex-col g-[45px] w-full" >
-      <div className="h-[432px]" >
-        <RadarChart />
-      </div>
+      <RadarChart />
       <TableBox />
   </div>
   )

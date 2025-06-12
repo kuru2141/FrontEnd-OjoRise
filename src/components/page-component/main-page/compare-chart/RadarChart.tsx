@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { ChartOptions, ChartData } from "chart.js/auto";
 import {
   Chart as ChartJS,
@@ -131,8 +131,38 @@ function RadarChart() {
       duration: 250
     },
   }
+
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [chartKey, setChartKey] = useState(0);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setChartKey((prev) => prev + 1);
+        }
+      },
+      {
+        threshold: 1, 
+      }
+    );
+
+    if (chartRef.current) {
+      observer.observe(chartRef.current);
+    }
+
+    return () => {
+      if (chartRef.current) {
+        observer.unobserve(chartRef.current);
+      }
+    };
+
+  }, []);
+
   return (
-    <Radar options={options} data={data} plugins={[legendPositionPlugin]}/>
+    <div ref={chartRef} className="h-[432px]">
+      <Radar key={chartKey} options={options} data={data} plugins={[legendPositionPlugin]} />
+    </div>
   )
 }
 
