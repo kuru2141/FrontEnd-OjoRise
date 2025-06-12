@@ -1,5 +1,4 @@
-import RadarChart from "./compare-chart/RadarChart";
-import TableBox from "./compare-chart/TableBox";
+import ScrollChart from "./compare-chart/ScrollChart";
 import CompareModeToggle from "./recommanded-list/CompareModeToggle";
 import LikedPlansList from "./recommanded-list/LikedPlansList";
 import RecommendedPlanList from "./recommanded-list/RecommendedPlanList";
@@ -14,12 +13,7 @@ export default function MainPage() {
         <RecommendedPlanList />
         <LikedPlansList />
         <SelectedPlanViewer />
-        <div className="flex flex-col g-[45px] w-full">
-          <div className="h-[432px]">
-            <RadarChart />
-          </div>
-          <TableBox/>
-        </div>
+        <ScrollChart/>
       </section>
     </main>
   );
