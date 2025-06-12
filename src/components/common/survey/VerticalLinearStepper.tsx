@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { StepItem } from "../StepItem";
+import { StepItem } from "./StepItem";
 import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
 import { PlanCombo } from "./PlanCombo";
