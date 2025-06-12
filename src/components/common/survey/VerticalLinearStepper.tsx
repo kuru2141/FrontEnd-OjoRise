@@ -5,9 +5,10 @@ import { StepItem } from "../StepItem";
 import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
 import { PlanCombo } from "./PlanCombo";
-import { ContractRadioGroup } from "./ContractRadioGroup";
-import { FamilyPlanRadioGroup } from "./FamilyPlanRadioGroup";
+import { FamilyBundleGroup } from "./FamilyBundleGroup";
+import { FamilyNumRadioGroup } from "./FamilyNumRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
+import { PlanPrice } from "./PlanPrice";
 
 export default function VerticalLinearStepper() {
   const { data } = useSurveyStore();
@@ -20,9 +21,11 @@ export default function VerticalLinearStepper() {
       case 1:
         return !(data.telecomProvider && data.planName);
       case 2:
-        return !data.contractTerm;
+        return !data.planPrice;
       case 3:
         return !data.familyBundle;
+      case 4:
+        return !data.familyNum;
       default:
         return true;
     }
@@ -51,12 +54,16 @@ export default function VerticalLinearStepper() {
       ),
     },
     {
-      label: "통신사 약정이 얼마나 남아있나요?",
-      component: <ContractRadioGroup />,
+      label: "현재 사용 중인 요금제의 금액을 알려주세요.",
+      component: <PlanPrice />,
     },
     {
-      label: "가족 결합을 하고 있거나 할 예정이신가요?",
-      component: <FamilyPlanRadioGroup />,
+      label: "가족 결합을 하고 있거나 할 예정인가요?",
+      component: <FamilyBundleGroup />,
+    },
+    {
+      label: "가족 결합으로 몇 대의 휴대폰을 함께 등록하실 예정인가요?",
+      component: <FamilyNumRadioGroup />,
     },
   ];
 

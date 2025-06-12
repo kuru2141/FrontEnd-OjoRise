@@ -4,8 +4,9 @@ interface SurveyData {
   birthDate: string;
   telecomProvider: string;
   planName: string;
-  contractTerm: string;
+  planPrice: string;
   familyBundle: string;
+  familyNum: string;
 }
 
 interface PlanOption {
@@ -26,8 +27,9 @@ export const useSurveyStore = create<SurveyStore>((set) => ({
     birthDate: "",
     telecomProvider: "",
     planName: "",
-    contractTerm: "",
+    planPrice: "",
     familyBundle: "",
+    familyNum: "",
   },
   planList: [],
   setField: (key, value) =>
@@ -47,8 +49,9 @@ export const useSurveyStore = create<SurveyStore>((set) => ({
         birthDate: "",
         telecomProvider: "",
         planName: "",
-        contractTerm: "",
+        planPrice: "",
         familyBundle: "",
+        familyNum: "",
       },
       planList: [],
     }),
