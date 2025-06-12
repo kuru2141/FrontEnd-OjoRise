@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 
-export async function IsSurvey() {
+export async function patchIsSurvey() {
   try {
     const response = await axios.patch("/auth/survey/complete");
     return response.data;

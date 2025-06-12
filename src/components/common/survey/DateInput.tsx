@@ -13,15 +13,15 @@ export function DateInput() {
 
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(
-    data.birthDate ? new Date(data.birthDate.replace(/\./g, "-")) : undefined
+    data.birthdate ? new Date(data.birthdate.replace(/\./g, "-")) : undefined
   );
   const [month, setMonth] = React.useState<Date | undefined>(date);
-  const [value, setValue] = React.useState(data.birthDate);
+  const [value, setValue] = React.useState(data.birthdate);
 
   // 날짜 문자열을 상태와 전역 스토어에 동기화하는 함수
   const handleChange = (formatted: string) => {
     setValue(formatted);
-    setField("birthDate", formatted);
+    setField("birthdate", formatted);
   };
 
   // 사용자가 직접 입력한 생년월일 값을 처리하는 함수
@@ -37,7 +37,7 @@ export function DateInput() {
         handleChange(formatDisplay(parsed));
       }
     } else {
-      setField("birthDate", formatted);
+      setField("birthdate", formatted);
     }
   };
 

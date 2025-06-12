@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
-interface SurveyData {
-  birthDate: string;
+export interface SurveyData {
+  birthdate: string;
   telecomProvider: string;
   planName: string;
-  planPrice: string;
-  familyBundle: string;
+  planPrice: number;
+  familyBundle: "" | "yes" | "no";
   familyNum: string;
 }
 
-interface PlanOption {
+export interface PlanOption {
   value: string;
   label: string;
 }
@@ -17,28 +17,34 @@ interface PlanOption {
 interface SurveyStore {
   data: SurveyData;
   planList: PlanOption[];
-  setField: (key: keyof SurveyData, value: string) => void;
+  setField: <K extends keyof SurveyData>(key: K, value: SurveyData[K]) => void;
   setPlanList: (plans: PlanOption[]) => void;
   reset: () => void;
 }
 
 export const useSurveyStore = create<SurveyStore>((set) => ({
   data: {
-    birthDate: "",
+    birthdate: "",
     telecomProvider: "",
     planName: "",
-    planPrice: "",
+    planPrice: 0,
     familyBundle: "",
     familyNum: "",
   },
   planList: [],
   setField: (key, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        [key]: value,
-      },
-    })),
+    set((state) => {
+      if (!(key in state.data)) {
+        console.warn(`잘못된 필드명: ${key}`);
+        return state;
+      }
+      return {
+        data: {
+          ...state.data,
+          [key]: value,
+        },
+      };
+    }),
   setPlanList: (plans) =>
     set(() => ({
       planList: plans,
@@ -46,10 +52,10 @@ export const useSurveyStore = create<SurveyStore>((set) => ({
   reset: () =>
     set({
       data: {
-        birthDate: "",
+        birthdate: "",
         telecomProvider: "",
         planName: "",
-        planPrice: "",
+        planPrice: 0,
         familyBundle: "",
         familyNum: "",
       },

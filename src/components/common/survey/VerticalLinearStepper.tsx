@@ -16,7 +16,7 @@ export default function VerticalLinearStepper() {
   const [step, setStep] = useState(0);
 
   const validationSteps = [
-    () => isValidDate(data.birthDate),
+    () => isValidDate(data.birthdate),
     () => !!(data.telecomProvider && data.planName),
     () => !!data.planPrice,
     () => !!data.familyBundle,

@@ -1,6 +1,8 @@
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
-import { IsSurvey } from "@/services/isSurvey";
+import { patchIsSurvey } from "@/services/patchIsSurvey";
+import { postSurvey } from "@/services/postSurvey";
+import { useSurveyStore } from "@/stores/surveyStore";
 import { useRouter } from "next/navigation";
 
 interface StepItemProps {
@@ -28,13 +30,23 @@ export const StepItem = ({
   children,
   isNextDisabled,
 }: StepItemProps) => {
+  const { data } = useSurveyStore();
   const router = useRouter();
 
   const handleNext = async () => {
     if (isLast) {
       try {
-        const res = await IsSurvey();
-        console.log("설문 완료 응답:", res);
+        const payload = {
+          birthdate: data.birthdate.replace(/\./g, "-"),
+          telecomProvider: data.telecomProvider,
+          planName: data.planName,
+          planPrice: Number(data.planPrice),
+          familyBundle: data.familyBundle === "yes" ? "할 예정이에요" : "안 할 예정이에요",
+          familyNum: data.familyNum,
+        };
+        await postSurvey(payload);
+        await patchIsSurvey();
+
         router.push("/main-page");
       } catch (err) {
         console.error("설문 완료 실패:", err);
