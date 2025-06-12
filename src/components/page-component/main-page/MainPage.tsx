@@ -1,3 +1,4 @@
+import ScrollChart from "./compare-chart/ScrollChart";
 import CompareModeToggle from "./recommanded-list/CompareModeToggle";
 import LikedPlansList from "./recommanded-list/LikedPlansList";
 import RecommendedPlanList from "./recommanded-list/RecommendedPlanList";
@@ -12,6 +13,7 @@ export default function MainPage() {
         <RecommendedPlanList />
         <LikedPlansList />
         <SelectedPlanViewer />
+        <ScrollChart/>
       </section>
     </main>
   );
