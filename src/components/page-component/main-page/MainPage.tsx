@@ -14,10 +14,12 @@ export default function MainPage() {
         <RecommendedPlanList />
         <LikedPlansList />
         <SelectedPlanViewer />
-        <div className='w-full h-[432px]'>
-          <RadarChart />
+        <div className="flex flex-col g-[45px] w-full">
+          <div className="h-[432px]">
+            <RadarChart />
+          </div>
+          <TableBox/>
         </div>
-        <TableBox/>
       </section>
     </main>
   );

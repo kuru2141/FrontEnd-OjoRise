@@ -85,7 +85,7 @@ function RadarChart() {
           pointStyle: 'circle',
           boxWidth: 10,
           boxHeight: 10,
-          color: '#222022',
+          color: 'var(--color-gray-100)',
           generateLabels: (chart) => {
             return [...chart.data.datasets].reverse().map((dataset, i) => ({
               text: dataset.label ?? '',
@@ -117,7 +117,7 @@ function RadarChart() {
             weight: 'bold',
             size: 18,
           },
-          color: '#222022',
+          color: 'var(--color-gray-100)',
         },
         ticks: {
           stepSize: 20,
