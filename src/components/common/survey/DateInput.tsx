@@ -6,30 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSurveyStore } from "@/stores/surveyStore";
-
-function formatDisplay(date: Date | undefined): string {
-  if (!date) return "";
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}.${m}.${d}`;
-}
-
-function parseDateFromString(value: string): Date | undefined {
-  const parts = value.split(".");
-  if (parts.length !== 3) return undefined;
-  const [y, m, d] = parts.map(Number);
-  const date = new Date(`${y}-${m}-${d}`);
-  return isNaN(date.getTime()) ? undefined : date;
-}
-
-function formatWithDots(raw: string): string {
-  const digits = raw.replace(/\D/g, "");
-
-  if (digits.length <= 4) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 4)}.${digits.slice(4)}`;
-  return `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6, 8)}`;
-}
+import { formatDisplay, formatWithDots, parseDateFromString } from "@/utils/date";
 
 export function DateInput() {
   const { data, setField } = useSurveyStore();
@@ -41,9 +18,38 @@ export function DateInput() {
   const [month, setMonth] = React.useState<Date | undefined>(date);
   const [value, setValue] = React.useState(data.birthDate);
 
+  // 날짜 문자열을 상태와 전역 스토어에 동기화하는 함수
   const handleChange = (formatted: string) => {
     setValue(formatted);
     setField("birthDate", formatted);
+  };
+
+  // 사용자가 직접 입력한 생년월일 값을 처리하는 함수
+  const handleInputChange = (raw: string) => {
+    const formatted = formatWithDots(raw);
+    setValue(formatted);
+
+    if (formatted.length === 10) {
+      const parsed = parseDateFromString(formatted);
+      if (parsed) {
+        setDate(parsed);
+        setMonth(parsed);
+        handleChange(formatDisplay(parsed));
+      }
+    } else {
+      setField("birthDate", formatted);
+    }
+  };
+
+  // 캘린더에서 날짜를 선택했을 때 호출되는 함수
+  const handleCalendarSelect = (selected: Date | undefined) => {
+    if (!selected) return;
+    const formatted = formatDisplay(selected);
+    setDate(selected);
+    setMonth(selected);
+    setValue(formatted);
+    setOpen(false);
+    handleChange(formatted);
   };
 
   return (
@@ -51,17 +57,7 @@ export function DateInput() {
       <input
         type="text"
         value={value}
-        onChange={(e) => {
-          const formatted = formatWithDots(e.target.value);
-          setValue(formatted);
-
-          const parsed = parseDateFromString(formatted);
-          if (parsed) {
-            setDate(parsed);
-            setMonth(parsed);
-            handleChange(formatDisplay(parsed));
-          }
-        }}
+        onChange={(e) => handleInputChange(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") {
             e.preventDefault();
@@ -96,15 +92,7 @@ export function DateInput() {
             captionLayout="dropdown"
             month={month}
             onMonthChange={setMonth}
-            onSelect={(selected) => {
-              setDate(selected);
-              setValue(formatDisplay(selected));
-              setOpen(false);
-
-              if (selected) {
-                handleChange(formatDisplay(selected));
-              }
-            }}
+            onSelect={handleCalendarSelect}
           />
         </PopoverContent>
       </Popover>

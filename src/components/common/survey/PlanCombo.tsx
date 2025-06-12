@@ -20,7 +20,7 @@ export function PlanCombo() {
   const { data, planList, setField } = useSurveyStore();
   const [open, setOpen] = React.useState(false);
 
-  const handleSelect = (currentValue: string) => {
+  const handlePlanSelect = (currentValue: string) => {
     const newValue = currentValue === data.planName ? "" : currentValue;
     setField("planName", newValue);
     setOpen(false);
@@ -30,7 +30,7 @@ export function PlanCombo() {
 
   return (
     <div>
-      <p className="font-bold text-[18px] mb-3">요금제 선택</p>
+      <p className="font-bold text-[18px] mb-3 mt-4">요금제 선택</p>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -55,7 +55,7 @@ export function PlanCombo() {
                   <CommandItem
                     key={plan.value}
                     value={plan.value}
-                    onSelect={handleSelect}
+                    onSelect={handlePlanSelect}
                     className="text-[15px] py-2"
                   >
                     {plan.label}
