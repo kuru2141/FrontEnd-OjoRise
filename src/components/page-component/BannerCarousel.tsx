@@ -75,7 +75,7 @@ const transition = {
     damping: 30,
 };
 
-const IMAGE_HEIGHT = 250; // 이미지 컨테이너의 높이 (w-[300px] h-[250px])
+const IMAGE_HEIGHT = 250;
 
 export default function BannerCarousel() {
     const [[page, direction], setPage] = useState([0, 0]);
@@ -92,7 +92,7 @@ export default function BannerCarousel() {
     useEffect(() => {
         const interval = setInterval(() => {
             paginate(1);
-        }, 5000); // 5초 자동 슬라이드
+        }, 5000);
 
         return () => clearInterval(interval);
     }, [paginate]);
@@ -110,31 +110,40 @@ export default function BannerCarousel() {
                     transition={transition}
                     className={`absolute inset-0 ${currentBanner.backgroundColor}`}
                 >
-                    {/* 텍스트 영역 */}
-                    <div className={`absolute top-1/2 -translate-y-1/2 flex flex-col text-left ${currentBanner.textColor}
-                                   ${currentBanner.imagePosition === 'right' ? 'left-[150px]' : 'right-[150px] text-right items-end'}`}>
-                        <h2 className="text-2xl font-bold mb-2">{currentBanner.title}</h2>
-                        <p className="text-base mb-6">{currentBanner.description}</p>
+                    {/* Text Section */}
+                    <div className={`absolute flex flex-col ${currentBanner.textColor}`}
+                         style={{
+                             top: '85px',
+                             left: currentBanner.imagePosition === 'right' ? '114px' : '348px',
+                             right: 'auto',
+                             alignItems: 'flex-start',
+                         }}>
+
+                        <h2 className="font-bold" style={{ fontSize: '32px' }}>
+                            {currentBanner.title}
+                        </h2>
+
+                        <p className="font-bold text-gray-60" style={{ fontSize: '18px', marginTop: '5px' }}>
+                            {currentBanner.description}
+                        </p>
                         <Link href={currentBanner.buttonLink}>
                             <Button
-                                className={`w-40 h-12 rounded-lg text-base font-semibold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor} hover:opacity-90`}
+                                className={`w-[242px] h-[55px] rounded-lg text-2xl font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor} hover:opacity-90`}
+                                style={{ fontFamily: 'Suit-ExtraBold, sans-serif', marginTop: '30px' }}
                             >
                                 {currentBanner.buttonText}
                             </Button>
                         </Link>
                     </div>
 
-                    {/* 이미지 영역 */}
+                    {/* Image Section */}
                     <div className={`absolute w-[300px]`}
                          style={{
                              height:`${IMAGE_HEIGHT}px`,
-                             // 첫 번째 배너
                              right: currentBanner.imagePosition === 'right' ? '110px' : 'auto',
-                             bottom: currentBanner.imagePosition === 'right' ? '0px' : 'auto', // 밑단 맞춤
-
-                             // 두 번째 배너
-                             left: currentBanner.imagePosition === 'left' ? '40px' : 'auto', // 왼쪽 끝에서 20px 이동
-                             top: currentBanner.imagePosition === 'left' ? `calc(50% - ${IMAGE_HEIGHT / 2}px)` : 'auto', // 가로 중앙 정렬
+                             bottom: currentBanner.imagePosition === 'right' ? '0px' : 'auto',
+                             left: currentBanner.imagePosition === 'left' ? '40px' : 'auto',
+                             top: currentBanner.imagePosition === 'left' ? `calc(50% - ${IMAGE_HEIGHT / 2}px)` : 'auto',
                          }}>
                         <Image
                             src={currentBanner.imageSrc}
@@ -146,15 +155,31 @@ export default function BannerCarousel() {
                 </motion.div>
             </AnimatePresence>
 
-            {/* 페이지 번호 */}
-            <span className="absolute bottom-4 left-8 text-xs text-gray-500 z-10">
+            {/* Page Number */}
+            <span
+                className="absolute bottom-4 left-8 flex items-center justify-center
+                           w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10"
+            >
                 {bannerIndex + 1}/{bannerData.length}
             </span>
 
-            {/* next/prev */}
+            {/* Button Container */}
             <div className="absolute bottom-4 right-8 flex gap-2 z-10">
-                <Button size="icon" variant="ghost" onClick={() => paginate(-1)}><ChevronLeft /></Button>
-                <Button size="icon" variant="ghost" onClick={() => paginate(1)}><ChevronRight /></Button>
+                <Button
+                    size="icon"
+                    onClick={() => paginate(-1)}
+                    className="w-[40px] h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90
+                    font-normal text-xs"
+                >
+                    <ChevronLeft className="text-white size-[24px]" />
+                </Button>
+                <Button
+                    size="icon"
+                    onClick={() => paginate(1)}
+                    className="w-[40px] h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90"
+                >
+                    <ChevronRight className="text-white size-[24px]" />
+                </Button>
             </div>
         </div>
     );
