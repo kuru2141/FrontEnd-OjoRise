@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import LinearProgress from "@/components/common/progress/LinearProgress";
 import FloatingActionButton from "@/components/common/FloatingActionButton";
 import LoadingProgressCircle from "@/components/common/progress/LoadingProgressCircle";
-import ChatBotModal from "../chatbot/ChatBotModal";
+import ChatBotModal from "@/components/common/chatbot/ChatBotModal";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -15,7 +15,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       <ToastContainer position="top-right" autoClose={2000} newestOnTop />
       {children}
       <LinearProgress colorClassName="bg-[black]" />
-      <ChatBotModal />
+      <ChatBotModal/>
       <FloatingActionButton />
       <LoadingProgressCircle />
     </Fragment>
