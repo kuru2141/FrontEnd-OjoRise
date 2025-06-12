@@ -125,8 +125,9 @@ export default function BannerCarousel() {
                     </div>
 
                     {/* 이미지 영역 */}
-                    <div className={`absolute w-[300px] h-[${IMAGE_HEIGHT}px]`}
+                    <div className={`absolute w-[300px]`}
                          style={{
+                             height:`${IMAGE_HEIGHT}px`,
                              // 첫 번째 배너
                              right: currentBanner.imagePosition === 'right' ? '110px' : 'auto',
                              bottom: currentBanner.imagePosition === 'right' ? '0px' : 'auto', // 밑단 맞춤
