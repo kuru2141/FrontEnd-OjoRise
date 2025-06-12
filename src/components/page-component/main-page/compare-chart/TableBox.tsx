@@ -40,7 +40,7 @@ function TableBox() {
     if (key === 'voiceCallPrice') unit = '원(1초 당)';
 
     //일괄적으로 쓰는 표현 함수
-    const getDisplayValue = (value: string | number) : string | JSX.Element => {
+    const getDisplayValue = (value: string | number): string | JSX.Element => {
       if ((key === 'baseDataGb' || key === 'voiceCallPrice') && value === -1) {
         return '무제한';
       }
@@ -64,55 +64,53 @@ function TableBox() {
       const icon = isCompare ? "/increase.svg" : "/decrease.svg";
       const diff = isCompare ? (Number(compare) - Number(base)).toLocaleString() : (Number(base) - Number(compare)).toLocaleString();
 
-      result = 
+      return(
         <div className="flex flex-row items-center justify-center w-full">
           <Image src={icon} alt="diff" width={18} height={18} />
           {diff}{unit}
-        </div> 
-      
-      return result;
+        </div>);
     }
 
     //compare result 함수
-    let result:JSX.Element;
-    if (base === compare) {
-      result = <p>-</p>;
-    } else if (key === 'monthlyFee') {
-      result = getDiffValue(Number(base), Number(compare));
-    } else if (key === 'baseDataGb' || key === 'voiceCallPrice') {
-      if (base === -1) {
-        result = (key === 'baseDataGb') ? <p>무제한 → {compare}GB</p> : <p>무제한 → {compare}원(1초 당)</p>;
+    const getResult = (): JSX.Element => {
+      if (base === compare) {
+        return <p>-</p>;
       }
-      else if (compare === -1) {
-        result = (key === 'baseDataGb') ? <p>{base}GB → 무제한</p> : <p>{base}원(1초 당) → 무제한</p>;
+      else if (key === 'monthlyFee') {
+        return getDiffValue(Number(base), Number(compare));
+      }
+      else if (key === 'baseDataGb' || key === 'voiceCallPrice') {
+        if (base === -1) return <p>무제한 → {compare}{unit}</p>;
+        else if (compare === -1) return <p>{base}{unit} → 무제한</p>;
+        else return getDiffValue(Number(base), Number(compare));
+      }
+      else if (key === 'sms') {
+        return <p>{base} → {compare}</p>;
+      }
+      else if (key === 'present') {
+        const baseArr = presentParsing(String(base));
+        const compareArr = presentParsing(String(compare));
+        
+        return (
+          <div>
+            {baseArr.filter((item) => !compareArr.includes(item)).map((baseItem, idx) => (
+              <s key={idx}>{baseItem}</s>
+            ))}
+            {compareArr.map((compareItem, idx) => (
+              <p key={idx}>{compareItem}</p>
+            ))}
+          </div>);
       }
       else {
-        result = getDiffValue(Number(base), Number(compare));
+        return <p>-</p>;
       }
-    } else if (key === 'sms') {
-      result = <p>{base} → {compare}</p>;
-    } else if (key === 'present') {
-      const baseArr = presentParsing(String(base));
-      const compareArr = presentParsing(String(compare));
-
-      result =
-        <div>
-          {baseArr.filter((item) => !compareArr.includes(item)).map((baseItem, idx) => (
-            <s key={idx}>{baseItem}</s>
-          ))}
-          {compareArr.map((compareItem, idx) => (
-            <p key={idx}>{compareItem}</p>
-          ))}
-        </div>
-    } else {
-      result = <p>-</p>;
-    }
-
+    };
+    
     return {
       label,
-      base:getDisplayValue(base),
-      compare:getDisplayValue(compare),
-      result,
+      base: getDisplayValue(base),
+      compare: getDisplayValue(compare),
+      result: getResult(),
     };
   })
 
