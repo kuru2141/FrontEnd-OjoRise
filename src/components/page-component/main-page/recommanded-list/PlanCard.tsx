@@ -5,15 +5,34 @@ import TextsmsIcon from "@mui/icons-material/Textsms";
 import FiveGIcon from "@mui/icons-material/FiveG";
 
 export default function PlanCard(props: Plan) {
-  const { label, title, description, price, discountedPrice, onRemove } = props;
+  const {
+    name,
+    baseDataGb,
+    monthlyFee,
+    voiceCallPrice,
+    smsIncluded,
+    present,
+    description,
+    mobileType,
+    onRemove,
+  } = props;
 
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
 
-  const isSelected = selectedPlans.some((p) => p.title === title);
+  const isSelected = selectedPlans.some((p) => p.name === name);
 
   const handleSelect = () => {
-    togglePlanSelection({ label, title, description, price, discountedPrice });
+    togglePlanSelection({
+      name,
+      baseDataGb,
+      monthlyFee,
+      voiceCallPrice,
+      smsIncluded,
+      present,
+      description,
+      mobileType,
+    });
   };
 
   return (
@@ -36,10 +55,10 @@ export default function PlanCard(props: Plan) {
       )}
 
       <span className="inline-block text-xs font-semibold px-3 py-1 bg-[#FAD0E1] text-[#E2217E] rounded w-fit">
-        {label}
+        {mobileType}
       </span>
 
-      <h3 className="text-2xl font-bold">{title}</h3>
+      <h3 className="text-2xl font-bold">{name}</h3>
 
       <div className="flex gap-2 text-sm font-medium mt-1 mb-1">
         <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
@@ -59,10 +78,10 @@ export default function PlanCard(props: Plan) {
       <p className="text-sm tracking-tighter text-gray-800">{description}</p>
 
       <div className="flex justify-between items-end mt-3">
-        <p className="text-xl font-bold">월 {price.toLocaleString()}원</p>
-        {discountedPrice && (
+        <p className="text-xl font-bold">월 {monthlyFee.toLocaleString()}원</p>
+        {monthlyFee && (
           <p className="text-xs text-gray-400 whitespace-nowrap">
-            약정 할인 시 월 {discountedPrice.toLocaleString()}원
+            약정 할인 시 월 {monthlyFee.toLocaleString()}원
           </p>
         )}
       </div>

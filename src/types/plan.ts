@@ -1,9 +1,11 @@
 export interface Plan {
-  label: string;
-  title: string;
+  name: string;
+  baseDataGb: string;
+  monthlyFee: number;
+  voiceCallPrice: string;
+  sms: string;
   description: string;
-  price: number;
-  discountedPrice?: number;
+  mobileType: string;
   onRemove?: () => void;
 }
 

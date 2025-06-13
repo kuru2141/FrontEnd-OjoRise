@@ -38,11 +38,11 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   togglePlanSelection: (plan) => {
     const { selectedPlans, isCompareWithMine } = get();
 
-    const isAlreadySelected = selectedPlans?.some((p) => p.title === plan.title);
+    const isAlreadySelected = selectedPlans?.some((p) => p.name === plan.name);
     let newPlans: Plan[];
 
     if (isAlreadySelected) {
-      newPlans = selectedPlans.filter((p) => p.title !== plan.title);
+      newPlans = selectedPlans.filter((p) => p.name !== plan.name);
     } else {
       if (isCompareWithMine) {
         newPlans = [plan];
@@ -62,14 +62,14 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   setRecommendedPlans: (plans) => set({ recommendedPlans: plans }),
   removePlan: (title) =>
     set((state) => ({
-      recommendedPlans: state.recommendedPlans.filter((plan) => plan.title !== title),
+      recommendedPlans: state.recommendedPlans.filter((plan) => plan.name !== title),
     })),
 
   likedPlans: [],
   setLikedPlans: (plans) => set({ likedPlans: plans }),
   removeLikedPlan: (title) =>
     set((state) => ({
-      likedPlans: state.likedPlans.filter((plan) => plan.title !== title),
+      likedPlans: state.likedPlans.filter((plan) => plan.name !== title),
     })),
 }));
 
