@@ -8,63 +8,29 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { usePlanStore } from "@/stores/usePlanStore";
-import { useEffect } from "react";
 import PlanCard from "./PlanCard";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function LikedPlansList() {
-  const { likedPlans, setLikedPlans } = usePlanStore();
-  const removeLikedPlan = usePlanStore((state) => state.removeLikedPlan);
+  const { isLoggedIn } = useAuthStore();
+  const { likedPlans } = usePlanStore();
 
-  useEffect(() => {
-    setLikedPlans([
-      {
-        label: "5G",
-        title: "유쓰 5G데이터 플러스찜",
-        description: "일반 5요금제보다 더 넉넉한 데이터를 이용할 수 있는 청년 전용 5G요금제",
-        price: 75000,
-        discountedPrice: 56250,
-      },
-      {
-        label: "5G",
-        title: "슬림 LTE 요금제 찜",
-        description: "일반 5요금제보다 더 넉넉한 데이터를 이용할 수 있는 청년 전용 5G요금제",
-        price: 35000,
-        discountedPrice: 56250,
-      },
-      {
-        label: "5G",
-        title: "프리미엄 플랜 찜",
-        description: "일반 5요금제보다 더 넉넉한 데이터를 이용할 수 있는 청년 전용 5G요금제",
-        price: 95000,
-        discountedPrice: 56250,
-      },
-      {
-        label: "LTE",
-        title: "슬림 LTE 요금제2 찜",
-        description: "일반 5요금제보다 더 넉넉한 데이터를 이용할 수 있는 청년 전용 5G요금제",
-        price: 35000,
-        discountedPrice: 56250,
-      },
-      {
-        label: "LTE",
-        title: "프리미엄 플랜3 찜",
-        description: "일반 5요금제보다 더 넉넉한 데이터를 이용할 수 있는 청년 전용 5G요금제",
-        price: 95000,
-        discountedPrice: 56250,
-      },
-    ]);
-  }, [setLikedPlans]);
+  const removeLikedPlan = usePlanStore((state) => state.removeLikedPlan);
 
   return (
     <section className="w-full mx-auto px-4 mb-9">
       <h2 className="text-2xl font-bold">찜한 요금제</h2>
       <div className="relative min-h-[400px] flex items-center justify-center">
-        {likedPlans.length === 0 ? (
+        {!isLoggedIn ? (
+          <div className="text-center">
+            <p className="text-gray-500 mb-4 text-lg">로그인 후 사용 가능한 서비스입니다.</p>
+          </div>
+        ) : likedPlans.length === 0 ? (
           <div className="text-center">
             <p className="text-gray-500 mb-4 text-lg">찜한 요금제가 없습니다!</p>
             <button
               onClick={() => window.scrollTo({ top: 1, behavior: "smooth" })}
-              className="bg-[#FF008C] hover:bg-[#E01F7C]  text-white px-4 py-2 rounded-full"
+              className="bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
             >
               요금제 둘러보기
             </button>
@@ -79,9 +45,9 @@ export default function LikedPlansList() {
                 >
                   <div className="w-full max-w-[320px]">
                     <PlanCard
-                      key={plan.title}
+                      key={plan.name}
                       {...plan}
-                      onRemove={() => removeLikedPlan(plan.title)}
+                      onRemove={() => removeLikedPlan(plan.name)}
                     />
                   </div>
                 </CarouselItem>

@@ -1,0 +1,25 @@
+import api from "@/lib/axios";
+import { usePlanStore } from "@/stores/usePlanStore";
+import { Plan } from "@/types/plan";
+
+export async function fetchRecommendedPlans() {
+  try {
+    const res = await api.get("/api/recommendations");
+
+    const refinedPlans: Plan[] = res.data.map((p: any) => ({
+      planId: p.planId,
+      name: p.name,
+      baseDataGb: p.baseDataGb,
+      monthlyFee: p.monthlyFee,
+      voiceCallPrice: p.voiceCallPrice,
+      smsIncluded: p.sms === "기본제공",
+      description: p.description,
+      mobileType: p.mobileType,
+      onRemove: undefined,
+    }));
+
+    usePlanStore.getState().setRecommendedPlans(refinedPlans);
+  } catch (error) {
+    console.error("추천 요금제 가져오기 실패:", error);
+  }
+}
