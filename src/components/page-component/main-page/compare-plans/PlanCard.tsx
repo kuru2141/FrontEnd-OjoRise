@@ -4,10 +4,22 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import FiveGIcon from "@mui/icons-material/FiveG";
 import LteMobiledataIcon from "@mui/icons-material/LteMobiledata";
+import { deleteRecommendedPlan } from "@/services/recommenendPlanService";
+import { deleteLikedPlan } from "@/services/dipPlanService";
 
 export default function PlanCard(props: Plan) {
-  const { name, baseDataGb, monthlyFee, voiceCallPrice, sms, description, mobileType, onRemove } =
-    props;
+  const {
+    planId,
+    name,
+    baseDataGb,
+    monthlyFee,
+    voiceCallPrice,
+    sms,
+    description,
+    mobileType,
+    onRemove,
+    source,
+  } = props;
 
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
@@ -16,6 +28,7 @@ export default function PlanCard(props: Plan) {
 
   const handleSelect = () => {
     togglePlanSelection({
+      planId,
       name,
       baseDataGb,
       monthlyFee,
@@ -24,6 +37,7 @@ export default function PlanCard(props: Plan) {
       description,
       mobileType,
       onRemove,
+      source,
     });
   };
 
@@ -36,9 +50,22 @@ export default function PlanCard(props: Plan) {
     >
       {onRemove && (
         <button
-          onClick={(e) => {
+          onClick={async (e) => {
             e.stopPropagation();
-            onRemove();
+
+            try {
+              if (props.source === "recommend") {
+                await deleteRecommendedPlan(planId);
+              } else if (props.source === "like") {
+                await deleteLikedPlan(planId);
+              } else {
+                console.warn("삭제 타입 미지정");
+              }
+
+              onRemove();
+            } catch (err) {
+              console.error("삭제 실패:", err);
+            }
           }}
           className="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"
         >

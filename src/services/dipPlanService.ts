@@ -23,3 +23,13 @@ export async function fetchLikedPlans() {
     console.error("찜한 요금제 가져오기 실패:", err);
   }
 }
+
+export async function deleteLikedPlan(planId: number): Promise<boolean> {
+  try {
+    await api.delete(`/api/dips/${planId}`);
+    return true;
+  } catch (error) {
+    console.error("찜 요금제 삭제 실패:", error);
+    return false;
+  }
+}

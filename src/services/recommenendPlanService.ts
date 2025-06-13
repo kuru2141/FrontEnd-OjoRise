@@ -23,3 +23,13 @@ export async function fetchRecommendedPlans() {
     console.error("추천 요금제 가져오기 실패:", error);
   }
 }
+
+export async function deleteRecommendedPlan(planId: number): Promise<boolean> {
+  try {
+    await api.delete(`/api/recommendations/${planId}`);
+    return true;
+  } catch (error) {
+    console.error("추천 요금제 삭제 실패:", error);
+    return false;
+  }
+}

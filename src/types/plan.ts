@@ -1,4 +1,7 @@
+type PlanSource = "recommend" | "like";
+
 export interface Plan {
+  planId: number;
   name: string;
   baseDataGb: string;
   monthlyFee: number;
@@ -7,6 +10,7 @@ export interface Plan {
   description: string;
   mobileType: string;
   onRemove?: () => void;
+  source?: PlanSource;
 }
 
 export interface MyPlan {
