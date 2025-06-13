@@ -3,19 +3,11 @@ import type { Plan } from "@/types/plan";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import FiveGIcon from "@mui/icons-material/FiveG";
+import LteMobiledataIcon from "@mui/icons-material/LteMobiledata";
 
 export default function PlanCard(props: Plan) {
-  const {
-    name,
-    baseDataGb,
-    monthlyFee,
-    voiceCallPrice,
-    smsIncluded,
-    present,
-    description,
-    mobileType,
-    onRemove,
-  } = props;
+  const { name, baseDataGb, monthlyFee, voiceCallPrice, sms, description, mobileType, onRemove } =
+    props;
 
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
@@ -28,10 +20,10 @@ export default function PlanCard(props: Plan) {
       baseDataGb,
       monthlyFee,
       voiceCallPrice,
-      smsIncluded,
-      present,
+      sms,
       description,
       mobileType,
+      onRemove,
     });
   };
 
@@ -62,16 +54,25 @@ export default function PlanCard(props: Plan) {
 
       <div className="flex gap-2 text-sm font-medium mt-1 mb-1">
         <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
-          <FiveGIcon fontSize="small" style={{ color: "black" }} />
-          무제한
+          {mobileType === "5G" ? (
+            <>
+              <FiveGIcon fontSize="small" style={{ color: "black" }} />
+              {baseDataGb.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
+            </>
+          ) : (
+            <>
+              <LteMobiledataIcon fontSize="small" style={{ color: "black" }} />
+              {baseDataGb.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
+            </>
+          )}
         </span>
         <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
           <TextsmsIcon fontSize="small" style={{ color: "black" }} />
-          무제한
+          {sms}
         </span>
         <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
           <LocalPhoneIcon fontSize="small" style={{ color: "black" }} />
-          무제한
+          {voiceCallPrice}
         </span>
       </div>
 

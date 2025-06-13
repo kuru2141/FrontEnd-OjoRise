@@ -12,7 +12,7 @@ export async function fetchLikedPlans() {
       baseDataGb: p.baseDataGb,
       monthlyFee: p.monthlyFee,
       voiceCallPrice: p.voiceCallPrice,
-      smsIncluded: p.sms === "기본제공",
+      sms: p.sms,
       description: p.description,
       mobileType: p.mobileType,
       onRemove: undefined,
