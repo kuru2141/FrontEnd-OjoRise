@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "@/lib/axios";
 import { fetchRecommendedPlans } from "./recommenendPlanService";
 import { useAuthStore } from "@/stores/authStore";
 import { fetchLikedPlans } from "./dipPlanService";
@@ -9,12 +9,20 @@ export async function handleLoginSuccess(accessToken: string) {
   const { login } = useAuthStore.getState();
   login();
 
-  const localRecommendations = JSON.parse(localStorage.getItem("planList") || "[]");
-
+  let localRecommendations: string[] = [];
+  try {
+    const stored = localStorage.getItem("planList");
+    if (stored) {
+      localRecommendations = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.error("planList 파싱 실패:", e);
+  }
+  console.log(localRecommendations);
   if (localRecommendations.length > 0) {
     try {
-      await axios.post("/api/recommendations", {
-        planIds: localRecommendations,
+      await api.post("/api/recommendations", {
+        planNames: localRecommendations,
       });
       localStorage.removeItem("planList");
     } catch (err) {
@@ -22,7 +30,6 @@ export async function handleLoginSuccess(accessToken: string) {
     }
   }
 
-  // 로컬에 저장된 추천 요금제 없는 경우
   try {
     await fetchRecommendedPlans();
   } catch (err) {
