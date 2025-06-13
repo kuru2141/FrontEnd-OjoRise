@@ -36,7 +36,12 @@ export default function RecommendedPlanList() {
                   className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
                 >
                   <div className="w-full max-w-[320px]">
-                    <PlanCard key={plan.name} {...plan} onRemove={() => removePlan(plan.name)} />
+                    <PlanCard
+                      key={plan.name}
+                      {...plan}
+                      source="recommend"
+                      onRemove={() => removePlan(plan.name)}
+                    />
                   </div>
                 </CarouselItem>
               ))}

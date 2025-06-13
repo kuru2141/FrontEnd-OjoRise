@@ -24,7 +24,7 @@ export default function PlanCard(props: Plan) {
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
 
-  const isSelected = selectedPlans.some((p) => p.name === name);
+  const isSelected = selectedPlans.some((p) => p.name === name && p.source === source);
 
   const handleSelect = () => {
     togglePlanSelection({

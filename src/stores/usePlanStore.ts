@@ -38,11 +38,15 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   togglePlanSelection: (plan) => {
     const { selectedPlans, isCompareWithMine } = get();
 
-    const isAlreadySelected = selectedPlans?.some((p) => p.name === plan.name);
+    const isAlreadySelected = selectedPlans.some(
+      (p) => p.name === plan.name && p.source === plan.source
+    );
+
     let newPlans: Plan[];
 
     if (isAlreadySelected) {
-      newPlans = selectedPlans.filter((p) => p.name !== plan.name);
+      // 같은 source인 plan만 제거
+      newPlans = selectedPlans.filter((p) => !(p.name === plan.name && p.source === plan.source));
     } else {
       if (isCompareWithMine) {
         newPlans = [plan];
@@ -54,6 +58,7 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
         }
       }
     }
+
     set({ selectedPlans: newPlans });
   },
   clearSelectedPlans: () => set({ selectedPlans: [] }),

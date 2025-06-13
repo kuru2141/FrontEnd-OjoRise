@@ -47,6 +47,7 @@ export default function LikedPlansList() {
                     <PlanCard
                       key={plan.name}
                       {...plan}
+                      source="like"
                       onRemove={() => removeLikedPlan(plan.name)}
                     />
                   </div>
