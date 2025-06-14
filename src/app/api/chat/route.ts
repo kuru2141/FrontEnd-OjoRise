@@ -1,4 +1,3 @@
-import { YOPLE_PROMPT } from "@/prompt/yoplePrompt";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -25,7 +24,6 @@ export const POST = async (req: Request) => {
     });
 
     const full = completion.choices[0].message?.content ?? "";
-    console.log(full)
 
     // JSON 형식 파싱    
     const parsed = JSON.parse(full);
