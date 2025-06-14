@@ -8,10 +8,18 @@ import { PlanCombo } from "../main-page/plan/PlanCombo";
 import { ContractRadioGroup } from "../../common/ContractRadioGroup";
 import { FamilyPlanRadioGroup } from "../../common/FamilyPlanRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
+import ScreenshotOCR from "./ScreenshotOCR";
+import { ResultItem } from "@/types/OCR";
 
 export default function VerticalLinearStepper() {
   const { data } = useSurveyStore();
   const [step, setStep] = useState(0);
+  const [OCRResult, setOCRResult] = useState<ResultItem>();
+
+  //OCR 값 받아오기
+  const handleOCRComplete = (result: ResultItem) => {
+    setOCRResult(result);
+  }
 
   const isNextDisabled = () => {
     switch (step) {
@@ -58,6 +66,8 @@ export default function VerticalLinearStepper() {
 
   return (
     <div>
+      <ScreenshotOCR onComplete={handleOCRComplete} />
+      <div>{OCRResult?.["실 납부금액"]}</div>
       {steps.map((s, i) => (
         <StepItem
           key={i}
