@@ -2,6 +2,11 @@ import { YOPLE_PROMPT } from "@/prompt/yoplePrompt";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
+interface userRequest {
+  message: string,
+  prompt: string
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_SECRET_KEY!,
   organization: process.env.OPENAI_ORGANIZATION_ID!,
@@ -9,20 +14,20 @@ const openai = new OpenAI({
 
 export const POST = async (req: Request) => {
   try {
-    const { message: userMessage } = await req.json(); // 이름 충돌 방지
+    const request: userRequest = await req.json(); // 이름 충돌 방지
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
-      stream: false,
       messages: [
-        { role: "system", content: YOPLE_PROMPT },
-        { role: "user", content: userMessage },
+        { role: "system", content: request.prompt },
+        { role: "user", content: request.message },
       ],
     });
 
     const full = completion.choices[0].message?.content ?? "";
+    console.log(full)
 
-    // JSON 형식 파싱
+    // JSON 형식 파싱    
     const parsed = JSON.parse(full);
     const messageText = parsed.message;
     const items = parsed.item;
