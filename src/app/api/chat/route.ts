@@ -1,10 +1,6 @@
+import { userRequest } from "@/types/chatbot";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-
-interface userRequest {
-  message: string,
-  prompt: string
-}
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_SECRET_KEY!,
