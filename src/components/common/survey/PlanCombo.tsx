@@ -16,32 +16,21 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSurveyStore } from "@/stores/surveyStore";
 
-const frameworks = [
-  {
-    value: "너겟26",
-    label: "너겟 26",
-  },
-  {
-    value: "너겟36",
-    label: "너겟 36",
-  },
-];
-
 export function PlanCombo() {
-  const { data, setField } = useSurveyStore();
+  const { data, planList, setField } = useSurveyStore();
   const [open, setOpen] = React.useState(false);
 
-  const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === data.plan ? "" : currentValue;
-    setField("plan", newValue);
+  const handlePlanSelect = (currentValue: string) => {
+    const newValue = currentValue === data.planName ? "" : currentValue;
+    setField("planName", newValue);
     setOpen(false);
   };
 
-  const selectedLabel = frameworks.find((f) => f.value === data.plan)?.label;
+  const selectedLabel = planList.find((p) => p.value === data.planName)?.label;
 
   return (
     <div>
-      <p className="font-bold text-[18px] mb-3">요금제 선택</p>
+      <p className="font-bold text-[18px] mb-3 mt-4">요금제 선택</p>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -50,7 +39,7 @@ export function PlanCombo() {
             aria-expanded={open}
             className="w-[260px] h-[50px] justify-between text-[16px]"
           >
-            <span className={data.plan ? "text-black" : "text-gray-60"}>
+            <span className={data.planName ? "text-black" : "text-gray-60"}>
               {selectedLabel || "요금제를 선택해 주세요."}
             </span>
             <ChevronsUpDown className="opacity-50" />
@@ -58,25 +47,22 @@ export function PlanCombo() {
         </PopoverTrigger>
         <PopoverContent className="w-[260px] p-0">
           <Command>
-            <CommandInput
-              placeholder="요금제를 선택해 주세요."
-              className="text-[15px] placeholder:text-gray-60"
-            />
+            <CommandInput placeholder="요금제를 선택해 주세요." className="text-[15px]" />
             <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandEmpty>해당 요금제가 없습니다.</CommandEmpty>
               <CommandGroup>
-                {frameworks.map((framework) => (
+                {planList.map((plan) => (
                   <CommandItem
-                    key={framework.value}
-                    value={framework.value}
-                    onSelect={handleSelect}
+                    key={plan.value}
+                    value={plan.value}
+                    onSelect={handlePlanSelect}
                     className="text-[15px] py-2"
                   >
-                    {framework.label}
+                    {plan.label}
                     <Check
                       className={cn(
                         "ml-auto",
-                        data.plan === framework.value ? "opacity-100" : "opacity-0"
+                        data.planName === plan.value ? "opacity-100" : "opacity-0"
                       )}
                     />
                   </CommandItem>
