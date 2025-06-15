@@ -1,12 +1,12 @@
 'use client';
 
-import { planOCR } from '@/app/api/signup';
+import { gptOCR, planOCR } from '@/app/api/ocr';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { OCR_PROMPT } from '@/prompt/OCRPrompt';
-import { ChatResult, ResultItem } from '@/types/OCR';
+import { ResultItem } from '@/types/ocr';
+import { extractJsonFromGpt } from '@/utils/extractJsonFromGPT';
 import { useMutation } from '@tanstack/react-query';
-import clsx from 'clsx';
-import { result } from 'lodash';
 import Image from 'next/image';
 import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -17,36 +17,23 @@ interface ScreenshotOCRProps {
 function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleOCRToGpt= async (formData: FormData): Promise<ResultItem> => {
+    const planOCRResult = await planOCR(formData);
+    const gptOCRResult = await gptOCR({ message: planOCRResult, prompt: OCR_PROMPT });
+    const parsedResult = extractJsonFromGpt(gptOCRResult);
+    if (!parsedResult) throw new Error("GPT 응답 파싱 불가");
+    return parsedResult.item;
+  }
   
-  const planOCRMutation = useMutation({
-    mutationFn: planOCR,
-    onSuccess: async (data) => {
-      console.log(data);
-
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        body: JSON.stringify({ message: data, prompt: OCR_PROMPT }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("/api/chat 에러 응답:", errorText);
-        return;
-      }
-    
-      const resultText = await response.text();
-      const jsonStart = resultText.indexOf('{');
-      const jsonEnd = resultText.lastIndexOf('}') + 1;
-      
-      const cleanJson = resultText.slice(jsonStart, jsonEnd);
-      const parsedResult: ChatResult = JSON.parse(cleanJson);
-      if (parsedResult) {
-        onComplete(parsedResult?.item);
-      }
+  const OCRToGptMutation = useMutation({
+    mutationKey: ['OCRToGpt'],
+    mutationFn: handleOCRToGpt,
+    onSuccess: (data) => {
+      onComplete(data);
     },
     onError: (error) => {
-      console.log(error);
+      console.error(error);
     },
   });
 
@@ -65,15 +52,15 @@ function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
       const formData = new FormData();
       formData.append('image', imgFile);
       
-      planOCRMutation.mutate(formData);
+      OCRToGptMutation.mutate(formData);
     }
   }, [imgFile]);
 
   return (
-    <Button variant='outline' className={clsx(imgFile ? 'border-[var(--color-primary-medium)]' : 'border-[var(--color-gray-40)]', 'flex flex-row gap-[10px] content-center justify-center bg-white border-[1px] border-solid rounded-[5px] h-[60px] w-[337px] cursor-pointer')} onClick={handleClick}>
+    <Button variant='outline' className={cn(imgFile && 'border-[var(--color-primary-medium)]', 'border-[var(--color-gray-40)] flex flex-row gap-[10px] content-center justify-center bg-white border-[1px] border-solid rounded-[5px] h-[60px] w-[337px] cursor-pointer')} onClick={handleClick}>
       <input className='hidden' type='file' onChange={handleChange} ref={fileInputRef}/>
       <Image src={`${imgFile?'/afterOCR.svg':'/beforeOCR.svg'}`} alt='capture' width={30} height={30} />
-      <p className={clsx(imgFile ? 'text-[var(--color-primary-medium)]' : 'text-[var(--color-gray-40)]', 'font-bold text-lg leading-[30px]')}>캡처 이미지로 회원가입 채우기</p>
+      <p className={cn(imgFile && 'text-[var(--color-primary-medium)]', 'text-[var(--color-gray-40)] font-bold text-lg leading-[30px]')}>캡처 이미지로 회원가입 채우기</p>
     </Button>
   );
 }
