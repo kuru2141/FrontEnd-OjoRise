@@ -9,8 +9,9 @@ import { ContractRadioGroup } from "../../common/ContractRadioGroup";
 import { FamilyPlanRadioGroup } from "../../common/FamilyPlanRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
 import ScreenshotOCR from "./ScreenshotOCR";
-import { ResultItem } from "@/types/OCR";
+import { ResultItem } from "@/types/ocr";
 
+//SK Telecom kt LG U+
 export default function VerticalLinearStepper() {
   const { data } = useSurveyStore();
   const [step, setStep] = useState(0);
@@ -67,7 +68,7 @@ export default function VerticalLinearStepper() {
   return (
     <div>
       <ScreenshotOCR onComplete={handleOCRComplete} />
-      <div>{OCRResult?.["실 납부금액"]}</div>
+      <div>{OCRResult?.통신사}</div>
       {steps.map((s, i) => (
         <StepItem
           key={i}

@@ -1,15 +1,12 @@
 'use client';
 
-import { gptOCR, planOCR } from '@/app/api/ocr';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { OCR_PROMPT } from '@/prompt/OCRPrompt';
 import { ResultItem } from '@/types/ocr';
-import { extractJsonFromGpt } from '@/utils/extractJsonFromGpt';
 import { isSameFile } from '@/utils/isSameFile';
-import { useMutation } from '@tanstack/react-query';
+import { useOCRToGptMutation } from '@/hooks/useOCRToGptMutation';
 import Image from 'next/image';
-import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, memo, useEffect, useRef, useState } from 'react';
 
 interface ScreenshotOCRProps {
   onComplete: (result: ResultItem) => void;
@@ -18,25 +15,7 @@ interface ScreenshotOCRProps {
 function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
   const [imgFile, setImgFile] = useState<File | undefined>();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleOCRToGpt= async (formData: FormData): Promise<ResultItem> => {
-    const planOCRResult = await planOCR(formData);
-    const gptOCRResult = await gptOCR({ message: planOCRResult, prompt: OCR_PROMPT });
-    const parsedResult = extractJsonFromGpt(gptOCRResult);
-    if (!parsedResult) throw new Error("GPT 응답 파싱 불가");
-    return parsedResult.item;
-  }
-  
-  const OCRToGptMutation = useMutation({
-    mutationKey: ['OCRToGpt'],
-    mutationFn: handleOCRToGpt,
-    onSuccess: (data) => {
-      onComplete(data);
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
+  const { mutate } = useOCRToGptMutation(onComplete);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -57,7 +36,7 @@ function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
       const formData = new FormData();
       formData.append('image', imgFile);
       
-      OCRToGptMutation.mutate(formData);
+      mutate(formData);
     }
   }, [imgFile]);
 
