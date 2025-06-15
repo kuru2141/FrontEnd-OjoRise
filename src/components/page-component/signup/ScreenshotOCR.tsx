@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { OCR_PROMPT } from '@/prompt/OCRPrompt';
 import { ResultItem } from '@/types/ocr';
 import { extractJsonFromGpt } from '@/utils/extractJsonFromGpt';
+import { isSameFile } from '@/utils/isSameFile';
 import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -15,7 +16,7 @@ interface ScreenshotOCRProps {
 }
 
 function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
-  const [imgFile, setImgFile] = useState<File | null>(null);
+  const [imgFile, setImgFile] = useState<File | undefined>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleOCRToGpt= async (formData: FormData): Promise<ResultItem> => {
@@ -37,11 +38,15 @@ function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
     },
   });
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (isSameFile(file, imgFile)) return;
+
+    e.target.value = '';
     setImgFile(file);
-  }, []);
+  };
   
   const handleClick = () => {
     fileInputRef.current?.click();
