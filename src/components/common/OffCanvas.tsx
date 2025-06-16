@@ -1,61 +1,64 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useEffect } from "react";
 
-type Props = {
+interface MenuItem {
+    label: string;
+    href: string;
+    onClick?: () => void;
+}
+
+interface OffCanvasProps {
     isOpen: boolean;
-    onClose: () => void;
-};
+    onCloseAction: () => void;
+    menuItems: MenuItem[];
+}
 
-const menuItems = [
-    { label: "MENU1", href: "/" },
-    { label: "MENU2", href: "/" },
-    { label: "MENU3", href: "/" },
-    { label: "MENU4", href: "/" },
-    { label: "MENU5", href: "/" },
-];
-
-export default function OffCanvas({ isOpen, onClose }: Props) {
-    // 스크롤 잠금
+export default function OffCanvas({ isOpen, onCloseAction, menuItems }: OffCanvasProps) {
     useEffect(() => {
-        document.body.style.overflow = isOpen ? "hidden" : "auto";
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+        }
+
         return () => {
-            document.body.style.overflow = "auto";
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         };
     }, [isOpen]);
 
     return (
-        <AnimatePresence>
-            {isOpen && (
-                <motion.div
-                    initial={{ x: "-100%" }}
-                    animate={{ x: 0 }}
-                    exit={{ x: "-100%" }}
-                    transition={{
-                        duration: 0.6,
-                        ease: [0.4, 0, 1, 1],
-                    }}
-                    className="fixed top-[56px] xl:top-[80px] right-0 z-40 w-full h-[calc(100%-56px)] xl:h-[calc(100%-80px)] bg-white flex flex-col items-center justify-center"
-                >
-                    {/* menu section */}
-                    <nav className="flex flex-col gap-8 text-center">
-                        {menuItems.map((item, index) => (
-                            <motion.a
-                                key={item.label}
-                                href={item.href}
-                                onClick={onClose}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                className="text-2xl font-bold text-neutral-800 hover:text-gray-600 transition"
-                            >
-                                {item.label}
-                            </motion.a>
-                        ))}
-                    </nav>
-                </motion.div>
-            )}
-        </AnimatePresence>
+        <div
+            className={`
+        fixed top-[56px] left-0 z-40 w-full h-[calc(100vh-56px)]
+        bg-white transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+            role="dialog"
+            aria-modal="true"
+        >
+            <nav className="flex flex-col items-center text-[24px] mt-15 h-full w-full space-y-8 cursor-pointer text-lg font-bold text-black">
+                {menuItems.map(({ label, href, onClick }) => (
+                    <Link
+                        key={label}
+                        href={href}
+                        className="w-full text-center"
+                        onClick={(e) => {
+                            if (onClick) {
+                                e.preventDefault();
+                                onClick();
+                            }
+                            onCloseAction();
+                        }}
+                    >
+                        {label}
+                    </Link>
+                ))}
+            </nav>
+        </div>
     );
 }

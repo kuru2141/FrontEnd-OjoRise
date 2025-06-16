@@ -1,7 +1,7 @@
 "use client";
 
 import { Send, X, Maximize2, Minimize2 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -11,14 +11,14 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "./ui/drawer";
-import { Input } from "./ui/input";
+} from "../../ui/drawer";
+import { Input } from "../../ui/input";
 import { KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "../../ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 import { useProgressing } from "@/stores/progressStore";
-import LoadingLine from "./common/LoadingLine";
+import LoadingLine from "../progress/LoadingLine";
 import { throttle } from "lodash";
 import { UserProfile } from "@/type/UserProfile";
 

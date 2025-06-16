@@ -62,16 +62,16 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary-dark: #AF0130;
-  --primary-default: #E01F7C;
+  --primary-dark: #af0130;
+  --primary-default: #e01f7c;
   --primary-medium: #ff008c;
-  --primary-light: #EDB3D2;
-  --primary-bright: #FCE8F3;
+  --primary-light: #edb3d2;
+  --primary-bright: #fce8f3;
   --gray-100: #222022;
-  --gray-60: #7A797A;
-  --gray-40: #A7A6A7;
-  --gray-20: #EAEAEA;
-  --gray-10: #F8F8F8;
+  --gray-60: #7a797a;
+  --gray-40: #a7a6a7;
+  --gray-20: #eaeaea;
+  --gray-10: #f8f8f8;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -167,4 +167,11 @@
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
+}
+
+@layer utilities {
+  .font-pretendard {
+    font-family: "Pretendard", sans-serif;
+    color: var(--gray-100);
+  }
 }
