@@ -3,19 +3,9 @@ import { usePlanStore } from "@/stores/usePlanStore";
 import { Plan } from "@/types/plan";
 
 export async function fetchLikedPlans() {
-  const res = await api.get("/api/dips");
+  const res = await api.get<Plan[]>("/api/dips");
 
-  const refinedPlans: Plan[] = res.data.map((p: any) => ({
-    planId: p.planId,
-    name: p.name,
-    baseDataGb: p.baseDataGb,
-    monthlyFee: p.monthlyFee,
-    voiceCallPrice: p.voiceCallPrice,
-    sms: p.sms,
-    description: p.description,
-    mobileType: p.mobileType,
-    onRemove: undefined,
-  }));
+  const refinedPlans = res.data;
 
   usePlanStore.getState().setLikedPlans(refinedPlans);
 }
