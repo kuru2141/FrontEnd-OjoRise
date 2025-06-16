@@ -2,6 +2,8 @@
 
 import { useState, useRef } from "react";
 
+const accessToken = "";
+
 interface PlanItem {
   name: string;
   link: string;
@@ -17,6 +19,18 @@ export default function ChatTestRoute() {
   const textBufferRef = useRef("");
   const currentTextRef = useRef("");
   const isNewLineRef = useRef(true);
+
+  const handleGetPlan = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/plan`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await res.json();
+    console.log(data);
+  };
 
   const handleClick = async () => {
     setResponseBlocks([]);
@@ -119,6 +133,7 @@ export default function ChatTestRoute() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col gap-5 justify-center items-center p-4">
+      <button onClick={handleGetPlan}>요금제 검색 버튼</button>
       <div className="flex gap-2">
         <input
           value={input}

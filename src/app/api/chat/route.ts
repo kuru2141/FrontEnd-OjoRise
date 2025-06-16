@@ -1,4 +1,3 @@
-import { YOPLE_PROMPT } from "@/prompt/yoplePrompt";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -9,15 +8,12 @@ const openai = new OpenAI({
 
 export const POST = async (req: Request) => {
   try {
-    const { message: userMessage } = await req.json(); // 이름 충돌 방지
+    const { prompt } = await req.json();
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       stream: false,
-      messages: [
-        { role: "system", content: YOPLE_PROMPT },
-        { role: "user", content: userMessage },
-      ],
+      messages: [{ role: "system", content: prompt }],
     });
 
     const full = completion.choices[0].message?.content ?? "";
@@ -51,6 +47,7 @@ export const POST = async (req: Request) => {
       },
     });
   } catch (error) {
+    console.error("GPT 처리 오류:", error);
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 };
