@@ -139,7 +139,7 @@ function ChatBotModal() {
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        console.log(chunk);
+
         // 아이템 구문 분리
         if (!jsonParsedRef.current && chunk.includes('"item"')) {
           try {
