@@ -1,4 +1,3 @@
-import { YOPLE_PROMPT } from "@/prompt/yoplePrompt";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -9,48 +8,32 @@ const openai = new OpenAI({
 
 export const POST = async (req: Request) => {
   try {
-    const { message: userMessage } = await req.json(); // 이름 충돌 방지
+    const { prompt } = await req.json();
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       stream: false,
-      messages: [
-        { role: "system", content: YOPLE_PROMPT },
-        { role: "user", content: userMessage },
-      ],
+      messages: [{ role: "system", content: prompt }],
     });
 
     const full = completion.choices[0].message?.content ?? "";
 
-    // JSON 형식 파싱
-    const parsed = JSON.parse(full);
-    const messageText = parsed.message;
-    const items = parsed.item;
+    let parsed;
+    try {
+      parsed = JSON.parse(full);
+    } catch (e) {
+      console.error("JSON 파싱 실패:", e);
+      throw new Error("응답이 유효한 JSON 형식이 아닙니다.");
+    }
 
-    const encoder = new TextEncoder();
-
-    const readable = new ReadableStream({
-      async start(controller) {
-        // 먼저 item을 JSON으로 전달
-        controller.enqueue(encoder.encode(JSON.stringify({ item: items }) + "\n"));
-
-        // message를 한 글자씩 스트리밍
-        for (let i = 0; i < messageText.length; i++) {
-          await new Promise((r) => setTimeout(r, 15)); // 타자 효과
-          controller.enqueue(encoder.encode(messageText[i]));
-        }
-
-        controller.close();
-      },
-    });
-
-    return new Response(readable, {
+    return new Response(JSON.stringify(parsed), {
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-cache",
       },
     });
   } catch (error) {
+    console.error("GPT 처리 오류:", error);
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 };

@@ -18,14 +18,15 @@ function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<Chat
   return (
     <div className={`flex flex-col ${teller === "user" ? "items-end" : ""} pb-2`}>
       <div className={`flex ${teller === "user" ? "flex-row-reverse" : "flex-row"} pb-1 space-x-2`}>
-        <div className="text-xs text-gray-600">{teller}</div>
-        <div className="pr-2 text-xs text-gray-500">{format(time, "HH:mm:ss")}</div>
+        <div className="pl-1 pr-2 text-xs text-gray-500">
+          {Number(format(time, "H")) >= 12 ? "오후" : "오전"} {format(time, "HH:mm")}
+        </div>
       </div>
       <div
         className={
           teller === "user"
-            ? "bg-yellow-300 mr-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded items-end"
-            : "bg-gray-300 ml-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded"
+            ? "bg-(--color-primary-medium) mr-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded items-end"
+            : "bg-gray-200 ml-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded"
         }
       >
         {children}
