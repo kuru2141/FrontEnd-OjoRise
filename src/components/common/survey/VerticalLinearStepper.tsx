@@ -12,6 +12,7 @@ import { PlanPrice } from "./PlanPrice";
 import { isValidDate } from "@/utils/date";
 import ScreenshotOCR from "../../page-component/signup/ScreenshotOCR";
 import { ResultItem } from "@/types/ocr";
+import { ocrTelecomProvider } from "@/utils/ocrTelecomProvider";
 
 export default function VerticalLinearStepper() {
   const { data, setField } = useSurveyStore();
@@ -25,8 +26,20 @@ export default function VerticalLinearStepper() {
 
   useEffect(() => {
     if (ocrResult?.통신사) {
-      console.log(ocrResult?.통신사);
-      setField('telecomProvider', ocrResult?.통신사);
+      const parsedTelecomProvider = ocrTelecomProvider(ocrResult?.통신사)
+      setField('telecomProvider', parsedTelecomProvider);
+    } else {
+      setField('telecomProvider', '');
+    }
+    if (ocrResult?.["요금제 이름"]) {
+      setField('planName', ocrResult?.["요금제 이름"]);
+    } else {
+      setField('planName', '');
+    }
+    if (ocrResult?.["실 납부금액"]) {
+      setField('planPrice', Number(ocrResult?.["실 납부금액"]));
+    } else {
+      setField('planPrice', 0)
     }
   }, [ocrResult]);
 
@@ -60,7 +73,7 @@ export default function VerticalLinearStepper() {
         label: "현재 사용 중인 요금제를 알려주세요.",
         component: (
           <div>
-            <ScreenshotOCR onComplete={onComplete}/>
+            <ScreenshotOCR onComplete={onComplete} />
             <SelectCarrier />
             {telecomProvider && <PlanCombo />}
             {planName.trim() !== '' && <PlanPrice/>}
