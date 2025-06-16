@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StepItem } from "./StepItem";
 import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
@@ -10,15 +10,29 @@ import { FamilyNumRadioGroup } from "./FamilyNumRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { PlanPrice } from "./PlanPrice";
 import { isValidDate } from "@/utils/date";
+import ScreenshotOCR from "../../page-component/signup/ScreenshotOCR";
+import { ResultItem } from "@/types/ocr";
 
 export default function VerticalLinearStepper() {
-  const { data } = useSurveyStore();
+  const { data, setField } = useSurveyStore();
+  const planName = useSurveyStore(state => state.data.planName);
+  const telecomProvider = useSurveyStore(state => state.data.telecomProvider);
   const [step, setStep] = useState(0);
+  const [ocrResult, setOcrResult] = useState<ResultItem>();
+  const onComplete = (result: ResultItem) => {
+    setOcrResult(result);
+  }
+
+  useEffect(() => {
+    if (ocrResult?.통신사) {
+      console.log(ocrResult?.통신사);
+      setField('telecomProvider', ocrResult?.통신사);
+    }
+  }, [ocrResult]);
 
   const validationSteps = [
     () => isValidDate(data.birthdate),
-    () => !!(data.telecomProvider && data.planName),
-    () => !!data.planPrice,
+    () => !!(data.telecomProvider && data.planName && data.planPrice),
     () => !!data.familyBundle,
     () => !!data.familyNum,
   ];
@@ -46,14 +60,12 @@ export default function VerticalLinearStepper() {
         label: "현재 사용 중인 요금제를 알려주세요.",
         component: (
           <div>
+            <ScreenshotOCR onComplete={onComplete}/>
             <SelectCarrier />
-            {data.telecomProvider && <PlanCombo />}
+            {telecomProvider && <PlanCombo />}
+            {planName.trim() !== '' && <PlanPrice/>}
           </div>
         ),
-      },
-      {
-        label: "현재 사용 중인 요금제의 금액을 알려주세요.",
-        component: <PlanPrice />,
       },
       {
         label: "새로운 요금제 가입 시 가족 결합을 할 예정인가요?",
@@ -64,7 +76,7 @@ export default function VerticalLinearStepper() {
         component: <FamilyNumRadioGroup />,
       },
     ],
-    [data.telecomProvider]
+    [telecomProvider, planName]
   );
 
   return (
