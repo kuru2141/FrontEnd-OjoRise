@@ -1,13 +1,28 @@
 "use client";
 
+import { usePlanAge } from "@/hooks/usePlanAge";
 import { useSurvey } from "@/hooks/useSurvey";
+import { useTongBTI } from "@/hooks/useTongBTI";
 
 const MyPage = () => {
-  const { data, isLoading, isError } = useSurvey();
+  const { data: survey, isLoading: isSurveyLoading, isError: isSurveyError } = useSurvey();
+  const { data: tongBTI, isLoading: isTongLoading, isError: isTongError } = useTongBTI();
+  const { data: planAge, isLoading: isPlanAgeLoading, isError: isPlanAgeError } = usePlanAge();
 
-  //로딩 우리가 만들어 놓은거로 바꾸기
-  if (isLoading) return <p>로딩 중...</p>;
-  if (isError || !data) return <p>데이터 로드 실패</p>;
+  //로딩, 에러 만들어 놓은거로 바꾸기
+  if (isSurveyLoading || isTongLoading || isPlanAgeLoading) return <p>로딩 중...</p>;
+  if (isSurveyError || isTongError || isPlanAgeError || !survey || !tongBTI || !planAge)
+    return <p>데이터를 불러오지 못했습니다.</p>;
+
+  const tongBTIImageMap: Record<string, string> = {
+    "와이파이 유목민": "wifiNomad",
+    "무제한의 민족": "unlimitedTribe",
+    "중간값 장인": "midrangeMaster",
+    "가성비교 신도": "valueSeeker",
+    "보조금 헌터": "subsidyHunter",
+  };
+
+  const tongResultKey = tongBTIImageMap[tongBTI.tongResult] || "default";
   return (
     <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm mt-30 md:max-w-3xl flex flex-col items-start text-left overflow-hidden">
@@ -21,10 +36,10 @@ const MyPage = () => {
           <div className="flex justify-between items-end rounded-[20px] border p-5">
             <div className="flex flex-col gap-5">
               <p className="text-[18px]">사용 중인 요금제</p>
-              <p className="font-bold text-[24px] text-primary-medium">{data.planName}</p>
+              <p className="font-bold text-[24px] text-primary-medium">{survey.planName}</p>
             </div>
             <div className="self-end">
-              <p className="text-[24px] font-bold">{data.planPrice.toLocaleString()}원</p>
+              <p className="text-[24px] font-bold">{survey.planPrice.toLocaleString()}원</p>
             </div>
           </div>
 
@@ -33,7 +48,7 @@ const MyPage = () => {
             <div className="flex flex-1 justify-between items-end rounded-[20px] bg-[#EEFBFF] p-5">
               <div className="flex flex-col gap-12">
                 <p className="text-[18px]">생년월일</p>
-                <p className="font-bold text-[24px] ">{data.birthdate.replace(/-/g, ".")}</p>
+                <p className="font-bold text-[24px] ">{survey.birthdate.replace(/-/g, ".")}</p>
               </div>
               <div className="self-end">
                 <img src="/birthday.svg" alt="생일" />
@@ -45,8 +60,8 @@ const MyPage = () => {
               <div className="flex flex-col gap-5">
                 <p className="text-[18px]">가족 결합</p>
                 <div>
-                  <p className="font-bold text-[18px] ">{data.familyNum}</p>
-                  <p className="font-bold text-[24px] ">{data.familyBundle}</p>
+                  <p className="font-bold text-[18px] ">{survey.familyNum}</p>
+                  <p className="font-bold text-[24px] ">{survey.familyBundle}</p>
                 </div>
               </div>
               <div className="self-end">
@@ -68,12 +83,16 @@ const MyPage = () => {
               <p>당신의</p>
               <div className="flex flex-row gap-2">
                 <p>통BTI</p>
-                <p className=" text-primary-medium">와이파이 유목민</p>
+                <p className=" text-primary-medium">{tongBTI.tongResult}</p>
               </div>
             </div>
           </div>
           <div className="self-end">
-            <img src="/TongBTI/wifiNomad.svg" alt="가족" className="w-[200px] h-[200px]" />
+            <img
+              src={`/TongBTI/${tongResultKey}.svg`}
+              alt={tongBTI.tongResult}
+              className="w-[200px] h-[200px]"
+            />
           </div>
         </div>
 
@@ -83,9 +102,10 @@ const MyPage = () => {
 
           <div className="flex items-center justify-center text-[32px] font-bold gap-2">
             <p>요금제 나이는</p>
+            {/* 이미지 넣고 수정하기 */}
             <img src="/20.svg" alt="캐릭터" className="w-[160px] h-[160px]" />
-            <span className="text-primary-medium">20</span>
-            <p>대 입니다</p>
+            <span className="text-primary-medium">{planAge.planAgeResult}</span>
+            <p>입니다</p>
           </div>
         </div>
       </div>

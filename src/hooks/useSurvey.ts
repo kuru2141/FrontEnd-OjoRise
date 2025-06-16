@@ -14,8 +14,7 @@ export const useSurvey = () => {
   return useQuery<SurveyResponse>({
     queryKey: ["survey"],
     queryFn: async () => {
-      const { data } = await axios.get("/survey/result", {
-      });
+      const { data } = await axios.get("/survey/result", {});
       return data;
     },
   });
