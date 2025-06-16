@@ -1,6 +1,13 @@
-import React from "react";
+"use client";
+
+import { useSurvey } from "@/hooks/useSurvey";
 
 const MyPage = () => {
+  const { data, isLoading, isError } = useSurvey();
+
+  //로딩 우리가 만들어 놓은거로 바꾸기
+  if (isLoading) return <p>로딩 중...</p>;
+  if (isError || !data) return <p>데이터 로드 실패</p>;
   return (
     <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm mt-30 md:max-w-3xl flex flex-col items-start text-left overflow-hidden">
@@ -14,10 +21,10 @@ const MyPage = () => {
           <div className="flex justify-between items-end rounded-[20px] border p-5">
             <div className="flex flex-col gap-5">
               <p className="text-[18px]">사용 중인 요금제</p>
-              <p className="font-bold text-[24px] text-primary-medium">유쓰 5G 데이터 플러스</p>
+              <p className="font-bold text-[24px] text-primary-medium">{data.planName}</p>
             </div>
             <div className="self-end">
-              <p className="text-[24px] font-bold">33000원</p>
+              <p className="text-[24px] font-bold">{data.planPrice.toLocaleString()}원</p>
             </div>
           </div>
 
@@ -26,7 +33,7 @@ const MyPage = () => {
             <div className="flex flex-1 justify-between items-end rounded-[20px] bg-[#EEFBFF] p-5">
               <div className="flex flex-col gap-12">
                 <p className="text-[18px]">생년월일</p>
-                <p className="font-bold text-[24px] ">2000.04.12</p>
+                <p className="font-bold text-[24px] ">{data.birthdate.replace(/-/g, ".")}</p>
               </div>
               <div className="self-end">
                 <img src="/birthday.svg" alt="생일" />
@@ -38,8 +45,8 @@ const MyPage = () => {
               <div className="flex flex-col gap-5">
                 <p className="text-[18px]">가족 결합</p>
                 <div>
-                  <p className="font-bold text-[18px] ">4대 이상</p>
-                  <p className="font-bold text-[24px] ">할 예정이에요</p>
+                  <p className="font-bold text-[18px] ">{data.familyNum}</p>
+                  <p className="font-bold text-[24px] ">{data.familyBundle}</p>
                 </div>
               </div>
               <div className="self-end">
