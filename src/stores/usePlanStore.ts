@@ -30,8 +30,7 @@ interface MyPlanStore {
 export const usePlanStore = create<PlanStore>((set, get) => ({
   isCompareWithMine: true,
   setIsCompareWithMine: (flag) => {
-    set({ isCompareWithMine: flag });
-    set({ selectedPlans: [] });
+    set({ isCompareWithMine: flag, selectedPlans: [] });
   },
 
   selectedPlans: [],
@@ -58,9 +57,9 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
         }
       }
     }
-
     set({ selectedPlans: newPlans });
   },
+
   clearSelectedPlans: () => set({ selectedPlans: [] }),
 
   recommendedPlans: [],

@@ -1,7 +1,5 @@
 "use client";
 
-import { LoginForm } from "@/components/login-form";
-import Image from "next/image";
 import PlanBox from "@/components/page-component/main-page/plan/PlanBox";
 import BannerCarousel from "@/components/page-component/BannerCarousel";
 import CompareModeToggle from "@/components/page-component/main-page/compare-plans/CompareModeToggle";
