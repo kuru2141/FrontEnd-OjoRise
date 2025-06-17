@@ -25,3 +25,8 @@ export interface MyPlan {
   extraCall: string;
   numberChangeFee: string;
 }
+
+export interface ApiPlan {
+  planId: number;
+  name: string;
+}

@@ -1,3 +1,4 @@
+import { userRequest } from "@/types/chatbot";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -8,23 +9,22 @@ const openai = new OpenAI({
 
 export const POST = async (req: Request) => {
   try {
-    const { prompt } = await req.json();
+    const request: userRequest = await req.json(); // 이름 충돌 방지
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
-      stream: false,
-      messages: [{ role: "system", content: prompt }],
+      messages: [
+        { role: "system", content: request.prompt },
+        { role: "user", content: request.message },
+      ],
     });
 
     const full = completion.choices[0].message?.content ?? "";
 
-    let parsed;
-    try {
-      parsed = JSON.parse(full);
-    } catch (e) {
-      console.error("JSON 파싱 실패:", e);
-      throw new Error("응답이 유효한 JSON 형식이 아닙니다.");
-    }
+    // JSON 형식 파싱
+    const parsed = JSON.parse(full);
+    // const messageText = parsed.message;
+    // const items = parsed.item;
 
     return new Response(JSON.stringify(parsed), {
       headers: {

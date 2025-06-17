@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StepItem } from "./StepItem";
 import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
@@ -10,15 +10,48 @@ import { FamilyNumRadioGroup } from "./FamilyNumRadioGroup";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { PlanPrice } from "./PlanPrice";
 import { isValidDate } from "@/utils/date";
+import ScreenshotOCR from "../../page-component/signup/ScreenshotOCR";
+import { ResultItem } from "@/types/ocr";
+import { ocrTelecomProvider } from "@/utils/ocrTelecomProvider";
+import { useGetPlan } from "@/hooks/useGetPlan";
 
 export default function VerticalLinearStepper() {
-  const { data } = useSurveyStore();
+  const { data, setField, setPlanList, setInput } = useSurveyStore();
+  const planName = useSurveyStore(state => state.data.planName);
+  const telecomProvider = useSurveyStore(state => state.data.telecomProvider);
   const [step, setStep] = useState(0);
+  const [ocrResult, setOcrResult] = useState<ResultItem>();
+  const [parsedTelecomProvider, setParsedTelecomProvider] = useState('');
+  const onComplete = (result: ResultItem) => {
+    setOcrResult(result);
+  }
+
+  useEffect(() => {
+    if (ocrResult?.통신사) {
+      const parsed = ocrTelecomProvider(ocrResult.통신사);
+      setParsedTelecomProvider(parsed);
+    }
+  },[ocrResult])
+
+  const {data: plans} = useGetPlan(parsedTelecomProvider); 
+
+  useEffect(() => {
+    if (!plans) return;
+
+    const formattedPlans = plans.map((plan) => ({
+      value: plan.name,
+      label: plan.name,
+    }));
+    setPlanList(formattedPlans);
+
+    setField('telecomProvider', parsedTelecomProvider);
+    setInput(ocrResult?.["요금제 이름"] || '');
+    setField('planPrice', Number(ocrResult?.["실 납부금액"] || 0));
+  }, [plans, ocrResult, parsedTelecomProvider]);
 
   const validationSteps = [
     () => isValidDate(data.birthdate),
-    () => !!(data.telecomProvider && data.planName),
-    () => !!data.planPrice,
+    () => !!(data.telecomProvider && data.planName && data.planPrice),
     () => !!data.familyBundle,
     () => !!data.familyNum,
   ];
@@ -46,14 +79,12 @@ export default function VerticalLinearStepper() {
         label: "현재 사용 중인 요금제를 알려주세요.",
         component: (
           <div>
+            <ScreenshotOCR onComplete={onComplete} />
             <SelectCarrier />
-            {data.telecomProvider && <PlanCombo />}
+            {telecomProvider && <PlanCombo />}
+            {planName.trim() !== '' && <PlanPrice/>}
           </div>
         ),
-      },
-      {
-        label: "현재 사용 중인 요금제의 금액을 알려주세요.",
-        component: <PlanPrice />,
       },
       {
         label: "새로운 요금제 가입 시 가족 결합을 할 예정인가요?",
@@ -64,7 +95,7 @@ export default function VerticalLinearStepper() {
         component: <FamilyNumRadioGroup />,
       },
     ],
-    [data.telecomProvider]
+    [telecomProvider, planName]
   );
 
   return (

@@ -2,19 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuthStore } from "@/stores/authStore";
+import { handleLoginSuccess } from "@/services/authService";
 
-export default function SuccessPage() {
+export default function SuccessPageRoute() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { setLoggedIn, setGuest } = useAuthStore();
+  const accessToken = searchParams.get("accessToken");
 
   useEffect(() => {
-    const accessToken = searchParams.get("accessToken");
-
     if (accessToken) {
-      localStorage.setItem("token", accessToken);
-      router.push("/");
+      handleLoginSuccess(accessToken);
+      setLoggedIn(true);
+      setGuest(false);
+      router.push("/signup");
     }
-  }, [searchParams, router]);
+  }, [accessToken, router, setGuest, setLoggedIn]);
 
-  return <div>로그인 처리 중입니다...</div>;
+  return null;
 }

@@ -2,14 +2,19 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSurveyStore } from "@/stores/surveyStore";
 
+const isValueValid = (value: string): value is "yes" | "no" | "" => {
+  return value === "yes" || value === "no" || value === "";
+};
+
 export function FamilyBundleGroup() {
   const { data, setField } = useSurveyStore();
-  
+
+  const handleValueChange = (value: string) => {
+    if (isValueValid(value)) setField("familyBundle", value);
+  };
+
   return (
-    <RadioGroup
-      value={data.familyBundle}
-      onValueChange={(value) => setField("familyBundle", value)}
-    >
+    <RadioGroup value={data.familyBundle} onValueChange={handleValueChange}>
       <div className="flex items-center gap-3">
         <RadioGroupItem value="yes" id="r1" />
         <Label htmlFor="r1" className="text-[18px]">

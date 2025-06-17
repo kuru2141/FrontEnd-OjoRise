@@ -19,6 +19,8 @@ interface SurveyStore {
   planList: PlanOption[];
   setField: <K extends keyof SurveyData>(key: K, value: SurveyData[K]) => void;
   setPlanList: (plans: PlanOption[]) => void;
+  input: string;
+  setInput: (value: string) => void;
   reset: () => void;
 }
 
@@ -32,6 +34,7 @@ export const useSurveyStore = create<SurveyStore>((set) => ({
     familyNum: "",
   },
   planList: [],
+  input: '',
   setField: (key, value) =>
     set((state) => {
       if (!(key in state.data)) {
@@ -48,6 +51,9 @@ export const useSurveyStore = create<SurveyStore>((set) => ({
   setPlanList: (plans) =>
     set(() => ({
       planList: plans,
+    })),
+  setInput: (value) => set(() => ({
+      input: value,
     })),
   reset: () =>
     set({
