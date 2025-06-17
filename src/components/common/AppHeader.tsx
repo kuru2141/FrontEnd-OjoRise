@@ -83,7 +83,7 @@ function AppHeader() {
               요금제 둘러보기
             </Link>
 
-            {!isLoggedIn && !isGuest && (
+            {(!isLoggedIn || !isGuest) && (
                 <button
                     onClick={() => {
                       console.log("카카오 로그인 데스크톱 버튼 (임시)");
