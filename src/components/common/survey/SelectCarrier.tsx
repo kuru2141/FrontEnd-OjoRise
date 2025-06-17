@@ -10,28 +10,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSurveyStore } from "@/stores/surveyStore";
-import { getPlans, Plan } from "@/services/getPlans";
+import { useGetPlan } from "@/hooks/useGetPlan";
 
 export function SelectCarrier() {
   const { data, setField, setPlanList } = useSurveyStore();
+  const { data: plans } = useGetPlan(data.telecomProvider);
 
-  const handleCarrierChange = async (telecomProvider: string) => {
+  const handleCarrierChange = (telecomProvider: string) => {
     setField("telecomProvider", telecomProvider);
-
-    try {
-      const plans: Plan[] = await getPlans(telecomProvider);
-
-      const formattedPlans = plans.map((plan) => ({
-        value: plan.name,
-        label: plan.name,
-      }));
-
-      setPlanList(formattedPlans);
-    } catch (e) {
-      console.error("요금제 불러오기 실패", e);
-    }
   };
 
+  React.useEffect(() => {
+    if (!plans) return;
+
+    const formattedPlans = plans.map((plan) => ({
+      value: plan.name,
+      label: plan.name,
+    }));
+    setPlanList(formattedPlans);
+  }, [plans]);
+  
   return (
     <div>
       <p className="font-bold text-[18px] mb-3">통신사 선택</p>

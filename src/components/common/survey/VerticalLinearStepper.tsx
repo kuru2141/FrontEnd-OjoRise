@@ -13,35 +13,41 @@ import { isValidDate } from "@/utils/date";
 import ScreenshotOCR from "../../page-component/signup/ScreenshotOCR";
 import { ResultItem } from "@/types/ocr";
 import { ocrTelecomProvider } from "@/utils/ocrTelecomProvider";
+import { useGetPlan } from "@/hooks/useGetPlan";
 
 export default function VerticalLinearStepper() {
-  const { data, setField } = useSurveyStore();
+  const { data, setField, setPlanList } = useSurveyStore();
   const planName = useSurveyStore(state => state.data.planName);
   const telecomProvider = useSurveyStore(state => state.data.telecomProvider);
   const [step, setStep] = useState(0);
   const [ocrResult, setOcrResult] = useState<ResultItem>();
+  const [parsedTelecomProvider, setParsedTelecomProvider] = useState('');
   const onComplete = (result: ResultItem) => {
     setOcrResult(result);
   }
 
   useEffect(() => {
     if (ocrResult?.통신사) {
-      const parsedTelecomProvider = ocrTelecomProvider(ocrResult?.통신사)
-      setField('telecomProvider', parsedTelecomProvider);
-    } else {
-      setField('telecomProvider', '');
+      const parsed = ocrTelecomProvider(ocrResult.통신사);
+      setParsedTelecomProvider(parsed);
     }
-    if (ocrResult?.["요금제 이름"]) {
-      setField('planName', ocrResult?.["요금제 이름"]);
-    } else {
-      setField('planName', '');
-    }
-    if (ocrResult?.["실 납부금액"]) {
-      setField('planPrice', Number(ocrResult?.["실 납부금액"]));
-    } else {
-      setField('planPrice', 0)
-    }
-  }, [ocrResult]);
+  },[ocrResult])
+
+  const {data: plans} = useGetPlan(parsedTelecomProvider); 
+
+  useEffect(() => {
+    if (!plans) return;
+
+    const formattedPlans = plans.map((plan) => ({
+      value: plan.name,
+      label: plan.name,
+    }));
+    setPlanList(formattedPlans);
+
+    setField('telecomProvider', parsedTelecomProvider);
+    setField('planName', ocrResult?.["요금제 이름"] || '');
+    setField('planPrice', Number(ocrResult?.["실 납부금액"] || 0));
+  }, [plans, ocrResult, parsedTelecomProvider]);
 
   const validationSteps = [
     () => isValidDate(data.birthdate),
