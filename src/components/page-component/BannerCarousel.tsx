@@ -128,7 +128,8 @@ export default function BannerCarousel() {
                         </p>
                         <Link href={currentBanner.buttonLink}>
                             <Button
-                                className={`w-[242px] h-[55px] rounded-lg text-2xl font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor} hover:opacity-90`}
+                                variant="banner"
+                                className={`w-[242px] h-[55px] rounded-lg text-2xl font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}`}
                                 style={{ fontFamily: 'Suit-ExtraBold, sans-serif', marginTop: '30px' }}
                             >
                                 {currentBanner.buttonText}

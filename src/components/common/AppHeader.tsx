@@ -10,7 +10,7 @@ import OffCanvas from "./OffCanvas";
 import { router } from "next/client";
 
 const menuForLoggedIn = [
-  { label: "마이페이지", href: "/" },
+  { label: "마이페이지", href: "/mypage" },
   { label: "요금제 둘러보기", href: "/" },
   {
     label: "로그아웃",
@@ -97,7 +97,7 @@ function AppHeader() {
           {isLoggedIn && (
             <Fragment>
               <Link
-                href="/"
+                href="/mypage"
                 className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
               >
                 마이페이지
