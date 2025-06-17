@@ -21,35 +21,19 @@ export const POST = async (req: Request) => {
 
     const full = completion.choices[0].message?.content ?? "";
 
-    // JSON 형식 파싱    
+    // JSON 형식 파싱
     const parsed = JSON.parse(full);
-    const messageText = parsed.message;
-    const items = parsed.item;
+    // const messageText = parsed.message;
+    // const items = parsed.item;
 
-    const encoder = new TextEncoder();
-
-    const readable = new ReadableStream({
-      async start(controller) {
-        // 먼저 item을 JSON으로 전달
-        controller.enqueue(encoder.encode(JSON.stringify({ item: items }) + "\n"));
-
-        // message를 한 글자씩 스트리밍
-        for (let i = 0; i < messageText.length; i++) {
-          await new Promise((r) => setTimeout(r, 15)); // 타자 효과
-          controller.enqueue(encoder.encode(messageText[i]));
-        }
-
-        controller.close();
-      },
-    });
-
-    return new Response(readable, {
+    return new Response(JSON.stringify(parsed), {
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-cache",
       },
     });
   } catch (error) {
+    console.error("GPT 처리 오류:", error);
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 };

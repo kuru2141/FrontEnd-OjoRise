@@ -1,16 +1,26 @@
 "use client";
 
-import { Send, X } from "lucide-react";
+import { Send, X, Maximize2, Minimize2 } from "lucide-react";
+import { Button } from "../../ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "../../ui/drawer";
+import { Input } from "../../ui/input";
 import { KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
+import { ScrollArea } from "../../ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 import { useProgressing } from "@/stores/progressStore";
-import { throttle } from "lodash";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import LoadingLine from "../progress/LoadingLine";
-import { Input } from "@/components/ui/input";
+import { throttle } from "lodash";
+import { UserProfile } from "@/type/UserProfile";
 
 interface DialogItem {
   teller: "user" | "chatbot";
@@ -25,7 +35,9 @@ interface PlanItem {
 
 const initialDialog: DialogItem = {
   teller: "chatbot",
-  block: ["초기 프롬프트"],
+  block: [
+    `LG U+ 요금제 추천 도우미입니다.\n데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요`,
+  ],
   time: new Date(),
 };
 
@@ -40,7 +52,31 @@ function ChatBotModal() {
   const textBufferRef = useRef("");
   const currentTextRef = useRef("");
   const isNewLineRef = useRef(true);
+  const statusRef = useRef(false);
   const messageField = useRef<HTMLDivElement>(null);
+  const [zoom, setZoom] = useState(false);
+  const [disableButton, SetDisableButton] = useState(false);
+  const [ambiguousCount, setAmbiguousCount] = useState(0);
+
+  const [userProfile, setUserProfile] = useState<UserProfile>({
+    birthdate: "",
+    telecomProvider: "",
+    planName: "",
+    familyBundle: "",
+    tongResult: "",
+    ambiguousCount: 0,
+  });
+
+  useEffect(() => {
+    setUserProfile({
+      birthdate: "1999-03-16",
+      telecomProvider: "SKT",
+      planName: "5GX 프리미엄(넷플릭스)",
+      familyBundle: "결합이 없어요",
+      tongResult: "중간값 장인",
+      ambiguousCount: 0,
+    });
+  }, []);
 
   const { setIsLoading } = useProgressing();
 
@@ -50,42 +86,36 @@ function ChatBotModal() {
 
   const throttledUpdateDialog = useRef(
     throttle((botBlock: DialogItem["block"]) => {
-      setDialog((prev): DialogItem[] => {
+      setDialog((prev) => {
         const lastIndex = prev.length - 1;
-        const newEntry: DialogItem = {
-          teller: "chatbot",
-          block: [...botBlock],
-          time: new Date(),
-        };
         const updated = [...prev];
-        updated[lastIndex] = newEntry;
+        updated[lastIndex] = {
+          ...updated[lastIndex],
+          block: [...botBlock],
+        };
         return updated;
       });
-    }, 200) // 100ms 주기로 setDialog 호출
+    }, 200)
   ).current;
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (message: string) => {
-      setDialog((prev): DialogItem[] => {
+      setDialog((prev) => {
         const lastIndex = prev.length - 1;
         const newEntry: DialogItem = {
           teller: "chatbot",
           block: [],
           time: new Date(),
         };
-        if (prev[lastIndex].teller === "user") {
-          return [...prev, newEntry];
-        } else {
-          const updated = [...prev];
-          updated[lastIndex] = newEntry;
-          return updated;
-        }
+        return prev[lastIndex].teller === "user"
+          ? [...prev, newEntry]
+          : [...prev.slice(0, -1), newEntry];
       });
 
-      const res = await fetch("/api/chat", {
+      const res = await fetch("http://localhost:8000/search", {
         method: "POST",
-        body: JSON.stringify({ message }),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: message, userProfile }),
       });
 
       if (!res.body) {
@@ -96,27 +126,15 @@ function ChatBotModal() {
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-
       const botBlock: DialogItem["block"] = [];
-
-      // const updateDialog = () => {
-      //   setDialog((prev): DialogItem[] => {
-      //     const lastIndex = prev.length - 1;
-      //     const newEntry: DialogItem = {
-      //       teller: "chatbot",
-      //       block: [...botBlock],
-      //       time: new Date(),
-      //     };
-
-      //     const updated = [...prev];
-      //     updated[lastIndex] = newEntry;
-      //     return updated;
-      //   });
-      // };
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
+          if (botBlock.length === 0) {
+            if (ambiguousCount < 3) botBlock.push("질문을 잘 알아듣지 못했어요.");
+            else botBlock.push("질문을 잘 알아듣지 못했어요. 고객센터로 연결해드리겠습니다.");
+          }
           throttledUpdateDialog(botBlock);
           break;
         }
@@ -134,6 +152,10 @@ function ChatBotModal() {
               if (Array.isArray(parsed.item)) {
                 itemsRef.current = parsed.item;
                 jsonParsedRef.current = true;
+              }
+              if (typeof parsed.status === "boolean") {
+                statusRef.current = parsed.status;
+                setAmbiguousCount((prev) => (parsed.status ? 0 : prev + 1));
               }
             } catch {
               continue;
@@ -156,7 +178,7 @@ function ChatBotModal() {
                 throttledUpdateDialog(botBlock);
               }
 
-              if (trimmedLine.startsWith("-") && itemIndexRef.current < itemsRef.current.length) {
+              if (trimmedLine.startsWith("-")) {
                 const plan = itemsRef.current[itemIndexRef.current];
                 botBlock.push(plan);
                 itemIndexRef.current++;
@@ -193,8 +215,9 @@ function ChatBotModal() {
   useEffect(() => scrollToBottom(), [dialog]);
 
   const handleClick = useCallback(async () => {
-    const message = inputRef.current?.value ?? "";
-    if (!message.trim()) return;
+    SetDisableButton(true);
+    const message = input.trim();
+    if (!message) return;
 
     setInput("");
     itemIndexRef.current = 0;
@@ -206,62 +229,82 @@ function ChatBotModal() {
 
     setDialog((prev) => [...prev, { teller: "user", block: [message], time: new Date() }]);
 
-    mutateAsync(message);
-  }, [mutateAsync]);
+    try {
+      await mutateAsync(message);
+    } catch (err) {
+      console.error("GPT 호출 오류:", err);
+    }
+
+    SetDisableButton(false);
+  }, [input, mutateAsync]);
 
   const handleEnter = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleClick(),
-    [handleClick]
+    (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && !disableButton && handleClick(),
+    [handleClick, disableButton]
   );
+
+  const handleZoom = useCallback(() => {
+    setZoom(!zoom);
+  }, [zoom]);
 
   return (
     <Drawer modal={false}>
       <DrawerTrigger asChild>
         <Button variant="outline">Open Drawer</Button>
       </DrawerTrigger>
-      <DrawerContent className="w-1/2  max-w-[650px] h-screen ml-auto">
-        <div>
-          <DrawerHeader className="flex flex-row justify-between">
-            <div>
-              <DrawerTitle>ChatBot</DrawerTitle>
-              <DrawerDescription>요금제 추천을 받아보세요.</DrawerDescription>
-            </div>
-            <DrawerClose className="hover:cursor-pointer">
-              <X />
-            </DrawerClose>
-          </DrawerHeader>
-          <div className="p-4 pb-0 pt-5 h-full  bg-gray-400 ">
-            <ScrollArea className="flex flex-col gap-2 w-full h-[560px]">
-              {dialog.map((item, i) => {
-                console.log("qqq", item);
-                return (
-                  <ChatBotBubble
-                    key={`dialog-${i}`}
-                    teller={item.teller}
-                    block={item.block}
-                    time={item.time}
-                  >
-                    {<LoadingLine isShow={dialog.length - 1 === i && item.block.length === 0} />}
-                  </ChatBotBubble>
-                );
-              })}
-              <div ref={messageField} />
-            </ScrollArea>
+      <DrawerContent
+        className={`${
+          zoom
+            ? "fixed top-0 left-0 max-w-[100%] h-screen z-50 bg-white"
+            : "w-1/2 max-w-[650px] h-screen"
+        } ml-auto pr-2 pl-2 flex flex-col`}
+      >
+        <DrawerHeader className="flex flex-row justify-between border-b border-gray-200">
+          <div onClick={handleZoom}>
+            {zoom ? (
+              <Minimize2 className="text-gray-600" />
+            ) : (
+              <Maximize2 className="text-gray-600" />
+            )}
           </div>
-          <DrawerFooter className="flex flex-row h-fit w-full absolute bottom-0 bg-white">
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="border px-2 py-1"
-              placeholder="메시지를 입력하세요"
-              onKeyDown={handleEnter}
-            />
-            <Button className="hover:cursor-pointer" onClick={handleClick}>
-              <Send />
-            </Button>
-          </DrawerFooter>
+          <div className="flex flex-col items-center w-full">
+            <DrawerTitle>챗봇</DrawerTitle>
+            <DrawerDescription>요금제 추천을 받아보세요.</DrawerDescription>
+          </div>
+          <DrawerClose className="hover:cursor-pointer h-fit">
+            <X className="text-gray-600" />
+          </DrawerClose>
+        </DrawerHeader>
+
+        <div className="flex-1 overflow-y-auto px-1 pt-4">
+          <ScrollArea className="flex flex-col gap-2 w-full pr-3">
+            {dialog.map((item, i) => (
+              <ChatBotBubble
+                key={`dialog-${i}`}
+                teller={item.teller}
+                block={item.block}
+                time={item.time}
+              >
+                {<LoadingLine isShow={dialog.length - 1 === i && item.block.length === 0} />}
+              </ChatBotBubble>
+            ))}
+            <div ref={messageField} />
+          </ScrollArea>
         </div>
+
+        <DrawerFooter className="flex flex-row items-center gap-2 sticky bottom-0 bg-white pt-2 pb-4">
+          <Input
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="border px-2 py-1"
+            placeholder="메시지를 입력하세요"
+            onKeyDown={handleEnter}
+          />
+          <Button onClick={handleClick} disabled={disableButton}>
+            <Send />
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
