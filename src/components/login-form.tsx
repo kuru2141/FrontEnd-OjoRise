@@ -35,7 +35,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     //   response_type: "code",
     // });
 
-    const kakaoAuthUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/kakao/login`;
+    const kakaoAuthUrl = "http://localhost:8080/ojoRise/auth/kakao/login";
     window.location.href = kakaoAuthUrl;
   };
 

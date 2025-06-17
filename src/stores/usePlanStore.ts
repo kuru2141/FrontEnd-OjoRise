@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Plan } from "@/types/plan";
+import type { MyPlan, Plan } from "@/types/plan";
 
 interface PlanStore {
   isCompareWithMine: boolean;
@@ -18,6 +18,15 @@ interface PlanStore {
   removeLikedPlan: (title: string) => void;
 }
 
+interface MyPlanStore {
+  username: string | null;
+  isGuest: boolean;
+  selectedPlan: MyPlan | null;
+  setUsername: (name: string | null) => void;
+  setGuest: (value: boolean) => void;
+  setSelectedPlan: (plan: MyPlan | null) => void;
+}
+
 export const usePlanStore = create<PlanStore>((set, get) => ({
   isCompareWithMine: true,
   setIsCompareWithMine: (flag) => {
@@ -28,19 +37,26 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   togglePlanSelection: (plan) => {
     const { selectedPlans, isCompareWithMine } = get();
 
-    const isAlreadySelected = selectedPlans.some((p) => p.title === plan.title);
+    const isAlreadySelected = selectedPlans.some(
+      (p) => p.name === plan.name && p.source === plan.source
+    );
+
     let newPlans: Plan[];
 
     if (isAlreadySelected) {
-      newPlans = selectedPlans.filter((p) => p.title !== plan.title);
+      // 같은 source인 plan만 제거
+      newPlans = selectedPlans.filter((p) => !(p.name === plan.name && p.source === plan.source));
     } else {
-      newPlans = isCompareWithMine
-          ? [plan]
-          : selectedPlans.length >= 2
-              ? [...selectedPlans.slice(1), plan]
-              : [...selectedPlans, plan];
+      if (isCompareWithMine) {
+        newPlans = [plan];
+      } else {
+        if (selectedPlans.length >= 2) {
+          newPlans = [...selectedPlans.slice(1), plan];
+        } else {
+          newPlans = [...selectedPlans, plan];
+        }
+      }
     }
-
     set({ selectedPlans: newPlans });
   },
 
@@ -49,14 +65,23 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   recommendedPlans: [],
   setRecommendedPlans: (plans) => set({ recommendedPlans: plans }),
   removePlan: (title) =>
-      set((state) => ({
-        recommendedPlans: state.recommendedPlans.filter((plan) => plan.title !== title),
-      })),
+    set((state) => ({
+      recommendedPlans: state.recommendedPlans.filter((plan) => plan.name !== title),
+    })),
 
   likedPlans: [],
   setLikedPlans: (plans) => set({ likedPlans: plans }),
   removeLikedPlan: (title) =>
-      set((state) => ({
-        likedPlans: state.likedPlans.filter((plan) => plan.title !== title),
-      })),
+    set((state) => ({
+      likedPlans: state.likedPlans.filter((plan) => plan.name !== title),
+    })),
+}));
+
+export const useMyPlanStore = create<MyPlanStore>((set) => ({
+  username: null,
+  isGuest: false,
+  selectedPlan: null,
+  setUsername: (name) => set({ username: name }),
+  setGuest: (value) => set({ isGuest: value }),
+  setSelectedPlan: (plan) => set({ selectedPlan: plan }),
 }));
