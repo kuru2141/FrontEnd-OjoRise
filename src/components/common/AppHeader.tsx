@@ -36,9 +36,14 @@ const menuForLoggedOut = [
   { label: "요금제 둘러보기", href: "/" },
 ];
 
+const handleKakaoLogin = () => {
+  const kakaoAuthUrl = "http://localhost:8080/ojoRise/auth/kakao/login";
+  window.location.href = kakaoAuthUrl;
+};
+
 function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isLoggedIn, isGuest } = useAuthStore();
+  const { isLoggedIn } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -80,12 +85,9 @@ function AppHeader() {
             요금제 둘러보기
           </Link>
 
-          {!isLoggedIn && !isGuest && (
+          {!isLoggedIn && (
             <button
-              onClick={() => {
-                console.log("카카오 로그인 데스크톱 버튼 (임시)");
-                router.push("/");
-              }}
+              onClick={handleKakaoLogin}
               className="text-sm bg-yellow-400 hover:bg-yellow-300 px-4 py-2 rounded transition-colors duration-300"
             >
               카카오 로그인
