@@ -19,7 +19,7 @@ function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<Chat
     <div className={`flex flex-col ${teller === "user" ? "items-end" : ""} pb-2`}>
       <div className={`flex ${teller === "user" ? "flex-row-reverse" : "flex-row"} pb-1 space-x-2`}>
         <div className="pl-1 pr-2 text-xs text-gray-500">
-          {Number(format(time, "H")) >= 12 ? "오후" : "오전"} {format(time, "HH:mm")}
+          {Number(format(time, "H")) >= 12 ? "오후" : "오전"} {format(time, "h:mm")}
         </div>
       </div>
       <div
@@ -32,7 +32,10 @@ function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<Chat
         {children}
         {block.map((item, i) =>
           typeof item === "string" ? (
-            <span key={`text-${i}`}>{item}</span>
+            <span key={`text-${i}`}>
+              {item}
+              <br />
+            </span>
           ) : (
             <a
               key={`plan-${item.name}-${i}`}
@@ -42,6 +45,7 @@ function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<Chat
               className="block my-2 bg-purple-100 hover:bg-purple-200 text-purple-800 py-2 px-4 rounded text-center shadow"
             >
               {item.name} 가입하러 가기
+              <br />
             </a>
           )
         )}
