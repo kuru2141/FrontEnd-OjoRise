@@ -1,4 +1,4 @@
-import axios from "@/lib/axios";
+import api from "@/lib/axios";
 
 export interface SurveyRequest {
   birthdate: string;
@@ -10,6 +10,6 @@ export interface SurveyRequest {
 }
 
 export async function postSurvey(data: SurveyRequest) {
-  const response = await axios.post("/survey", data);
+  const response = await api.post("/survey", data);
   return response.data;
 }

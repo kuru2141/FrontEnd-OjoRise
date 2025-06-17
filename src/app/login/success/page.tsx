@@ -1,5 +1,10 @@
-import SuccessPage from "@/components/page-component/success/SuccessPage";
+"use client";
+import dynamic from "next/dynamic";
 
-export default function SuccessPageRoute() {
-  return <SuccessPage/>;
+const SuccessPageRoute = dynamic(() => import("@/components/page-component/success/SuccessPage"), {
+  ssr: false,
+});
+
+export default function SuccessPage() {
+  return <SuccessPageRoute />;
 }

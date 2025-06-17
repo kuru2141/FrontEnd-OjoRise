@@ -84,12 +84,12 @@ export default function PlanCard(props: Plan) {
           {mobileType === "5G" ? (
             <>
               <FiveGIcon fontSize="small" style={{ color: "black" }} />
-              {baseDataGb.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
+              {baseDataGb?.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
             </>
           ) : (
             <>
               <LteMobiledataIcon fontSize="small" style={{ color: "black" }} />
-              {baseDataGb.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
+              {baseDataGb?.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
             </>
           )}
         </span>

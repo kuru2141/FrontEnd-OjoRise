@@ -24,7 +24,7 @@ import { UserProfile } from "@/type/UserProfile";
 
 interface DialogItem {
   teller: "user" | "chatbot";
-  block: (string | PlanItem)[]; // 요금제 설명 텍스트 or 버튼
+  block: (string | PlanItem)[];
   time: Date;
 }
 
@@ -36,13 +36,7 @@ interface PlanItem {
 const initialDialog: DialogItem = {
   teller: "chatbot",
   block: [
-    `LG U+ 요금제 추천 도우미입니다.  
-데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.
-
-예:  
-- 유튜브를 자주 봐요  
-- 가족 결합할 예정이에요  
-- 무제한 요금제 쓰고 싶어요`,
+    `LG U+ 요금제 추천 도우미입니다.\n데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요`,
   ],
   time: new Date(),
 };
@@ -58,9 +52,11 @@ function ChatBotModal() {
   const textBufferRef = useRef("");
   const currentTextRef = useRef("");
   const isNewLineRef = useRef(true);
+  const statusRef = useRef(false);
   const messageField = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(false);
   const [disableButton, SetDisableButton] = useState(false);
+  const [ambiguousCount, setAmbiguousCount] = useState(0);
 
   const [userProfile, setUserProfile] = useState<UserProfile>({
     birthdate: "",
@@ -68,6 +64,7 @@ function ChatBotModal() {
     planName: "",
     familyBundle: "",
     tongResult: "",
+    ambiguousCount: 0,
   });
 
   useEffect(() => {
@@ -77,6 +74,7 @@ function ChatBotModal() {
       planName: "5GX 프리미엄(넷플릭스)",
       familyBundle: "결합이 없어요",
       tongResult: "중간값 장인",
+      ambiguousCount: 0,
     });
   }, []);
 
@@ -90,13 +88,11 @@ function ChatBotModal() {
     throttle((botBlock: DialogItem["block"]) => {
       setDialog((prev) => {
         const lastIndex = prev.length - 1;
-        const newEntry: DialogItem = {
-          teller: "chatbot",
-          block: [...botBlock],
-          time: new Date(),
-        };
         const updated = [...prev];
-        updated[lastIndex] = newEntry;
+        updated[lastIndex] = {
+          ...updated[lastIndex],
+          block: [...botBlock],
+        };
         return updated;
       });
     }, 200)
@@ -123,10 +119,8 @@ function ChatBotModal() {
       });
 
       if (!res.body) {
-        setDialog((prev) => [
-          ...prev,
-          { teller: "chatbot", block: ["❌ 응답이 없습니다."], time: new Date() },
-        ]);
+        const errorBlock = ["❌ 응답이 없습니다."];
+        setDialog((prev) => [...prev, { teller: "chatbot", block: errorBlock, time: new Date() }]);
         return;
       }
 
@@ -136,41 +130,64 @@ function ChatBotModal() {
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          if (botBlock.length === 0) {
+            if (ambiguousCount < 3) botBlock.push("질문을 잘 알아듣지 못했어요.");
+            else botBlock.push("질문을 잘 알아듣지 못했어요. 고객센터로 연결해드리겠습니다.");
+          }
+          throttledUpdateDialog(botBlock);
+          break;
+        }
 
         const chunk = decoder.decode(value, { stream: true });
 
-        // 아이템 구문 분리
-        if (!jsonParsedRef.current && chunk.includes('"item"')) {
-          try {
-            const startIdx = chunk.indexOf("{");
-            const endIdx = chunk.indexOf("}") + 1;
-            const jsonText = chunk.slice(startIdx, endIdx);
-            const parsed = JSON.parse(jsonText);
-            itemsRef.current = parsed.item ?? [];
-            jsonParsedRef.current = true;
-
-            // 남은 텍스트를 textBuffer에 이어 붙이기
-            const rest = chunk.slice(endIdx).trim();
-            if (rest) textBufferRef.current += rest + "\n";
-          } catch (err) {
-            console.error("item 파싱 실패:", err);
+        if (!jsonParsedRef.current) {
+          textBufferRef.current += chunk;
+          const newlineIndex = textBufferRef.current.indexOf("\n");
+          if (newlineIndex !== -1) {
+            const jsonLine = textBufferRef.current.slice(0, newlineIndex);
+            textBufferRef.current = textBufferRef.current.slice(newlineIndex + 1);
+            try {
+              const parsed = JSON.parse(jsonLine);
+              if (Array.isArray(parsed.item)) {
+                itemsRef.current = parsed.item;
+                jsonParsedRef.current = true;
+              }
+              if (typeof parsed.status === "boolean") {
+                statusRef.current = parsed.status;
+                setAmbiguousCount((prev) => (parsed.status ? 0 : prev + 1));
+              }
+            } catch {
+              continue;
+            }
           }
           continue;
         }
 
-        // 텍스트 스트리밍 처리
         for (const char of chunk) {
           if (char === "\n") {
-            const trimmed = currentTextRef.current.trim();
-            if (trimmed) {
-              botBlock.push(trimmed);
-              throttledUpdateDialog(botBlock);
-            }
+            const fullLine = currentTextRef.current;
+            const trimmedLine = fullLine.trim();
             currentTextRef.current = "";
             isNewLineRef.current = true;
+
+            if (trimmedLine) {
+              const last = botBlock[botBlock.length - 1];
+              if (!(typeof last === "string" && last.trim() === trimmedLine)) {
+                botBlock.push(fullLine);
+                throttledUpdateDialog(botBlock);
+              }
+
+              if (trimmedLine.startsWith("-")) {
+                const plan = itemsRef.current[itemIndexRef.current];
+                botBlock.push(plan);
+                itemIndexRef.current++;
+                throttledUpdateDialog(botBlock);
+              }
+            }
           } else {
             currentTextRef.current += char;
+
             if (isNewLineRef.current) {
               botBlock.push(char);
               isNewLineRef.current = false;
@@ -178,50 +195,29 @@ function ChatBotModal() {
               const last = botBlock[botBlock.length - 1];
               if (typeof last === "string") {
                 botBlock[botBlock.length - 1] = last + char;
+              } else {
+                botBlock.push(char);
               }
             }
+
             throttledUpdateDialog(botBlock);
             await new Promise((r) => setTimeout(r, 5));
           }
         }
       }
-
-      // 최종 메시지 정리 및 버튼 삽입
-      if (textBufferRef.current) {
-        const parts = textBufferRef.current.trim().split("\n\n");
-        const finalBlock: DialogItem["block"] = [];
-
-        parts.forEach((text, i) => {
-          finalBlock.push(text);
-          const item = itemsRef.current[i];
-          if (item) {
-            finalBlock.push({
-              name: item.name,
-              link: item.link,
-            });
-          }
-        });
-
-        setDialog((prev) => {
-          const last = prev[prev.length - 1];
-          return [...prev.slice(0, -1), { ...last, block: finalBlock }];
-        });
-
-        textBufferRef.current = "";
-        jsonParsedRef.current = false;
-      }
     },
   });
 
-  useEffect(() => setIsLoading(isPending), [isPending]);
+  useEffect(() => {
+    setIsLoading(isPending);
+  }, [isPending, setIsLoading]);
+
   useEffect(() => scrollToBottom(), [dialog]);
 
   const handleClick = useCallback(async () => {
     SetDisableButton(true);
-
-    if (!input.trim()) return;
-
-    setDialog((prev) => [...prev, { teller: "user", block: [input.trim()], time: new Date() }]);
+    const message = input.trim();
+    if (!message) return;
 
     setInput("");
     itemIndexRef.current = 0;
@@ -231,8 +227,10 @@ function ChatBotModal() {
     jsonParsedRef.current = false;
     isNewLineRef.current = true;
 
+    setDialog((prev) => [...prev, { teller: "user", block: [message], time: new Date() }]);
+
     try {
-      await mutateAsync(input.trim());
+      await mutateAsync(message);
     } catch (err) {
       console.error("GPT 호출 오류:", err);
     }

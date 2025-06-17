@@ -8,10 +8,9 @@ import { useAuthStore } from "@/stores/authStore";
 import HamburgerIcon from "./HamburgerIcon";
 import OffCanvas from "./OffCanvas";
 import { router } from "next/client";
-import { handleLoginSuccess } from "@/services/authService";
 
 const menuForLoggedIn = [
-  { label: "마이페이지", href: "/" },
+  { label: "마이페이지", href: "/mypage" },
   { label: "요금제 둘러보기", href: "/" },
   {
     label: "로그아웃",
@@ -44,7 +43,7 @@ const handleKakaoLogin = () => {
 
 function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isLoggedIn, isGuest } = useAuthStore();
+  const { isLoggedIn } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -86,7 +85,7 @@ function AppHeader() {
             요금제 둘러보기
           </Link>
 
-          {!isLoggedIn && !isGuest && (
+          {!isLoggedIn && (
             <button
               onClick={handleKakaoLogin}
               className="text-sm bg-yellow-400 hover:bg-yellow-300 px-4 py-2 rounded transition-colors duration-300"
@@ -98,7 +97,7 @@ function AppHeader() {
           {isLoggedIn && (
             <Fragment>
               <Link
-                href="/"
+                href="/mypage"
                 className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
               >
                 마이페이지
