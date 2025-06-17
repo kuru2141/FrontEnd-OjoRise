@@ -1,17 +1,33 @@
 "use client";
 
-import { usePlanAge } from "@/hooks/usePlanAge";
 import { useSurvey } from "@/hooks/useSurvey";
 import { useTongBTI } from "@/hooks/useTongBTI";
+import { useState } from "react";
+import WithdrawModal from "./WithdrawModal";
+import { useWithdraw } from "@/hooks/useWithdraw";
+import LinearProgress from "@/components/common/progress/LinearProgress";
 
 const MyPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   const { data: survey, isLoading: isSurveyLoading, isError: isSurveyError } = useSurvey();
   const { data: tongBTI, isLoading: isTongLoading, isError: isTongError } = useTongBTI();
-  const { data: planAge, isLoading: isPlanAgeLoading, isError: isPlanAgeError } = usePlanAge();
+  const { mutate: withdraw } = useWithdraw();
 
-  //로딩, 에러 만들어 놓은거로 바꾸기
-  if (isSurveyLoading || isTongLoading || isPlanAgeLoading) return <p>로딩 중...</p>;
-  if (isSurveyError || isTongError || isPlanAgeError || !survey || !tongBTI || !planAge)
+  const handleWithdraw = () => {
+    withdraw();
+    closeModal();
+  };
+
+  if (isSurveyLoading || isTongLoading )
+    return (
+      <div className="w-full px-6 pt-4">
+        <LinearProgress />
+      </div>
+    );
+  if (isSurveyError || isTongError || !survey || !tongBTI)
     return <p>데이터를 불러오지 못했습니다.</p>;
 
   const tongBTIImageMap: Record<string, string> = {
@@ -76,25 +92,29 @@ const MyPage = () => {
 
         <p className="font-bold text-[18px] mb-5 mt-10">테스트 결과</p>
         {/* 통BTI */}
-        <div className="flex justify-between items-end w-full rounded-[20px] bg-[#F8F8F8] p-5 mb-5">
-          <div className="flex flex-col gap-10 p-5">
-            <p className="font-bold text-[18px]">통BTI</p>
-            <div className="font-bold text-[32px]">
-              <p>당신의</p>
-              <div className="flex flex-row gap-2">
-                <p>통BTI</p>
-                <p className=" text-primary-medium">{tongBTI.tongResult}</p>
+        {tongBTI?.tongResult ? (
+          <div className="flex justify-between items-end w-full rounded-[20px] bg-[#F8F8F8] p-5 mb-5">
+            <div className="flex flex-col gap-10 p-5">
+              <p className="font-bold text-[18px]">통BTI</p>
+              <div className="font-bold text-[32px]">
+                <p>당신의</p>
+                <div className="flex flex-row gap-2">
+                  <p>통BTI</p>
+                  <p className=" text-primary-medium">{tongBTI.tongResult}</p>
+                </div>
               </div>
             </div>
+            <div className="self-end">
+              <img
+                src={`/TongBTI/${tongResultKey}.svg`}
+                alt={tongBTI.tongResult}
+                className="w-[200px] h-[200px]"
+              />
+            </div>
           </div>
-          <div className="self-end">
-            <img
-              src={`/TongBTI/${tongResultKey}.svg`}
-              alt={tongBTI.tongResult}
-              className="w-[200px] h-[200px]"
-            />
-          </div>
-        </div>
+        ) : (
+          <div>{/* 테스트하러가기 이후에 추가 */}</div>
+        )}
 
         {/* 요금제 나이 테스트 */}
         <div className="flex flex-col gap-4 rounded-[20px] border pt-10 pr-10 pl-10 w-full">
@@ -104,12 +124,19 @@ const MyPage = () => {
             <p>요금제 나이는</p>
             {/* 이미지 넣고 수정하기 */}
             <img src="/20.svg" alt="캐릭터" className="w-[160px] h-[160px]" />
-            <span className="text-primary-medium">{planAge.planAgeResult}</span>
+            <span className="text-primary-medium">20대</span>
             <p>입니다</p>
           </div>
         </div>
       </div>
-      <button className="text-gray-40 mt-10 text-[12px]">회원탈퇴하기</button>
+      <button onClick={openModal} className="text-gray-40 mt-10 text-[12px]">
+        회원탈퇴하기
+      </button>
+      <WithdrawModal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleWithdraw}
+      />
     </div>
   );
 };

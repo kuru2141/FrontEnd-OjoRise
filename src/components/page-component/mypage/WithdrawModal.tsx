@@ -19,10 +19,10 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onCancel, onConfi
         <p className="text-sm text-gray-600 mb-6">삭제되어 복구가 불가해요.</p>
         <p className="text-base font-medium text-gray-900 mb-10">정말로 탈퇴하시겠어요?</p>
         <div className="flex justify-center gap-3">
-          <Button variant="back" onClick={onCancel} className="w-28 h-12 shadow-lg">
+          <Button variant="back" onClick={onCancel} className="w-28 h-12 rounded-[5px] shadow-md">
             취소
           </Button>
-          <Button variant="next" onClick={onConfirm} className="w-28 h-12 shadow-lg">
+          <Button variant="next" onClick={onConfirm} className="w-28 h-12 rounded-[5px] shadow-md">
             탈퇴
           </Button>
         </div>

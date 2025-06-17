@@ -1,16 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "@/lib/axios";
+import { getPlanAge } from "@/services/getPlanAge";
 
 interface PlanAgeResponse {
   planAgeResult: string;
 }
 
 export const usePlanAge = () => {
-  return useQuery<PlanAgeResponse>({
+  return useQuery<PlanAgeResponse, Error>({
     queryKey: ["planage"],
-    queryFn: async () => {
-      const { data } = await axios.get("/planage/result", {});
-      return data;
-    },
+    queryFn: getPlanAge,
   });
-}
+};
