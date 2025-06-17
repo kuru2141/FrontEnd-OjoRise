@@ -28,29 +28,20 @@ const PlanInfoLoggedIn: FC<PlanInfoLoggedInProps> = ({
                                                          portingFee,
                                                      }) => {
     return (
-        <div className="relative w-[758px] h-[371px] bg-[#FAFAFA] rounded-xl shadow">
-            {/* 상단 텍스트 */}
-            <div
-                className="absolute text-[20px] leading-[28px] font-semibold"
-                style={{ top: 48, left: 40 }}
-            >
+        <div className="w-full max-w-[758px] bg-[#FAFAFA] rounded-xl shadow px-6 py-6 flex flex-col gap-6">
+            {/* 상단 문장 */}
+            <div className="text-base md:text-lg font-semibold leading-6 md:leading-7">
                 {username}님께서 사용 중인 요금제는<br />
-                <span className="text-[20px] font-bold text-[#EF3E7D]">{planName}</span> 입니다
+                <span className="text-[#EF3E7D] font-bold text-lg md:text-xl">{planName}</span> 입니다
             </div>
 
             {/* 가격 */}
-            <div
-                className="absolute text-[32px] font-bold text-black"
-                style={{ top: 88, right: 40 }}
-            >
+            <div className="text-2xl font-bold text-black self-end">
                 월 {price}
             </div>
 
-            {/* 중간 카드: 통화/문자/통신기술 */}
-            <div
-                className="absolute bg-white rounded-md p-4"
-                style={{ top: 147, left: 40, width: 355, height: 80 }}
-            >
+            {/* 통화/문자/통신기술 */}
+            <div className="bg-white rounded-md p-4 w-full max-w-[400px]">
                 <div className="flex justify-between text-sm font-medium">
                     <div>
                         <p className="text-gray-500">통화</p>
@@ -67,16 +58,8 @@ const PlanInfoLoggedIn: FC<PlanInfoLoggedInProps> = ({
                 </div>
             </div>
 
-            {/* 하단 세부 정보 */}
-            <div
-                className="absolute grid grid-cols-4 gap-y-2 text-[14px] leading-5 font-medium"
-                style={{
-                    top: 272,
-                    left: 40,
-                    right: 206,
-                    bottom: 47,
-                }}
-            >
+            {/* 하단 정보 */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-2 text-sm font-medium">
                 <div className="text-gray-500">데이터 제공량</div>
                 <div className="text-[#EF3E7D]">{dataAmount}</div>
 
