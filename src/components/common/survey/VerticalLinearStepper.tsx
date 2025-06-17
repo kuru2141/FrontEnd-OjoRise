@@ -16,7 +16,7 @@ import { ocrTelecomProvider } from "@/utils/ocrTelecomProvider";
 import { useGetPlan } from "@/hooks/useGetPlan";
 
 export default function VerticalLinearStepper() {
-  const { data, setField, setPlanList } = useSurveyStore();
+  const { data, setField, setPlanList, setInput } = useSurveyStore();
   const planName = useSurveyStore(state => state.data.planName);
   const telecomProvider = useSurveyStore(state => state.data.telecomProvider);
   const [step, setStep] = useState(0);
@@ -45,7 +45,7 @@ export default function VerticalLinearStepper() {
     setPlanList(formattedPlans);
 
     setField('telecomProvider', parsedTelecomProvider);
-    setField('planName', ocrResult?.["요금제 이름"] || '');
+    setInput(ocrResult?.["요금제 이름"] || '');
     setField('planPrice', Number(ocrResult?.["실 납부금액"] || 0));
   }, [plans, ocrResult, parsedTelecomProvider]);
 

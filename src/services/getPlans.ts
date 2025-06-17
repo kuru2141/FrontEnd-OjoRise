@@ -1,11 +1,7 @@
 import axios from "@/lib/axios";
+import { ApiPlan } from "@/types/plan";
 
-export interface Plan {
-  planId: number;
-  name: string;
-}
-
-export const getPlans = async (telecomProvider: string): Promise<Plan[]> => {
+export const getPlans = async (telecomProvider: string): Promise<ApiPlan[]> => {
   try {
     const response = await axios.get("/survey", {
       params: { telecom_provider: telecomProvider },

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { ResultItem } from '../types/ocr';
-import { gptOCR, planOCR } from '../app/api/ocr';
+import { gptOCR, planOCR } from '../services/ocr';
 import { OCR_PROMPT } from '../prompt/OCRPrompt';
 import { extractJsonFromGpt } from '../utils/extractJsonFromGpt';
 

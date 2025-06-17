@@ -12,7 +12,7 @@ export default function SuccessPage() {
 
     if (accessToken) {
       localStorage.setItem("token", accessToken);
-      router.push("/");
+      router.push("/signup");
     }
   }, [searchParams, router]);
 
