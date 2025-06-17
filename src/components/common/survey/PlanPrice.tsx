@@ -6,9 +6,9 @@ export function PlanPrice() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setField("planPrice", value);
+    setField("planPrice", Number(value) || 0);
   };
-  
+
   return (
     <div>
       <p className="font-bold text-[18px] mb-3 mt-4">요금제 금액 선택</p>
@@ -20,8 +20,8 @@ export function PlanPrice() {
         value={data.planPrice}
         onChange={handleChange}
         min={0}
-        step={1} />
+        step={1}
+      />
     </div>
-
   );
 }

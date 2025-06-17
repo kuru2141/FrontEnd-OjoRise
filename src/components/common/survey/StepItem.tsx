@@ -1,11 +1,10 @@
-import { cn } from "@/lib/utils";
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
 import { patchIsSurvey } from "@/services/patchIsSurvey";
 import { postSurvey } from "@/services/postSurvey";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { useRouter } from "next/navigation";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import { useLayoutEffect, useRef, useState } from "react";
 
 interface StepItemProps {
@@ -71,10 +70,10 @@ export const StepItem = ({
       <div className="flex flex-col items-center">
         <StepIndicator step={index + 1} active={active} completed={completed} />
         {!isLast && (
-          <motion.div 
+          <motion.div
             initial={{ height: 30 }}
             animate={{ height: showContent ? height : 30 }}
-            transition={{duration: 0.6, ease: 'easeInOut'}}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
             className="my-2 w-[2px] bg-[#BDBDBD] h-[30px]"
           />
         )}
