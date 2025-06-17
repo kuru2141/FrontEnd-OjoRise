@@ -4,4 +4,5 @@ export interface UserProfile {
   planName: string;
   familyBundle: string;
   tongResult: string;
+  ambiguousCount: number;
 }
