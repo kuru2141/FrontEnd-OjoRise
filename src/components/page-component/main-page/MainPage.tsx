@@ -1,3 +1,5 @@
+"use client";
+
 import BannerCarousel from "../BannerCarousel";
 import ScrollChart from "./compare-chart/ScrollChart";
 import CompareModeToggle from "./compare-plans/CompareModeToggle";
@@ -5,8 +7,20 @@ import LikedPlansList from "./compare-plans/LikedPlansList";
 import RecommendedPlanList from "./compare-plans/RecommendedPlanList";
 import SelectedPlanViewer from "./compare-plans/SelectedPlanViewer";
 import PlanBox from "./plan/PlanBox";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { handleLoginSuccess } from "@/services/authService";
 
 export default function MainPage() {
+  const searchParams = useSearchParams();
+  const accessToken = searchParams.get("accessToken");
+
+  useEffect(() => {
+    if (accessToken) {
+      handleLoginSuccess(accessToken);
+    }
+  }, [accessToken]);
+
   return (
     <main className="flex flex-col items-center bg-white px-4 pb-20">
       <section className="w-full max-w-[768px] mt-30 flex flex-col items-center gap-20">
