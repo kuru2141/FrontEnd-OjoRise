@@ -1,54 +1,56 @@
+"use client";
+
 import {
     Command,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
-} from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { ChevronDown } from 'lucide-react';
-import {MyPlan} from "@/types/plan";
+} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
+import { MyPlan } from "@/types/plan";
 
-const mockPlans : MyPlan[] = [
+const mockPlans: MyPlan[] = [
     {
-        id: 'plan_1',
-        name: '유쓰 5G 데이터 플러스',
-        price: '75,000원',
-        call: '무제한',
-        sms: '무제한',
-        tech: '5G',
-        data: '월 11GB + 매일 2GB',
-        speed: '3mbps 속도로 무제한',
-        extraCall: '300분',
-        numberChangeFee: '800원',
+        id: "plan_1",
+        name: "유쓰 5G 데이터 플러스",
+        price: "75,000원",
+        call: "무제한",
+        sms: "무제한",
+        tech: "5G",
+        data: "월 11GB + 매일 2GB",
+        speed: "3mbps 속도로 무제한",
+        extraCall: "300분",
+        numberChangeFee: "800원",
     },
     {
-        id: 'plan_2',
-        name: '갈라파고스',
-        price: '15,000원',
-        call: '무제한',
-        sms: '무제한',
-        tech: '5G',
-        data: '월 11GB + 매일 2GB',
-        speed: '3mbps 속도로 무제한',
-        extraCall: '300분',
-        numberChangeFee: '800원',
+        id: "plan_2",
+        name: "갈라파고스",
+        price: "15,000원",
+        call: "무제한",
+        sms: "무제한",
+        tech: "5G",
+        data: "월 11GB + 매일 2GB",
+        speed: "3mbps 속도로 무제한",
+        extraCall: "300분",
+        numberChangeFee: "800원",
     },
     {
-        id: 'plan_3',
-        name: '아기코끼리',
-        price: '25,000원',
-        call: '유제한',
-        sms: '유제한',
-        tech: '5G',
-        data: '월 11GB + 매일 2GB',
-        speed: '3mbps 속도로 무제한',
-        extraCall: '300분',
-        numberChangeFee: '800원',
+        id: "plan_3",
+        name: "아기코끼리",
+        price: "25,000원",
+        call: "유제한",
+        sms: "유제한",
+        tech: "5G",
+        data: "월 11GB + 매일 2GB",
+        speed: "3mbps 속도로 무제한",
+        extraCall: "300분",
+        numberChangeFee: "800원",
     },
 ];
 
@@ -57,22 +59,19 @@ export default function GuestPlanSelector() {
     const [selectedPlan, setSelectedPlan] = useState<MyPlan | null>(null);
 
     return (
-        <div className="relative w-[758px] h-[371px] bg-[#FAFAFA] rounded-xl shadow">
-            {/* 요금제 선택 문장 */}
-            <div
-                className="absolute text-[20px] leading-[28px] font-semibold"
-                style={{ top: 48, left: 40 }}
-            >
+        <div className="w-full md:w-[758px] bg-[#FAFAFA] rounded-xl shadow px-4 py-6 flex flex-col gap-6">
+            {/* 문장 + 요금제 선택 */}
+            <div className="text-[18px] md:text-[20px] leading-[28px] font-semibold">
                 고객님께서 사용 중인 요금제는<br />
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                         <Button
                             variant="outline"
                             className={cn(
-                                'mt-1 text-[20px] font-bold text-[#EF3E7D] bg-white px-2 py-1 h-auto border border-[#F7ADC3] hover:bg-[#FFF1F6] rounded-md inline-flex items-center gap-1'
+                                "mt-1 text-[18px] md:text-[20px] font-bold text-[#EF3E7D] bg-white px-2 py-1 h-auto border border-[#F7ADC3] hover:bg-[#FFF1F6] rounded-md inline-flex items-center gap-1"
                             )}
                         >
-                            {selectedPlan?.name ?? '요금제 선택'}
+                            {selectedPlan?.name ?? "요금제 선택"}
                             <ChevronDown className="w-4 h-4" />
                         </Button>
                     </PopoverTrigger>
@@ -97,14 +96,11 @@ export default function GuestPlanSelector() {
                         </Command>
                     </PopoverContent>
                 </Popover>
-                {selectedPlan && ' 입니다'}
+                {selectedPlan && " 입니다"}
             </div>
 
-            {/* 가장 큰 가격 텍스트 */}
-            <div
-                className="absolute text-[32px] font-bold text-black"
-                style={{ top: 88, right: 40 }}
-            >
+            {/* 가격 */}
+            <div className="text-[24px] md:text-[32px] font-bold text-black self-end">
                 {selectedPlan ? (
                     `월 ${selectedPlan.price}`
                 ) : (
@@ -112,11 +108,8 @@ export default function GuestPlanSelector() {
                 )}
             </div>
 
-            {/* 통화/문자/통신 기술 */}
-            <div
-                className="absolute bg-white rounded-md p-4"
-                style={{ top: 147, left: 40, width: 355, height: 80 }}
-            >
+            {/* 통화/문자/통신 */}
+            <div className="bg-white rounded-md p-4 w-full md:w-[355px]">
                 {selectedPlan ? (
                     <div className="flex justify-between text-sm font-medium">
                         <div>
@@ -141,16 +134,8 @@ export default function GuestPlanSelector() {
                 )}
             </div>
 
-            {/* 하단 정보 그룹 */}
-            <div
-                className="absolute grid grid-cols-4 gap-y-2 text-[14px] leading-5 font-medium"
-                style={{
-                    top: 272,
-                    left: 40,
-                    right: 206,
-                    bottom: 47,
-                }}
-            >
+            {/* 하단 정보 */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-2 text-[14px] leading-5 font-medium">
                 <div className="text-gray-500">데이터 제공량</div>
                 <div className="text-[#EF3E7D]">
                     {selectedPlan ? selectedPlan.data : <Skeleton className="w-20 h-4" />}
