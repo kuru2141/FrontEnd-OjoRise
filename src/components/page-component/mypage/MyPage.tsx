@@ -21,16 +21,19 @@ const MyPage = () => {
   const { data: planAge, isLoading: isAgeLoading, isError: isAgeError } = usePlanAge();
   const { mutate: withdraw } = useWithdraw();
 
+  //회원탈퇴
   const handleWithdraw = () => {
     withdraw();
     closeModal();
   };
 
+  // 통비티아이로 이동
   // 통비티아이 주소 추가하기
   const handleGoTongTest = () => {
     router.push("/");
   };
 
+  // 요금제 나이 테스트로 이동
   // 요금제 나이 테스트 주소 추가하기
   const handleGoAgeTest = () => {
     router.push("/");
@@ -43,7 +46,11 @@ const MyPage = () => {
       </div>
     );
   if (isSurveyError || isTongError || isAgeError || !survey || !tongBTI || !planAge)
-    return <p>회원가입하러가기</p>; // UI 수정하기
+    return (
+      <div className="flex flex-col justify-center items-center h-[90vh] w-full gap-3">
+        <Button onClick={() => router.push("/")} variant="back" className="font-bold text-2xl p-5">회원가입 하러가기</Button>
+      </div>
+    );
 
   const tongBTIImageMap: Record<string, string> = {
     "와이파이 유목민": "wifiNomad",
