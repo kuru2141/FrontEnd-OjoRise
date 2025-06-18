@@ -1,9 +1,9 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 import _ from "lodash";
 import Image from "next/image";
 import { memo, useState } from "react";
 import { WayParsing } from "./WayParsing";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 type telecomProvider = 'LG U+' | 'KT' | 'SKT';
 
@@ -25,7 +25,7 @@ const data = {
   },
 };
 
-function HoverBox() {
+function PopoverBox() {
   const [selected, setSelected] = useState<telecomProvider>('LG U+');
 
   const handleClick = (telecomProvider: telecomProvider) => {
@@ -33,14 +33,14 @@ function HoverBox() {
   }
 
   return (
-    <HoverCard>
-      <HoverCardTrigger>
+    <Popover>
+      <PopoverTrigger asChild>
         <div className="text-sm cursor-pointer flex gap-[5px] text-gray-40">
           <Image src={'/info.svg'} alt='info' width={18} height={18} />
           이미지 업로드 전 안내사항 보기
         </div>
-      </HoverCardTrigger>
-      <HoverCardContent  className="w-[471px] p-[20px] bg-gray-10">
+      </PopoverTrigger>
+      <PopoverContent  className="w-[471px] p-[20px] bg-gray-10">
         <div className="flex gap-[5px]">
           {_.map(['LG U+', 'KT', 'SKT'], (telecomProvider:telecomProvider) => (
             <div
@@ -65,9 +65,9 @@ function HoverBox() {
             </div>
           </div>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 }
 
-export default memo(HoverBox);
+export default memo(PopoverBox);

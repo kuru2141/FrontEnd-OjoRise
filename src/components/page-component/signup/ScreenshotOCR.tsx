@@ -7,7 +7,7 @@ import { isSameFile } from '@/utils/isSameFile';
 import { useOCRToGptMutation } from '@/hooks/useOCRToGptMutation';
 import Image from 'next/image';
 import { ChangeEvent, memo, useEffect, useRef, useState } from 'react';
-import HoverBox from './HoverBox';
+import PopoverBox from './PopoverBox';
 
 interface ScreenshotOCRProps {
   onComplete: (result: ResultItem) => void;
@@ -48,7 +48,7 @@ function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
         <Image src={`${imgFile ? '/afterOCR.svg' : '/beforeOCR.svg'}`} alt='capture' width={20} height={20} />
         <p className={cn('text-gray-40 font-bold text-base leading-[30px]', imgFile && 'text-primary-medium')}>캡처 이미지로 회원가입 채우기</p>
       </Button>
-      <HoverBox/>
+      <PopoverBox/>
     </div>
   );
 }
