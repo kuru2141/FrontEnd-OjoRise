@@ -1,5 +1,4 @@
 "use client";
-
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +20,6 @@ interface BannerItem {
   buttonTextColor: string;
   imagePosition: "left" | "right";
 }
-
 const bannerData: BannerItem[] = [
   {
     id: 1,
@@ -52,7 +50,6 @@ const bannerData: BannerItem[] = [
     imagePosition: "left",
   },
 ];
-
 const variants = {
   enter: (direction: number) => ({
     x: direction > 0 ? 758 : -758,
@@ -67,7 +64,6 @@ const variants = {
     opacity: 0,
   }),
 };
-
 const spring: Transition = {
   type: "spring",
   stiffness: 300,
@@ -78,19 +74,16 @@ export default function BannerCarousel() {
   const [[page, direction], setPage] = useState([0, 0]);
   const bannerIndex = wrap(0, bannerData.length, page);
   const currentBanner = bannerData[bannerIndex];
-
   const paginate = useCallback((newDirection: number) => {
     setPage(([currentPage]) => {
       const nextPage = currentPage + newDirection;
       return [nextPage, newDirection];
     });
   }, []);
-
   useEffect(() => {
     const interval = setInterval(() => {
       paginate(1);
     }, 5000);
-
     return () => clearInterval(interval);
   }, [paginate]);
 
@@ -198,7 +191,6 @@ export default function BannerCarousel() {
     </div>
   );
 }
-
 // 숫자를 감싸는 헬퍼 함수 (캐러셀 루프를 위함)
 const wrap = (min: number, max: number, value: number) => {
   const range = max - min;
