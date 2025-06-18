@@ -10,7 +10,12 @@ export function FamilyBundleGroup() {
   const { data, setField } = useSurveyStore();
 
   const handleValueChange = (value: string) => {
-    if (isValueValid(value)) setField("familyBundle", value);
+    setField("familyNum", '');
+    if (!isValueValid(value)) return;
+    setField("familyBundle", value);
+    if (value === 'no') {
+      setField("familyNum", '0');
+    }
   };
 
   return (
