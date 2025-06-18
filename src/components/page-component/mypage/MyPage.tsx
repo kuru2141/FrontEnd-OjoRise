@@ -27,6 +27,10 @@ const MyPage = () => {
     closeModal();
   };
 
+  const handleGoEditSurvey = () => {
+    router.push("/mypage/edit-survey");
+  };
+
   // 통비티아이로 이동
   // 통비티아이 주소 추가하기
   const handleGoTongTest = () => {
@@ -83,9 +87,9 @@ const MyPage = () => {
           <p className="font-bold text-[20px] sm:text-[24px]">이다예 님의 마이페이지입니다.</p>
         </div>
         <p className="font-bold text-[14px] sm:text-[18px] mb-2 sm:mb-5 mt-10">회원 정보</p>
-        <div className="flex flex-col rounded-[14px] sm:rounded-[20px] border p-3 sm:p-5 gap-3 sm:gap-5 w-full">
+        <div className="flex flex-col rounded-[14px] sm:rounded-[20px] border-[0.7px] sm:border p-3 sm:p-5 gap-3 sm:gap-5 w-full">
           {/* 사용중인 요금제 컴포넌트 */}
-          <div className="flex justify-between items-end rounded-[14px] sm:rounded-[20px] border p-3 sm:p-5">
+          <div className="flex justify-between items-end rounded-[14px] sm:rounded-[20px] border-[0.7px] sm:border p-3 sm:p-5">
             <div className="flex flex-col gap-5">
               <p className="text-[10px] sm:text-[18px]">사용 중인 요금제</p>
               <p className="font-bold text-[14px] sm:text-[24px] text-primary-medium">
@@ -94,7 +98,7 @@ const MyPage = () => {
             </div>
             <div className="self-end">
               <p className="text-[14px] sm:text-[24px] font-bold">
-                {survey.planPrice.toLocaleString()}원
+                월 {survey.planPrice.toLocaleString()}원
               </p>
             </div>
           </div>
@@ -129,7 +133,12 @@ const MyPage = () => {
           </div>
 
           {/* 정보 수정하기 */}
-          <button className="self-end font-bold text-[12px] sm:text-[16px]">정보 수정하기</button>
+          <button
+            onClick={handleGoEditSurvey}
+            className="self-end font-bold text-[12px] sm:text-[16px]"
+          >
+            정보 수정하기
+          </button>
         </div>
 
         <p className="font-bold text-[14px] sm:text-[18px] mb-2 sm:mb-5 mt-10">테스트 결과</p>
@@ -175,7 +184,7 @@ const MyPage = () => {
 
         {/* 요금제 나이 테스트 */}
         {planAge?.age ? (
-          <div className="flex flex-col gap-4 rounded-[14px] sm:rounded-[20px] border pt-5 pr-5 pl-5 sm:pt-10 sm:pr-10 sm:pl-10 w-full">
+          <div className="flex flex-col gap-4 rounded-[14px] sm:rounded-[20px] border-[0.7px] sm:border pt-5 pr-5 pl-5 sm:pt-10 sm:pr-10 sm:pl-10 w-full">
             <p className="font-bold text-[12px] sm:text-[18px]">요금제 나이 테스트</p>
             <div className="flex items-center justify-center text-[18px] sm:text-[32px] font-bold gap-2">
               <p>요금제 나이는</p>
@@ -189,7 +198,7 @@ const MyPage = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-row justify-center rounded-[14px] sm:rounded-[20px] border w-full pt-2 sm:pt-5">
+          <div className="flex flex-row justify-center rounded-[14px] sm:rounded-[20px] border-[0.7px] sm:border w-full pt-2 sm:pt-5">
             <div className="flex flex-col justify-center pl-5 sm:pl-15">
               <p className="font-bold text-[16px] sm:text-[28px]">요금제 나이 테스트</p>
               <p className="font-bold text-[8px] sm:text-[16px] text-gray-60">
