@@ -1,12 +1,12 @@
+import { withdraw } from "@/services/authService";
 import { useMutation } from "@tanstack/react-query";
-import { deleteWithdraw } from "@/services/deleteWithdraw";
 import { useRouter } from "next/navigation";
 
 export const useWithdraw = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: deleteWithdraw,
+    mutationFn: withdraw,
     onSuccess: () => {
       router.push("/");
     },

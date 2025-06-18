@@ -42,3 +42,14 @@ export async function handleLoginSuccess(accessToken: string) {
     console.error("찜한 요금제 가져오기 실패:", err);
   }
 }
+
+/**
+ * 회원 탈퇴 요청을 보냅니다.
+ *
+ * @returns 서버로부터 받은 응답 데이터
+ * @throws 탈퇴 요청 실패 시 예외를 throw합니다.
+ */
+export const withdraw = async () => {
+  const response = await api.delete("/auth/withdraw");
+  return response.data;
+};

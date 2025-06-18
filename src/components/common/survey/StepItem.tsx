@@ -1,11 +1,10 @@
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
-import { patchIsSurvey } from "@/services/patchIsSurvey";
-import { postSurvey } from "@/services/postSurvey";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useLayoutEffect, useRef, useState } from "react";
+import { IsSurvey, postSurvey } from "@/services/survey";
 
 interface StepItemProps {
   index: number;
@@ -53,9 +52,9 @@ export const StepItem = ({
           familyNum: data.familyNum,
         };
         await postSurvey(payload);
-        await patchIsSurvey();
+        await IsSurvey();
 
-        router.push("/main-page");
+        router.push("/");
       } catch (err) {
         console.error("설문 완료 실패:", err);
         alert("설문 완료 처리 중 오류가 발생했습니다.");
