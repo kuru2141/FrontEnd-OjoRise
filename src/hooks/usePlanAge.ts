@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPlanAge } from "@/services/getPlanAge";
 
 interface PlanAgeResponse {
-  planAgeResult: string;
+  age: string;
 }
 
 export const usePlanAge = () => {
