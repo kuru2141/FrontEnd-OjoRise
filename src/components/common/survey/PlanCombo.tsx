@@ -30,7 +30,7 @@ export function PlanCombo() {
   }, [data.planName]);
 
   React.useEffect(() => {
-    if (input === data.planName) setShowList(false);
+    if (input === data.planName && input !== '') setShowList(false);
     else setShowList(true);
   }, [input, data.planName]);
 
