@@ -4,6 +4,7 @@ import { useResultStore } from "@/stores/useResultStore";
 import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 import { fetchTongBTIInfo, saveTongBTIResult, sendRecommendations } from "@/services/tongbti";
 
 export default function TongBTILoadingPage() {
@@ -40,8 +41,27 @@ export default function TongBTILoadingPage() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-[#fcff63]/20">
-      <p className="text-xl font-semibold mb-4">나의 통BTI 분석 중</p>
-      <img src="/TongBTI/loading.png" alt="분석 중 캐릭터" className="w-48 h-auto" />
+      <motion.p
+        className="text-xl font-semibold mb-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        나의 통BTI 분석 중
+      </motion.p>
+      <motion.img
+        src="/TongBTI/loading.png"
+        alt="분석 중 캐릭터"
+        className="w-48 h-auto"
+        animate={{
+          y: [0, -10, 0],
+        }}
+        transition={{
+          duration: 1,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
     </div>
   );
 }
