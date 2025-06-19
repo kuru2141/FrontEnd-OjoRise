@@ -1,10 +1,9 @@
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
-import { patchIsSurvey } from "@/services/patchIsSurvey";
-import { postSurvey } from "@/services/postSurvey";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useSurveyMutation } from "@/hooks/useSurveyMutation";
 
 interface StepItemProps {
   stepRef?: (el: HTMLDivElement | null) => void;
@@ -18,6 +17,7 @@ interface StepItemProps {
   showContent: boolean;
   children: React.ReactNode;
   isNextDisabled: boolean;
+  isSignup: boolean;
 }
 
 export const StepItem = ({
@@ -32,29 +32,24 @@ export const StepItem = ({
   showContent,
   children,
   isNextDisabled,
+  isSignup,
 }: StepItemProps) => {
   const { data } = useSurveyStore();
+  const { mutate } = useSurveyMutation();
   const router = useRouter();
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (isLast) {
-      try {
-        const payload = {
-          birthdate: data.birthdate.replace(/\./g, "-"),
-          telecomProvider: data.telecomProvider,
-          planName: data.planName,
-          planPrice: Number(data.planPrice),
-          familyBundle: data.familyBundle === "yes" ? "할 예정이에요" : "안 할 예정이에요",
-          familyNum: data.familyNum,
-        };
-        await postSurvey(payload);
-        await patchIsSurvey();
-
-        router.push("/main-page");
-      } catch (err) {
-        console.error("설문 완료 실패:", err);
-        alert("설문 완료 처리 중 오류가 발생했습니다.");
-      }
+      const payload = {
+        birthdate: data.birthdate.replace(/\./g, "-"),
+        telecomProvider: data.telecomProvider,
+        planName: data.planName,
+        planPrice: Number(data.planPrice),
+        familyBundle: data.familyBundle === "yes" ? "할 예정이에요" : "안 할 예정이에요",
+        familyNum: data.familyNum,
+      };
+      mutate(payload);
+      if (isSignup) router.push('/');
     } else {
       onNext();
     }

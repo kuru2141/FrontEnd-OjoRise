@@ -14,7 +14,7 @@ export function FamilyBundleGroup() {
     if (!isValueValid(value)) return;
     setField("familyBundle", value);
     if (value === 'no') {
-      setField("familyNum", '0');
+      setField("familyNum", '1');
     }
   };
 
