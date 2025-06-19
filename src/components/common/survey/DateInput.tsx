@@ -18,6 +18,17 @@ export function DateInput() {
   const [month, setMonth] = React.useState<Date | undefined>(date);
   const [value, setValue] = React.useState(data.birthdate);
 
+  React.useEffect(() => {
+    if (data.birthdate) {
+      setValue(data.birthdate);
+      const parsed = parseDateFromString(data.birthdate);
+      if (parsed) {
+        setDate(parsed);
+        setMonth(parsed);
+      }
+    }
+  }, [data.birthdate]);
+
   // 날짜 문자열을 상태와 전역 스토어에 동기화하는 함수
   const handleChange = (formatted: string) => {
     setValue(formatted);

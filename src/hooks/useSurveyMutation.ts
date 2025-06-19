@@ -3,23 +3,30 @@ import { SurveyRequest } from '@/types/survey';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, usePathname } from "next/navigation";
 
-const handleSurvey = async (surverRequest: SurveyRequest): Promise<string> => {
-  const postSurveyResult = await postSurvey(surverRequest);
-  await IsSurvey();
-
-  return postSurveyResult;
-}
-
 export const useSurveyMutation = () => {
   const router = useRouter();
   const pathname = usePathname();
+
+  const handleSurvey = async (surveyRequest: SurveyRequest): Promise<string> => {
+    const postSurveyResult = await postSurvey(surveyRequest);
+
+    if (pathname.startsWith("/signup")) {
+      await IsSurvey();
+    }
+
+    return postSurveyResult;
+  };
 
   return useMutation<string, Error, SurveyRequest>({
     mutationKey: ['OCRToGpt'],
     mutationFn:  handleSurvey,
     onSuccess: (data) => {
       console.log(data);
-      if (pathname.startsWith('/signup')) router.push('/');
+      if (pathname.startsWith("/signup")) {
+        router.push("/");
+      } else if (pathname.startsWith("/mypage/edit-survey")) {
+        router.push("/mypage");
+      }
     },
     onError: (error) => {
       console.error(error);

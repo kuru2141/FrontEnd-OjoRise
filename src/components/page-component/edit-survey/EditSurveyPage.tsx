@@ -1,17 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import UpdateModal from "./UpdateModal";
+import VerticalLinearStepper from "@/components/common/survey/VerticalLinearStepper";
+import { useSurveyResult } from "@/hooks/useSurveyResult";
+import { useSurveyStore } from "@/stores/surveyStore";
+import { useEffect } from "react";
+import { typedEntries } from "@/utils/typeEntries";
 
 const EditSurveyPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const { data: surveyData } = useSurveyResult();
 
-  const handleWithdraw = () => {
-    //수정api 보내기 hook에서 성공하면 마이페이지로 이동하는거 추가하기
-    closeModal();
-  };
+  useEffect(() => {
+    if (surveyData) {
+      const normalized = {
+        ...surveyData,
+        birthdate: surveyData.birthdate.replace(/-/g, "."),
+        familyBundle: surveyData.familyBundle === "할 예정이에요" ? "yes" : "no",
+        familyNum: surveyData.familyNum.replace("대", ""),
+      };
+
+      typedEntries(normalized).forEach(([key, value]) => {
+        useSurveyStore.getState().setField(key, value);
+      });
+    }
+  }, [surveyData]);
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
@@ -22,15 +33,8 @@ const EditSurveyPage = () => {
             정보를 작성해주시면 적합한 요금제를 추천해드려요
           </p>
         </div>
+        <VerticalLinearStepper />
       </div>
-      <button onClick={openModal} className="text-gray-40 mt-10 text-[8px] sm:text-[12px]">
-        수정하기
-      </button>
-      <UpdateModal
-        isOpen={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onConfirm={handleWithdraw}
-      />
     </div>
   );
 };
