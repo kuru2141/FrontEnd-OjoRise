@@ -1,6 +1,6 @@
 import { ApiPlan } from "@/types/plan";
 import api from "@/lib/axios";
-import { SurveyRequest } from "@/types/survey";
+import { SurveyRequest, SurveyResponse } from "@/types/survey";
 
 /**
  * 사용자의 통신사에 따라 요금제 목록을 조회합니다.
@@ -62,3 +62,19 @@ export async function postSurvey(data: SurveyRequest) {
     throw error;
   }
 }
+
+/**
+ * 설문 결과를 조회합니다.
+ *
+ * @returns 사용자의 설문 응답 결과 (SurveyResponse 타입)
+ * @throws 설문 결과 조회 실패 시 예외를 throw합니다.
+ */
+export const getSurveyResult = async (): Promise<SurveyResponse> => {
+  try {
+    const response = await api.get("/survey/result");
+    return response.data;
+  } catch (error) {
+    console.error("설문 결과 조회 실패:", error);
+    throw error;
+  }
+};
