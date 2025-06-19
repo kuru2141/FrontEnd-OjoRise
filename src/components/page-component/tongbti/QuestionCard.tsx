@@ -1,6 +1,7 @@
 "use client";
 import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -33,31 +34,62 @@ export default function QuestionCard() {
 
   if (!question) return <div>로딩 중...</div>;
 
+  const answerListVariants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const answerItemVariants = {
+    hidden: { opacity: 0, x: 100 },
+    show: { opacity: 1, x: 0 },
+  };
+
   return (
     <div className="min-h-screen bg-[#fcff63]/20 flex flex-col justify-center items-center px-4 text-center">
       <div className="w-full max-w-md text-left">
-        <h2 className="text-[#FF008C] text-4xl font-bold mb-8">{`Q${currentStep}`}</h2>
-        <p className="text-2xl font-bold mb-8">{question.questionTitle}</p>
+        <motion.div
+          key={currentStep}
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-[#FF008C] text-4xl font-bold mb-8">{`Q${currentStep}`}</h2>
+          <p className="text-2xl font-bold mb-8">{question.questionTitle}</p>
+        </motion.div>
 
-        {[question.answerOne, question.answerTwo].map((text, idx) => {
-          const index = idx + 1;
-          const isSelected = selected === index;
+        <motion.div
+          variants={answerListVariants}
+          initial="hidden"
+          animate="show"
+          key={`answers-${currentStep}`}
+        >
+          {[question.answerOne, question.answerTwo].map((text, idx) => {
+            const index = idx + 1;
+            const isSelected = selected === index;
 
-          return (
-            <button
-              key={index}
-              onClick={() => handleClick(index)}
-              className={clsx(
-                "w-full max-w-md py-6 px-4 mb-4 rounded-md transition-colors font-bold text-lg",
-                isSelected
-                  ? "bg-[#FF008C] text-white"
-                  : "bg-white text-gray-700 hover:bg-[#FF008C] hover:text-white"
-              )}
-            >
-              {text}
-            </button>
-          );
-        })}
+            return (
+              <motion.button
+                key={index}
+                variants={answerItemVariants}
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.03 }}
+                onClick={() => handleClick(index)}
+                className={clsx(
+                  "w-full max-w-md py-6 px-4 mb-4 rounded-md transition-colors font-bold text-lg",
+                  isSelected
+                    ? "bg-[#FF008C] text-white"
+                    : "bg-white text-gray-700 hover:bg-[#FF008C] hover:text-white"
+                )}
+              >
+                {text}
+              </motion.button>
+            );
+          })}
+        </motion.div>
 
         <div className="mt-15 w-full max-w-md text-right">
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
