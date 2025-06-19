@@ -1,9 +1,9 @@
-import { Question } from "@/types/tongbtiQuestion";
+import { Question } from "@/types/tongBTI";
 import { create } from "zustand";
 
 type Answer = {
-  question_id: number;
-  answer_index: number;
+  questionId: number;
+  answerIndex: number;
 };
 
 type TongBTIState = {
@@ -13,9 +13,9 @@ type TongBTIState = {
   resultType: string | null;
 
   setQuestions: (questions: Question[]) => void;
-  selectAnswer: (question_id: number, answer_index: number) => void;
+  selectAnswer: (questionId: number, answerIndex: number) => void;
   goToNext: () => void;
-  calculateResult: () => void;
+  calculateResult: () => { resultKey: string; resultType: string };
   reset: () => void;
 };
 
@@ -26,19 +26,37 @@ export const useTongBTIStore = create<TongBTIState>((set, get) => ({
   resultType: null,
 
   setQuestions: (questions) => set({ questions }),
-  selectAnswer: (question_id, answer_index) => {
-    const filtered = get().answers.filter((a) => a.question_id !== question_id);
-    set({ answers: [...filtered, { question_id, answer_index }] });
+  selectAnswer: (questionId, answerIndex) => {
+    const filtered = get().answers.filter((a) => a.questionId !== questionId);
+    set({ answers: [...filtered, { questionId, answerIndex }] });
   },
   goToNext: () => set((state) => ({ currentStep: state.currentStep + 1 })),
   calculateResult: () => {
-    // const counts = { A: 0, B: 0 };
-    // get().answers.forEach(({ answer_index }) => {
-    //   if (answer_index === 1) counts.A += 1;
-    //   else if (answer_index === 2) counts.B += 1;
-    // });
-    // const result = counts.B > counts.A ? "무제한의 민족" : "절약형 민족";
-    // set({ resultType: result });
+    const answers = get().answers;
+    const countA = answers.filter((a) => a.answerIndex === 1).length;
+
+    let resultType = "";
+
+    if (countA >= 10) resultType = "와이파이 유목민";
+    else if (countA >= 7) resultType = "보조금 헌터";
+    else if (countA === 6) resultType = "가성비 교신도";
+    else if (countA >= 4) resultType = "중간값 장인";
+    else if (countA >= 2) resultType = "폭주억제기";
+    else resultType = "무제한의 민족";
+
+    set({ resultType });
+
+    const resultKeyMap: Record<string, string> = {
+      "무제한의 민족": "unlimitedTribe",
+      "보조금 헌터": "subsidyHunter",
+      "중간값 장인": "midrangeMaster",
+      "와이파이 유목민": "wifiNomad",
+      "가성비 교신도": "valueSeeker",
+      "폭주 억제기": "speedController",
+    };
+
+    const resultKey = resultKeyMap[resultType];
+    return { resultKey, resultType };
   },
   reset: () =>
     set({
