@@ -9,6 +9,7 @@ import LinearProgress from "@/components/common/progress/LinearProgress";
 import { usePlanAge } from "@/hooks/usePlanAge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const MyPage = () => {
   const router = useRouter();
@@ -114,7 +115,7 @@ const MyPage = () => {
                   {survey.birthdate.replace(/-/g, ".")}
                 </p>
               </div>
-              <div className="self-end w-17 h-17 sm:w-25 sm:h-25">
+              <div className="self-end">
                 <img src="/birthday.svg" alt="생일" />
               </div>
             </div>
@@ -133,7 +134,7 @@ const MyPage = () => {
                 </div>
               </div>
               <div className="self-end w-17 h-17 sm:w-25 sm:h-25">
-                <img src="/family.svg" alt="가족" />
+                <Image src="/family.svg" alt="가족" />
               </div>
             </div>
           </div>
@@ -169,7 +170,7 @@ const MyPage = () => {
               </div>
             </div>
             <div className="self-end">
-              <img
+              <Image
                 src={`/TongBTI/${tongResultKey}.svg`}
                 alt={tongBTI.tongResult}
                 className="w-[100px] h-[100px] sm:w-[200px] sm:h-[200px]"
@@ -201,7 +202,7 @@ const MyPage = () => {
             <p className="font-bold text-[12px] sm:text-[18px]">요금제 나이 테스트</p>
             <div className="flex items-center justify-center text-[16px] sm:text-[32px] font-bold gap-2">
               <p>요금제 나이는</p>
-              <img
+              <Image
                 src={`/planAge/${planAgeKey}.svg`}
                 alt="캐릭터"
                 className="w-[100px] h-[100px] sm:w-[160px] sm:h-[160px]"
