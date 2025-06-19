@@ -52,7 +52,9 @@ const MyPage = () => {
   if (isSurveyError || isTongError || isAgeError || !survey || !tongBTI || !planAge)
     return (
       <div className="flex flex-col justify-center items-center h-[90vh] w-full gap-3">
-        <Button onClick={() => router.push("/")} variant="back" className="font-bold text-2xl p-5">회원가입 하러가기</Button>
+        <Button onClick={() => router.push("/")} variant="back" className="font-bold text-2xl p-5">
+          회원가입 하러가기
+        </Button>
       </div>
     );
 
@@ -122,7 +124,11 @@ const MyPage = () => {
               <div className="flex flex-col gap-5">
                 <p className="text-[10px] sm:text-[18px]">가족 결합</p>
                 <div>
-                  <p className="font-bold text-[12px] sm:text-[18px] ">{survey.familyNum}</p>
+                  {survey.familyNum === "1대" ? (
+                    <div className="h-7"></div>
+                  ) : (
+                    <p className="font-bold text-[12px] sm:text-[18px] ">{survey.familyNum}</p>
+                  )}
                   <p className="font-bold text-[14px] sm:text-[24px] ">{survey.familyBundle}</p>
                 </div>
               </div>
@@ -133,12 +139,19 @@ const MyPage = () => {
           </div>
 
           {/* 정보 수정하기 */}
-          <button
-            onClick={handleGoEditSurvey}
-            className="self-end font-bold text-[12px] sm:text-[16px]"
-          >
-            정보 수정하기
-          </button>
+          <div className="flex justify-end items-center gap-1">
+            <button
+              onClick={handleGoEditSurvey}
+              className="font-bold text-primary-medium text-[12px] sm:text-[18px] flex items-center"
+            >
+              정보 수정하기
+            </button>
+            <img
+              src="/pencil.svg"
+              className="w-[10px] h-[10px] sm:w-[18px] sm:h-[18px]"
+              alt="수정 아이콘"
+            />
+          </div>
         </div>
 
         <p className="font-bold text-[14px] sm:text-[18px] mb-2 sm:mb-5 mt-10">테스트 결과</p>
@@ -186,7 +199,7 @@ const MyPage = () => {
         {planAge?.age ? (
           <div className="flex flex-col gap-4 rounded-[14px] sm:rounded-[20px] border-[0.7px] sm:border pt-5 pr-5 pl-5 sm:pt-10 sm:pr-10 sm:pl-10 w-full">
             <p className="font-bold text-[12px] sm:text-[18px]">요금제 나이 테스트</p>
-            <div className="flex items-center justify-center text-[18px] sm:text-[32px] font-bold gap-2">
+            <div className="flex items-center justify-center text-[16px] sm:text-[32px] font-bold gap-2">
               <p>요금제 나이는</p>
               <img
                 src={`/planAge/${planAgeKey}.svg`}
