@@ -9,12 +9,6 @@ export function FamilyNumRadioGroup() {
       <p className="font-bold text-[18px] mb-3 mt-4">몇 대 할 예정인가요?</p>
       <RadioGroup value={data.familyNum} onValueChange={(value) => setField("familyNum", value)}>
         <div className="flex items-center gap-3">
-          <RadioGroupItem value="1" id="r1" />
-          <Label htmlFor="r1" className="text-[18px]">
-            1대
-          </Label>
-        </div>
-        <div className="flex items-center gap-3">
           <RadioGroupItem value="2" id="r2" />
           <Label htmlFor="r2" className="text-[18px]">
             2대

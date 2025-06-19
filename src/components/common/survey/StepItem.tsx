@@ -5,9 +5,9 @@ import { postSurvey } from "@/services/postSurvey";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useLayoutEffect, useRef, useState } from "react";
 
 interface StepItemProps {
+  stepRef?: (el: HTMLDivElement | null) => void;
   index: number;
   active: boolean;
   completed: boolean;
@@ -21,6 +21,7 @@ interface StepItemProps {
 }
 
 export const StepItem = ({
+  stepRef,
   index,
   active,
   completed,
@@ -34,12 +35,6 @@ export const StepItem = ({
 }: StepItemProps) => {
   const { data } = useSurveyStore();
   const router = useRouter();
-  const heightRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    if (heightRef.current) setHeight(heightRef.current.scrollHeight);
-  }, [showContent]);
 
   const handleNext = async () => {
     if (isLast) {
@@ -67,19 +62,19 @@ export const StepItem = ({
 
   return (
     <div className="flex">
-      <div className="flex flex-col items-center">
-        <StepIndicator step={index + 1} active={active} completed={completed} />
+      <div className="flex flex-col items-center" ref={stepRef}>
+        <StepIndicator step={index + 1} active={active} completed={completed}/>
         {!isLast && (
           <motion.div
             initial={{ height: 30 }}
-            animate={{ height: showContent ? height : 30 }}
+            animate={{ height: showContent ? '100%' : 30 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
             className="my-2 w-[2px] bg-[#BDBDBD] h-[30px]"
           />
         )}
       </div>
-      <div ref={heightRef} className="ml-4 ">
-        <p className="my-1.5 font-bold text-[20px]">{label}</p>
+      <div className="ml-4 ">
+        <p className="my-1.5 font-bold text-[20px]" ref={stepRef}>{label}</p>
         {showContent && (
           <div className="mt-5">
             <p className="text-sm text-gray-700 leading-relaxed"></p>

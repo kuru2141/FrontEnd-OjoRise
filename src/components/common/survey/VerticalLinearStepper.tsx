@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StepItem } from "./StepItem";
 import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
@@ -23,6 +23,17 @@ export default function VerticalLinearStepper() {
   const [step, setStep] = useState(0);
   const [ocrResult, setOcrResult] = useState<ResultItem>();
   const [parsedTelecomProvider, setParsedTelecomProvider] = useState('');
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const el = stepRefs.current[step];
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }, [step]);
+
   const onComplete = (result: ResultItem) => {
     setOcrResult(result);
   }
@@ -104,6 +115,7 @@ export default function VerticalLinearStepper() {
       {steps.map((s, i) => (
         <StepItem
           key={i}
+          stepRef={(el) => stepRefs.current[i] = el}
           index={i}
           active={step === i}
           completed={step > i}

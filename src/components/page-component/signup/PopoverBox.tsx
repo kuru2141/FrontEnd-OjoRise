@@ -57,7 +57,7 @@ function PopoverBox() {
           <Image src={data[selected].image} height={data[selected].height} width={168} alt={selected} />
           <div className="flex flex-col justify-between">
             <div className="flex flex-col gap-[3px]">
-              <div className="text-gray-60 text-base h-[60px]">요금제 이름과 실 납부 금액이 보이도록 캡처해 주세요.</div>
+              <div className="text-gray-60 text-base h-[50px]">요금제 이름과 실 납부 금액이 보이도록 캡처해 주세요.</div>
               <WayParsing text={data[selected].way} className="text-base font-bold"/>
             </div>
             <div className="border border-primary-medium bg-primary-bright p-[10px] rounded-[5px] text-base ">
