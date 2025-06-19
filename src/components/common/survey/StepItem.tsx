@@ -1,7 +1,6 @@
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
 import { useSurveyStore } from "@/stores/surveyStore";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useSurveyMutation } from "@/hooks/useSurveyMutation";
 
@@ -17,7 +16,6 @@ interface StepItemProps {
   showContent: boolean;
   children: React.ReactNode;
   isNextDisabled: boolean;
-  isSignup: boolean;
 }
 
 export const StepItem = ({
@@ -32,11 +30,9 @@ export const StepItem = ({
   showContent,
   children,
   isNextDisabled,
-  isSignup,
 }: StepItemProps) => {
   const { data } = useSurveyStore();
   const { mutate } = useSurveyMutation();
-  const router = useRouter();
 
   const handleNext = () => {
     if (isLast) {
@@ -49,7 +45,6 @@ export const StepItem = ({
         familyNum: data.familyNum,
       };
       mutate(payload);
-      if (isSignup) router.push('/');
     } else {
       onNext();
     }
