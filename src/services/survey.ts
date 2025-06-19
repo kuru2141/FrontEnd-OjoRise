@@ -43,12 +43,12 @@ export async function IsSurvey() {
  * 설문 데이터를 서버에 전송합니다.
  *
  * @param data 사용자가 입력한 설문 정보 (SurveyRequest 타입)
- *  - birthdate: 생년월일 (예: "1990-01-01")
- *  - telecomProvider: 통신사 이름 (예: "SKT", "KT", "LGU+")
- *  - planName: 사용 중인 요금제 이름
- *  - planPrice: 요금제 가격 (숫자, 원 단위)
- *  - familyBundle: 가족 결합 유형 (예: "부모", "형제", "자녀" 등)
- *  - familyNum: 가족 결합 인원 수 (문자열로 받음, 예: "3")
+ *  - birthdate(LocalDate): 생년월일 (예: 2025-06-12)
+ *  - telecomProvider(ENUM): 통신사 이름 (예: "SKT", "KT", "LG")
+ *  - planName(String): 사용 중인 요금제 이름 (예: 5G 스탠다드)
+ *  - planPrice(Integer): 요금제 가격
+ *  - familyBundle(ENUM): 가족 결합 의향 (예: "할 예정이에요", "안 할 예정이에요")
+ *  - familyNum(ENUM): 가족 결합 인원 수 (예: '1대', '2대', '3대', '4대 이상')
  *
  * @returns 서버로부터 받은 응답 데이터
  * @throws 설문 전송 중 에러가 발생하면 예외를 throw합니다.
