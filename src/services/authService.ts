@@ -1,13 +1,9 @@
 import api from "@/lib/axios";
 import { fetchRecommendedPlans } from "./recommenendPlanService";
-import { useAuthStore } from "@/stores/authStore";
 import { fetchLikedPlans } from "./dipPlanService";
 
 export async function handleLoginSuccess(accessToken: string) {
   localStorage.setItem("accessToken", accessToken);
-
-  const { login } = useAuthStore.getState();
-  login();
 
   let localRecommendations: string[] = [];
   try {
