@@ -28,7 +28,7 @@ export function SelectCarrier() {
       label: plan.name,
     }));
     setPlanList(formattedPlans);
-  }, [plans]);
+  }, [plans, setPlanList]);
   
   return (
     <div>

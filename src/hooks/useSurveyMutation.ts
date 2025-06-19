@@ -19,6 +19,7 @@ export const useSurveyMutation = () => {
     mutationKey: ['OCRToGpt'],
     mutationFn:  handleSurvey,
     onSuccess: (data) => {
+      console.log(data);
       if (pathname.startsWith('/signup')) router.push('/');
     },
     onError: (error) => {

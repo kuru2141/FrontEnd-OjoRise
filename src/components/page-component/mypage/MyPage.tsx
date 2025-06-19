@@ -6,6 +6,7 @@ import { useState } from "react";
 import WithdrawModal from "./WithdrawModal";
 import { useWithdraw } from "@/hooks/useWithdraw";
 import LinearProgress from "@/components/common/progress/LinearProgress";
+import Image from "next/image";
 
 const MyPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,7 +68,7 @@ const MyPage = () => {
                 <p className="font-bold text-[24px] ">{survey.birthdate.replace(/-/g, ".")}</p>
               </div>
               <div className="self-end">
-                <img src="/birthday.svg" alt="생일" />
+                <Image src="/birthday.svg" alt="생일" />
               </div>
             </div>
 
@@ -81,7 +82,7 @@ const MyPage = () => {
                 </div>
               </div>
               <div className="self-end">
-                <img src="/family.svg" alt="가족" />
+                <Image src="/family.svg" alt="가족" />
               </div>
             </div>
           </div>
@@ -105,7 +106,7 @@ const MyPage = () => {
               </div>
             </div>
             <div className="self-end">
-              <img
+              <Image
                 src={`/TongBTI/${tongResultKey}.svg`}
                 alt={tongBTI.tongResult}
                 className="w-[200px] h-[200px]"
@@ -123,7 +124,7 @@ const MyPage = () => {
           <div className="flex items-center justify-center text-[32px] font-bold gap-2">
             <p>요금제 나이는</p>
             {/* 이미지 넣고 수정하기 */}
-            <img src="/20.svg" alt="캐릭터" className="w-[160px] h-[160px]" />
+            <Image src="/20.svg" alt="캐릭터" className="w-[160px] h-[160px]" />
             <span className="text-primary-medium">20대</span>
             <p>입니다</p>
           </div>

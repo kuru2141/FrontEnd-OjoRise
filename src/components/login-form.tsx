@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToastStore } from "@/stores/toastStore"; // ← Zustand toast store
+import Image from "next/image";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { showErrorFromApi, showToast } = useToastStore();
@@ -74,7 +75,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 {/* SSO 버튼들 */}
                 <Button variant="kakao" type="button" onClick={handleKakaoLogin} className="w-full">
                   {/* Kakao icon */}
-                  <img src="/kakao.png" className="w-6" alt="logo"/>
+                  <Image src="/kakao.png" className="w-6" alt="logo"/>
                 </Button>
                 <Button variant="outline" type="button" className="w-full">
                   {/* Google icon */}
@@ -99,7 +100,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
+            <Image
               src="/placeholder.svg"
               alt="Image"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"

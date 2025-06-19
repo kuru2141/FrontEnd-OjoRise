@@ -59,7 +59,7 @@ export default function VerticalLinearStepper() {
     setField('telecomProvider', parsedTelecomProvider);
     setInput(ocrResult?.["요금제 이름"] || '');
     setField('planPrice', Number(ocrResult?.["실 납부금액"] || 0));
-  }, [plans, ocrResult, parsedTelecomProvider]);
+  }, [plans, ocrResult, parsedTelecomProvider, setField, setInput, setPlanList]);
 
   const validationSteps = [
     () => isValidDate(data.birthdate),

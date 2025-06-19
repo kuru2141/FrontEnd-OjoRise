@@ -40,7 +40,7 @@ function ScreenshotOCR({onComplete}: ScreenshotOCRProps) {
       
       mutate(formData);
     }
-  }, [imgFile]);
+  }, [imgFile, mutate]);
 
   return (
     <div className='mb-7 w-[260px]'>
