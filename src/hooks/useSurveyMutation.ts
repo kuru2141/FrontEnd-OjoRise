@@ -1,12 +1,11 @@
-import { patchIsSurvey } from '@/services/patchIsSurvey';
-import { postSurvey } from '@/services/postSurvey';
+import { IsSurvey, postSurvey } from '@/services/survey';
 import { SurveyRequest } from '@/types/survey';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, usePathname } from "next/navigation";
 
 const handleSurvey = async (surverRequest: SurveyRequest): Promise<string> => {
   const postSurveyResult = await postSurvey(surverRequest);
-  await patchIsSurvey();
+  await IsSurvey();
 
   return postSurveyResult;
 }

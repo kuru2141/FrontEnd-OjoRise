@@ -6,7 +6,7 @@ import api from "@/lib/axios";
  * @returns 서버로부터 받은 통BTI 결과 데이터 (예: tongResult)
  * @throws 조회 중 에러가 발생하면 예외를 throw합니다.
  */
-export const tongBTI = async () => {
+export const tongbti = async () => {
   try {
     const response = await api.get("/tongbti/result");
     return response.data;

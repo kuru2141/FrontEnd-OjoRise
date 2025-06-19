@@ -115,8 +115,8 @@ const MyPage = () => {
                   {survey.birthdate.replace(/-/g, ".")}
                 </p>
               </div>
-              <div className="self-end">
-                <img src="/birthday.svg" alt="생일" />
+              <div className="self-end w-17 h-17 sm:w-25 sm:h-25">
+                <Image src="/birthday.svg" alt="생일" width={100} height={100} />
               </div>
             </div>
 
@@ -134,7 +134,7 @@ const MyPage = () => {
                 </div>
               </div>
               <div className="self-end w-17 h-17 sm:w-25 sm:h-25">
-                <Image src="/family.svg" alt="가족" />
+                <Image src="/family.svg" alt="가족" width={100} height={100} />
               </div>
             </div>
           </div>
@@ -147,8 +147,10 @@ const MyPage = () => {
             >
               정보 수정하기
             </button>
-            <img
+            <Image
               src="/pencil.svg"
+              width={18}
+              height={18}
               className="w-[10px] h-[10px] sm:w-[18px] sm:h-[18px]"
               alt="수정 아이콘"
             />
@@ -173,13 +175,21 @@ const MyPage = () => {
               <Image
                 src={`/TongBTI/${tongResultKey}.svg`}
                 alt={tongBTI.tongResult}
+                width={100}
+                height={100}
                 className="w-[100px] h-[100px] sm:w-[200px] sm:h-[200px]"
               />
             </div>
           </div>
         ) : (
           <div className="flex flex-row justify-center w-full rounded-[14px] sm:rounded-[20px] bg-[#F8F8F8] p-3 sm:p-5 mb-5">
-            <img src="TongBTI.png" className="w-[100px] h-[100px] sm:w-[180px] sm:h-[180px]" />
+            <Image
+              src="/TongBTI.png"
+              alt="plan"
+              width={100}
+              height={100}
+              className="w-[100px] h-[100px] sm:w-[180px] sm:h-[180px]"
+            />
             <div className="flex flex-col justify-center">
               <p className="font-bold text-[16px] sm:text-[28px]">통BTI테스트</p>
               <p className="font-bold text-[8px] sm:text-[16px] text-gray-60">
@@ -205,6 +215,8 @@ const MyPage = () => {
               <Image
                 src={`/planAge/${planAgeKey}.svg`}
                 alt="캐릭터"
+                width={100}
+                height={100}
                 className="w-[100px] h-[100px] sm:w-[160px] sm:h-[160px]"
               />
               <span className="text-primary-medium">{planAge.age}</span>
@@ -226,7 +238,13 @@ const MyPage = () => {
                 테스트 하러가기
               </Button>
             </div>
-            <img src="BannerIMG.png" className="w-[110px] h-[90px] sm:w-[220px] sm:h-[180px]" />
+            <Image
+              src="/BannerIMG.png"
+              alt="plan"
+              width={220}
+              height={220}
+              className="w-[110px] h-[90px] sm:w-[220px] sm:h-[180px]"
+            />
           </div>
         )}
       </div>
