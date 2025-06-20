@@ -6,32 +6,35 @@ import { useResultStore } from "@/stores/useResultStore";
 import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import KakaoInitializer from "@/components/common/kakao/KakaoInitializer";
 import ShareButton from "@/components/common/button/ShareButton";
-
-const imageUrlMap: Record<string, string> = {
-  unlimitedTribe: "/TongBTI/unlimitedTribe.svg",
-  midrangeMaster: "/TongBTI/midrangeMaster.svg",
-  valueSeeker: "/TongBTI/valueSeeker.svg",
-  speedController: "/TongBTI/speedController.svg",
-  subsidyHunter: "/TongBTI/subsidyHunter.svg",
-  wifiNomad: "/TongBTI/wifiNomad.svg",
-};
+import { fetchTongBTIInfo } from "@/services/tongbti";
+import { typeKeyMap } from "@/utils/tongbtiMap";
 
 export default function ResultPage() {
-  const { resultInfo } = useResultStore();
+  const { resultInfo, setResultInfo } = useResultStore();
   const { typeKey } = useParams();
   const router = useRouter();
 
   useEffect(() => {
-    if (!resultInfo) {
-      router.replace("/tongbti");
-    }
-  }, [resultInfo]);
+    const loadResult = async () => {
+      if (!resultInfo && typeKey) {
+        try {
+          const info = await fetchTongBTIInfo(typeKey as string);
+          setResultInfo(info);
+        } catch (err) {
+          alert("결과를 불러오는 데 실패했습니다.");
+          router.replace("/tongbti");
+        }
+      }
+    };
+
+    loadResult();
+  }, [resultInfo, typeKey]);
 
   if (!resultInfo) return null;
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const shareUrl = `${baseUrl}/tongbti/result/${typeKey}`;
-  const imageUrl = `${baseUrl}${imageUrlMap[typeKey as string]}`;
+  const imageUrl = `${baseUrl}${typeKeyMap[typeKey as string]?.image || "/default.png"}`;
 
   return (
     <>

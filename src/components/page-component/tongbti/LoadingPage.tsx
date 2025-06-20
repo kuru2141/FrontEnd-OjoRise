@@ -19,7 +19,7 @@ export default function TongBTILoadingPage() {
       try {
         if (!resultType) throw new Error("결과 유형이 없습니다.");
 
-        const info = await fetchTongBTIInfo(resultType);
+        const info = await fetchTongBTIInfo(resultKey);
         setResultInfo(info);
 
         const token = localStorage.getItem("accessToken");
