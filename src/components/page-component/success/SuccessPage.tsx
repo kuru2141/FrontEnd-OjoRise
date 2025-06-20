@@ -2,23 +2,30 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuthStore } from "@/stores/authStore";
-import { handleLoginSuccess } from "@/services/authService";
+import { useGetIsSurveyedQuery } from "@/hooks/useGetIsSurveyed";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SuccessPageRoute() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setLoggedIn, setGuest } = useAuthStore();
+  const queryClient = useQueryClient();
   const accessToken = searchParams.get("accessToken");
+  const {data: isSurveyed, isLoading} = useGetIsSurveyedQuery();
 
   useEffect(() => {
     if (accessToken) {
-      handleLoginSuccess(accessToken);
-      setLoggedIn(true);
-      setGuest(false);
-      router.push("/signup");
+      sessionStorage.setItem('accessToken', accessToken);
+      
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     }
-  }, [accessToken, router, setGuest, setLoggedIn]);
+  }, [accessToken, queryClient]);
+
+  useEffect(() => {
+    if (!isLoading && isSurveyed !== undefined) {
+      if(isSurveyed) router.push("/");
+      else router.push("/signup");
+    }
+  }, [isSurveyed, isLoading, router]);
 
   return null;
 }

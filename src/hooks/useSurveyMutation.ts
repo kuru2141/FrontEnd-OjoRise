@@ -28,10 +28,10 @@ export const useSurveyMutation = () => {
         if (pathname.startsWith("/signup") && accessToken) {
           login();
           router.push("/");
+        } else if (pathname.startsWith("/mypage/edit-survey")) {
+          router.push("/mypage");
         }
-      } else if (pathname.startsWith("/mypage/edit-survey")) {
-        router.push("/mypage");
-      }
+      } 
     },
     onError: (error) => {
       console.error(error);

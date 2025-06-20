@@ -40,14 +40,14 @@ const Account = [
 ];
 
 export default function GuestPrompt() {
-    const setGuest = useAuthStore((state) => state.setGuest);
-    const { username, isGuest, isLoggedIn, selectedPlan } = useAuthStore();
+    const setIsGuest = useAuthStore((state) => state.setIsGuest);
+    const { username, isGuest, isSurveyed, selectedPlan } = useAuthStore();
 
     const handleKakaoLogin = () => {
         window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/kakao/login`;
     };
 
-    if (isLoggedIn) {
+    if (isSurveyed) {
         return (
             <PlanInfoLoggedIn
                 username={username}
@@ -85,7 +85,7 @@ export default function GuestPrompt() {
 
                 <div className="flex flex-col md:flex-row gap-4 mt-6 justify-center">
                     <Button
-                        onClick={() => setGuest(true)}
+                        onClick={() => setIsGuest(true)}
                         className="w-full md:w-[203px] h-[50px] bg-black text-white text-sm hover:opacity-90"
                     >
                         비회원으로 이용하기
