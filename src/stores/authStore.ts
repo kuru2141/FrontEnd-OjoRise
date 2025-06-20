@@ -2,29 +2,29 @@ import { create } from 'zustand';
 import type { MyPlan } from "@/types/plan";
 
 type AuthState = {
-    isSurveyed: boolean | null;
-    isGuest: boolean | null;
+    isLoggedIn: boolean;
+    isGuest: boolean;
     username: string;
     selectedPlan: MyPlan | null;
-    
+
     login: () => void;
     logout: () => void;
-    setIsSurveyed: (state: boolean) => void;
-    setIsGuest: (state: boolean) => void;
+    setGuest: (state: boolean) => void;
+    setLoggedIn: (state: boolean) => void;
     setUsername: (name: string | null) => void;
     setSelectedPlan: (plan: MyPlan | null) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-    isSurveyed: null,
-    isGuest: null,
+    isLoggedIn: false,
+    isGuest: false,
     username: "",
     selectedPlan: null,
 
-    login: () => set({ isGuest: false, isSurveyed: true}),
-    logout: () => set({ isGuest: null, isSurveyed: null}),
-    setIsSurveyed: (state: boolean) => set({ isSurveyed: state }),
-    setIsGuest:(state: boolean) => set({ isGuest: state }),
+    login: () => set({ isLoggedIn: true, isGuest: false }),
+    logout: () => set({ isLoggedIn: false, isGuest: false, username: "", selectedPlan: null }),
+    setGuest: (state: boolean) => set({ isGuest: state }),
+    setLoggedIn: (state: boolean) => set({ isLoggedIn: state }),
     setUsername: (name) => set({ username: name ?? "" }),
     setSelectedPlan: (plan) => set({ selectedPlan: plan }),
 }));

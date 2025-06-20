@@ -14,6 +14,7 @@ import ScreenshotOCR from "../../page-component/signup/ScreenshotOCR";
 import { ResultItem } from "@/types/ocr";
 import { ocrTelecomProvider } from "@/utils/ocrTelecomProvider";
 import { useGetPlan } from "@/hooks/useGetPlan";
+import { usePathname } from "next/navigation";
 
 export default function VerticalLinearStepper() {
   const { data, setField, setPlanList, setInput } = useSurveyStore();
@@ -24,6 +25,8 @@ export default function VerticalLinearStepper() {
   const [ocrResult, setOcrResult] = useState<ResultItem>();
   const [parsedTelecomProvider, setParsedTelecomProvider] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const pathname = usePathname();
+  const isEdit = pathname === "/mypage/edit-survey";
 
   useEffect(() => {
     const el = stepRefs.current[step];
@@ -115,16 +118,16 @@ export default function VerticalLinearStepper() {
       {steps.map((s, i) => (
         <StepItem
           key={i}
-          stepRef={(el) => stepRefs.current[i] = el}
+          stepRef={(el) => (stepRefs.current[i] = el)}
           index={i}
-          active={step === i}
-          completed={step > i}
+          active={isEdit ? true : step === i}
+          completed={isEdit ? true : step > i}
           label={s.label}
           isLast={i === steps.length - 1}
           onNext={next}
           onBack={back}
-          showContent={step === i}
-          isNextDisabled={isNextDisabled()}
+          showContent={isEdit ? true : step === i}
+          isNextDisabled={isEdit ? false : isNextDisabled()}
         >
           {s.component}
         </StepItem>

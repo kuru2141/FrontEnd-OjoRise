@@ -6,9 +6,9 @@ import GuestPlanSelector from "@/components/page-component/main-page/plan/GuestP
 import { useAuthStore } from "@/stores/authStore";
 
 export default function PlanBox() {
-  const { username, isGuest, isSurveyed, selectedPlan } = useAuthStore();
+  const { username, isGuest, isLoggedIn, selectedPlan } = useAuthStore();
 
-  if (isSurveyed) {
+  if (isLoggedIn) {
     return (
         <PlanInfoLoggedIn
             username={username}

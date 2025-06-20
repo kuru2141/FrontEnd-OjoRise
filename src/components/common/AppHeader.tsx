@@ -43,7 +43,7 @@ const handleKakaoLogin = () => {
 
 function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const isSurveyed = useAuthStore(state => state.isSurveyed);
+  const { isLoggedIn } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -58,9 +58,9 @@ function AppHeader() {
 
   // 현재 상태에 따른 메뉴 선택
   const currentMenu = useMemo(() => {
-    if (isSurveyed) return menuForLoggedIn;
+    if (isLoggedIn) return menuForLoggedIn;
     return menuForLoggedOut;
-  }, [isSurveyed]);
+  }, [isLoggedIn]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -85,7 +85,7 @@ function AppHeader() {
             요금제 둘러보기
           </Link>
 
-          {!isSurveyed && (
+          {!isLoggedIn && (
             <button
               onClick={handleKakaoLogin}
               className="text-sm bg-yellow-400 hover:bg-yellow-300 px-4 py-2 rounded transition-colors duration-300"
@@ -94,7 +94,7 @@ function AppHeader() {
             </button>
           )}
 
-          {isSurveyed && (
+          {isLoggedIn && (
             <Fragment>
               <Link
                 href="/mypage"
