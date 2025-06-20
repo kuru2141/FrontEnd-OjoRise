@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,14 +11,14 @@ import { formatDisplay, formatWithDots, parseDateFromString } from "@/utils/date
 export function DateInput() {
   const { data, setField } = useSurveyStore();
 
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(
     data.birthdate ? new Date(data.birthdate.replace(/\./g, "-")) : undefined
   );
-  const [month, setMonth] = React.useState<Date | undefined>(date);
-  const [value, setValue] = React.useState(data.birthdate);
+  const [month, setMonth] = useState<Date | undefined>(date);
+  const [value, setValue] = useState(data.birthdate);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data.birthdate) {
       setValue(data.birthdate);
       const parsed = parseDateFromString(data.birthdate);
