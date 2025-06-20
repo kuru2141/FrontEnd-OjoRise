@@ -58,7 +58,9 @@ export default function QuestionCard() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-[#FF008C] text-4xl font-bold mb-8">{`Q${currentStep}`}</h2>
-          <p className="text-2xl font-bold mb-8">{question.questionTitle}</p>
+          <p className="text-2xl font-bold mb-8 min-h-[80px]">
+            {formatQuestion(question.questionTitle)}
+          </p>
         </motion.div>
 
         <motion.div
@@ -104,5 +106,21 @@ export default function QuestionCard() {
         </div>
       </div>
     </div>
+  );
+}
+
+function formatQuestion(text: string): React.ReactNode {
+  const parts = text.split(/(?<=[.!?])\s+/);
+  if (parts[0].length > 30 || parts.length === 1) {
+    return <>{text}</>;
+  }
+  return (
+    <>
+      {parts.map((part, i) => (
+        <span key={i} className="block">
+          {part}
+        </span>
+      ))}
+    </>
   );
 }
