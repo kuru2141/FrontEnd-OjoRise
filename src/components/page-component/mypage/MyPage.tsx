@@ -17,9 +17,9 @@ const MyPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const { data: survey, isLoading: isSurveyLoading, isError: isSurveyError } = useSurvey();
-  const { data: tongBTI, isLoading: isTongLoading, isError: isTongError } = useTongBTI();
-  const { data: planAge, isLoading: isAgeLoading, isError: isAgeError } = usePlanAge();
+  const { data: survey, isPending: isSurveyPending, isError: isSurveyError } = useSurvey();
+  const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI();
+  const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge();
   const { mutate: withdraw } = useWithdraw();
 
   //회원탈퇴
@@ -44,7 +44,7 @@ const MyPage = () => {
     router.push("/");
   };
 
-  if (isSurveyLoading || isTongLoading || isAgeLoading)
+  if (isSurveyPending || isTongPending || isAgePending)
     return (
       <div className="w-full px-6 pt-4">
         <LinearProgress />
