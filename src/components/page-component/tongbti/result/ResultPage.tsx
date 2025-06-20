@@ -5,7 +5,16 @@ import { useParams, useRouter } from "next/navigation";
 import { useResultStore } from "@/stores/useResultStore";
 import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import KakaoInitializer from "@/components/common/kakao/KakaoInitializer";
-import ShareButton from "./ShareButton";
+import ShareButton from "@/components/common/button/ShareButton";
+
+const imageUrlMap: Record<string, string> = {
+  unlimitedTribe: "/TongBTI/unlimitedTribe.svg",
+  midrangeMaster: "/TongBTI/midrangeMaster.svg",
+  valueSeeker: "/TongBTI/valueSeeker.svg",
+  speedController: "/TongBTI/speedController.svg",
+  subsidyHunter: "/TongBTI/subsidyHunter.svg",
+  wifiNomad: "/TongBTI/wifiNomad.svg",
+};
 
 export default function ResultPage() {
   const { resultInfo } = useResultStore();
@@ -19,6 +28,10 @@ export default function ResultPage() {
   }, [resultInfo]);
 
   if (!resultInfo) return null;
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const shareUrl = `${baseUrl}/tongbti/result/${typeKey}`;
+  const imageUrl = `${baseUrl}${imageUrlMap[typeKey as string]}`;
 
   return (
     <>
@@ -52,7 +65,12 @@ export default function ResultPage() {
         </div>
 
         <div className="flex flex-col gap-3 w-full max-w-xs">
-          <ShareButton tongName={resultInfo.tongName} />
+          <ShareButton
+            title={`나의 통BTI는 ${resultInfo.tongName}`}
+            description="LG U+ 통BTI로 내 통신 성격도 보고 요금제까지 추천받아보세요!"
+            url={shareUrl}
+            imageUrl={imageUrl}
+          />
           <button
             className="bg-blue-200 px-4 py-2 rounded-md font-semibold 
              hover:bg-blue-300 hover:cursor-pointer transition-colors duration-200"
