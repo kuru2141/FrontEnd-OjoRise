@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { deleteWithdraw } from "@/services/deleteWithdraw";
+import { deleteWithdraw } from "@/services/auth";
 import { useRouter } from "next/navigation";
 
 export const useWithdraw = () => {
