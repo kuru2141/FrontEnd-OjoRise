@@ -1,7 +1,17 @@
+import PlanDipCard from "./PlanDipCard";
+
 const ExplorePlansPage = () => {
   return (
-    <div>
-      
+    <div className="flex min-h-svh flex-col items-center justify-center p-6 ">
+      <div className="w-full max-w-3xl flex flex-col items-start text-left gap-12 overflow-hidden">
+        <div className="p-4">
+          <p className="font-bold text-[32px] mb-3">요금제 둘러보기</p>
+          <p className="text-[18px] text-gray-60">
+            관심 있는 요금제를 선택하여 메인화면에서 비교해 보세요
+          </p>
+        </div>
+        <PlanDipCard />
+      </div>
     </div>
   );
 };
