@@ -1,4 +1,5 @@
 import PlanDipCard from "./PlanDipCard";
+import { PlanTabs } from "./PlanTabs";
 
 const ExplorePlansPage = () => {
   return (
@@ -10,7 +11,10 @@ const ExplorePlansPage = () => {
             관심 있는 요금제를 선택하여 메인화면에서 비교해 보세요
           </p>
         </div>
-        <PlanDipCard />
+        <div className="w-full max-w-3xl p-4">
+          <PlanTabs />
+          <PlanDipCard />
+        </div>
       </div>
     </div>
   );

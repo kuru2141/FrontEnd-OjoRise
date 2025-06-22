@@ -3,7 +3,7 @@ import { Heart } from "lucide-react";
 
 const PlanDipCard = () => {
   return (
-    <div className="flex flex-col w-full max-w-sm sm:max-w-2xl p-6 rounded-2xl shadow-soft bg-white m-4 gap-2">
+    <div className="flex flex-col w-full p-4 rounded-2xl shadow-soft bg-white mt-5 gap-2">
       {/* 1행: 상단 라벨 + 하트 */}
       <div className="flex flex-row justify-between items-start">
         <div className="flex items-center gap-1">
