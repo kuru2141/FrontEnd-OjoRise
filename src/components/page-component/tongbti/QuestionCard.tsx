@@ -19,18 +19,19 @@ export default function QuestionCard() {
 
   const handleClick = (answerIndex: number) => {
     if (selected !== null) return;
+
     setSelected(answerIndex);
     selectAnswer(question.questionId, answerIndex);
 
-    setTimeout(() => {
-      goToNext();
-    }, 50);
+    const isLast = currentStep === totalQuestions;
 
-    if (currentStep === totalQuestions) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (isLast) {
         router.push("/tongbti/loading");
-      }, 0);
-    }
+      } else {
+        goToNext();
+      }
+    }, 200);
   };
 
   if (!question) return <div>로딩 중...</div>;
