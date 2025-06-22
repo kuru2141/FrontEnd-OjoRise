@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import {api} from "@/lib/axios";
 
 export const getIsSurveyed = async() => {
     const response = await api.get('/user');

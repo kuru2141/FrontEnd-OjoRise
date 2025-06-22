@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { api } from "@/lib/axios";
 
 /**
  * 통BTI 테스트 결과를 조회합니다.
