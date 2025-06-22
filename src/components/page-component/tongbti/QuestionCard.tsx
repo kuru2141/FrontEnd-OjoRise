@@ -23,13 +23,14 @@ export default function QuestionCard() {
     selectAnswer(question.questionId, answerIndex);
 
     setTimeout(() => {
-      if (currentStep === totalQuestions) {
-        goToNext();
+      goToNext();
+    }, 50);
+
+    if (currentStep === totalQuestions) {
+      setTimeout(() => {
         router.push("/tongbti/loading");
-      } else {
-        goToNext();
-      }
-    }, 80);
+      }, 0);
+    }
   };
 
   if (!question) return <div>로딩 중...</div>;
@@ -83,8 +84,8 @@ export default function QuestionCard() {
                 className={clsx(
                   "w-full max-w-md py-6 px-4 mb-4 rounded-md transition-colors font-bold text-lg",
                   isSelected
-                    ? "bg-[#FF008C] text-white"
-                    : "bg-white text-gray-700 hover:bg-[#FF008C] hover:text-white"
+                    ? "bg-[#FF008C] text-white cursor-default"
+                    : "bg-white text-gray-700 hover:bg-[#FF008C] hover:text-white hover:cursor-pointer"
                 )}
               >
                 {text}

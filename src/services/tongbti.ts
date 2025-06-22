@@ -2,15 +2,6 @@ import api from "@/lib/axios";
 import { Question, TongBTIResultInfo } from "@/types/tongBTI";
 import { typeKeyMap } from "@/utils/tongbtiMap";
 
-const typeKeyToTongName: Record<string, string> = {
-  unlimitedTribe: "무제한의 민족",
-  midrangeMaster: "중간값 장인",
-  valueSeeker: "가성비 교신도",
-  speedController: "폭주 억제기",
-  subsidyHunter: "보조금 헌터",
-  wifiNomad: "와이파이 유목민",
-};
-
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
     const res = await api.get<Question[]>("/question");
