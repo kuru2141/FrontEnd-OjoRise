@@ -6,10 +6,11 @@ import { numberParsing } from "@/utils/numberParsing";
 import { useMyPlanStore } from "@/stores/myPlanStore";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
 import { useEffect } from "react";
+import { useGetName } from "@/hooks/useGetUserInfo";
 
 export default function PlanBox() {
   const { isGuest, isSurveyed } = useAuthStore();
-  const username = useAuthStore(state => state.username);
+  const {data: username} = useGetName();
   const {data} = useGetMyPlan();
   const {setMyPlan} = useMyPlanStore();
 
@@ -36,7 +37,7 @@ export default function PlanBox() {
   if (isSurveyed) {
     return (
         <PlanInfoLoggedIn
-            username = {username}
+            username = {username ?? ""}
             planName = {data?.name ?? "알 수 없음"}
             monthlyFee = {data?.monthlyFee ? parsingMonthlyFee : "0원"}
             voiceCallPrice = {data?.voiceCallPrice ? parsingVoiceCallPrice : "-"}
