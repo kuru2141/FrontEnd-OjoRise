@@ -1,3 +1,6 @@
+"use client";
+
+import { Pagination } from "./Pagination";
 import PlanDipCard from "./PlanDipCard";
 import { PlanTabs } from "./PlanTabs";
 
@@ -14,6 +17,13 @@ const ExplorePlansPage = () => {
         <div className="w-full max-w-3xl p-4">
           <PlanTabs />
           <PlanDipCard />
+          <div className="flex justify-center mt-8">
+            <Pagination
+              totalPages={3}
+              initialPage={2}
+              onChangePage={(page) => console.log("페이지:", page)}
+            />
+          </div>
         </div>
       </div>
     </div>
