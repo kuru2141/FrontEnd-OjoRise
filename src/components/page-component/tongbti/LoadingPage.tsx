@@ -22,7 +22,7 @@ export default function TongBTILoadingPage() {
         const info = await fetchTongBTIInfo(resultKey);
         setResultInfo(info);
 
-        const token = localStorage.getItem("accessToken");
+        const token = sessionStorage.getItem("accessToken");
         if (token) {
           await saveTongBTIResult(resultType);
 

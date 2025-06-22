@@ -1,4 +1,6 @@
 import api from "@/lib/axios";
+import { Question, TongBTIResultInfo } from "@/types/tongBTI";
+import { typeKeyMap } from "@/utils/tongbtiMap";
 
 /**
  * 통BTI 테스트 결과를 조회합니다.
@@ -15,8 +17,6 @@ export const tongbti = async () => {
     throw error;
   }
 };
-import { Question, TongBTIResultInfo } from "@/types/tongBTI";
-import { typeKeyMap } from "@/utils/tongbtiMap";
 
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
