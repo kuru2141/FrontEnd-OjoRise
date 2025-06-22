@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useGetIsSurveyedQuery } from "@/hooks/useGetIsSurveyed";
+import { useGetIsSurveyedQuery } from "@/hooks/useGetUserInfo";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function SuccessPageRoute() {
