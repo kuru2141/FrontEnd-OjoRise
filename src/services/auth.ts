@@ -5,6 +5,11 @@ export const getIsSurveyed = async() => {
     return response.data;
 }
 
+export const getName = async() => {
+    const response = await api.get('/user/name');
+    return response.data;
+}
+
 export const refreshToken = async() => {
     const response = await api.post('/auth/refresh');
     return response.data;

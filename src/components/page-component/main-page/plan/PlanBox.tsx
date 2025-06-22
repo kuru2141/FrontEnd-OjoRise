@@ -2,12 +2,16 @@ import PlanInfoLoggedIn from "@/components/page-component/main-page/plan/PlanInf
 import GuestPrompt from "@/components/page-component/main-page/plan/GuestPrompt";
 import GuestPlanSelector from "@/components/page-component/main-page/plan/GuestPlanSelector";
 import { useAuthStore } from "@/stores/authStore";
-import { useGetMyPlan } from "@/hooks/useGetMyPlan";
 import { numberParsing } from "@/utils/numberParsing";
+import { useMyPlanStore } from "@/stores/myPlanStore";
+import { useGetMyPlan } from "@/hooks/useGetMyPlan";
+import { useEffect } from "react";
 
 export default function PlanBox() {
-  const { username, isGuest, isSurveyed } = useAuthStore();
+  const { isGuest, isSurveyed } = useAuthStore();
+  const username = useAuthStore(state => state.username);
   const {data} = useGetMyPlan();
+  const {setMyPlan} = useMyPlanStore();
 
   const parsingMonthlyFee = numberParsing(String(data?.monthlyFee), 'monthlyFee');
   const parsingVoiceCallPrice =  numberParsing(String(data?.voiceCallPrice), 'voiceCallPrice');
@@ -16,6 +20,18 @@ export default function PlanBox() {
   const parsingbaseDataGb = numberParsing(String(data?.baseDataGb), 'baseDataGb');
   const parsingSharingDataGb = numberParsing(String(data?.sharingDataGb), 'sharingDataGb');
   const parsingBenefit = numberParsing(String(data?.benefit), 'benefit');
+
+  useEffect(() => {
+    setMyPlan({
+      name: data?.name ?? "",
+      baseDataGb: data?.baseDataGb ?? "",
+      monthlyFee: data?.monthlyFee ?? 0,
+      voiceCallPrice: data?.voiceCallPrice ?? "",
+      sharingDataGb: data?.sharingDataGb ?? "",
+      sms: data?.sms ?? "",
+      benefit: data?.benefit ? parsingBenefit : "",
+    });
+  }, [data, parsingBenefit]);
 
   if (isSurveyed) {
     return (

@@ -1,15 +1,16 @@
 type PlanSource = "recommend" | "like";
 
-export interface comparePlan{
+export interface ComparePlan{
   name: string;
   baseDataGb: string;
   monthlyFee: number;
   voiceCallPrice: string;
+  sharingDataGb: string,
   sms: string;
   benefit: string;
 }
 
-export interface Plan extends comparePlan{
+export interface Plan extends ComparePlan{
   planId: number;
   description: string;
   mobileType: string;
@@ -17,10 +18,9 @@ export interface Plan extends comparePlan{
   source?: PlanSource;
 }
 
-export interface MyPlan extends comparePlan{
+export interface MyPlan extends ComparePlan{
   planId: number;
   dailyDataGb: string,
-  sharingDataGb: string,
   throttleSpeedKbps: 0,
   eligibility: "ALL" | "YOUTH" | "OLD" | "SOLDIER" | "BOY" | "KID",
   mobileType: string,
