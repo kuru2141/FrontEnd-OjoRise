@@ -18,4 +18,5 @@ export type TongBTIResultInfo = {
   baseDataGb: string;
   voiceCallPrice: string;
   sms: string;
+  planUrl: string;
 };

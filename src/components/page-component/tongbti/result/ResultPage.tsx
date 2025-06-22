@@ -8,6 +8,7 @@ import KakaoInitializer from "@/components/common/kakao/KakaoInitializer";
 import ShareButton from "@/components/common/button/ShareButton";
 import { fetchTongBTIInfo } from "@/services/tongbti";
 import { typeKeyMap } from "@/utils/tongbtiMap";
+import PlanSummaryCard from "./PlanSummaryCard";
 
 export default function ResultPage() {
   const { resultInfo, setResultInfo } = useResultStore();
@@ -52,20 +53,7 @@ export default function ResultPage() {
           {resultInfo.tongDescription}
         </p>
 
-        <div className="bg-white rounded-xl shadow-md px-10 py-5 w-full max-w-lg mb-6">
-          <p className="text-[22px] font-bold text-gray-100 mb-1">나와 가장 잘 맞는 요금제는?</p>
-          <h3 className="font-bold text-[20px] mb-1">{resultInfo.planName}</h3>
-          <p className="text-sm text-gray-600 mb-4">{resultInfo.planDescription}</p>
-
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-bold text-black">
-              월 {resultInfo.monthlyFee.toLocaleString()}원
-            </span>
-            <button className="bg-pink-500 text-white text-sm px-4 py-2 rounded-md">
-              신청하기
-            </button>
-          </div>
-        </div>
+        <PlanSummaryCard {...resultInfo} />
 
         <div className="flex flex-col gap-3 w-full max-w-xs">
           <ShareButton
@@ -90,6 +78,7 @@ export default function ResultPage() {
             className="text-sm text-gray-600 underline mt-1"
             onClick={() => {
               useTongBTIStore.getState().reset();
+              useResultStore.getState().clearResultInfo();
               router.replace("/tongbti");
             }}
           >
