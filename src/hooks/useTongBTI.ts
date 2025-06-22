@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTongBTI } from "@/services/tongbti";
-
-interface TongBTIResponse {
-  tongResult: string;
-}
+import { TongBTIResponse } from "@/types/tongBTI";
+import { tongbti } from "@/services/tongbti";
 
 export const useTongBTI = () => {
   return useQuery<TongBTIResponse>({
     queryKey: ["tongbti"],
-    queryFn: getTongBTI,
+    queryFn: tongbti,
   });
 };

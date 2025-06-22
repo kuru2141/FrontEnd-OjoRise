@@ -136,6 +136,7 @@ function RadarChart() {
   const [chartKey, setChartKey] = useState(0);
 
   useEffect(() => {
+    const target = chartRef.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -147,13 +148,13 @@ function RadarChart() {
       }
     );
 
-    if (chartRef.current) {
-      observer.observe(chartRef.current);
+    if (target) {
+      observer.observe(target);
     }
 
     return () => {
-      if (chartRef.current) {
-        observer.unobserve(chartRef.current);
+      if (target) {
+        observer.unobserve(target);
       }
     };
 

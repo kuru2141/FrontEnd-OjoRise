@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StepItem } from "./StepItem";
 import { DateInput } from "./DateInput";
 import { SelectCarrier } from "./SelectCarrier";
@@ -14,14 +14,29 @@ import ScreenshotOCR from "../../page-component/signup/ScreenshotOCR";
 import { ResultItem } from "@/types/ocr";
 import { ocrTelecomProvider } from "@/utils/ocrTelecomProvider";
 import { useGetPlan } from "@/hooks/useGetPlan";
+import { usePathname } from "next/navigation";
 
 export default function VerticalLinearStepper() {
   const { data, setField, setPlanList, setInput } = useSurveyStore();
   const planName = useSurveyStore(state => state.data.planName);
   const telecomProvider = useSurveyStore(state => state.data.telecomProvider);
+  const familyBundle = useSurveyStore(state => state.data.familyBundle);
   const [step, setStep] = useState(0);
   const [ocrResult, setOcrResult] = useState<ResultItem>();
   const [parsedTelecomProvider, setParsedTelecomProvider] = useState('');
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const pathname = usePathname();
+  const isEdit = pathname === "/mypage/edit-survey";
+
+  useEffect(() => {
+    const el = stepRefs.current[step];
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }, [step]);
+
   const onComplete = (result: ResultItem) => {
     setOcrResult(result);
   }
@@ -47,13 +62,12 @@ export default function VerticalLinearStepper() {
     setField('telecomProvider', parsedTelecomProvider);
     setInput(ocrResult?.["요금제 이름"] || '');
     setField('planPrice', Number(ocrResult?.["실 납부금액"] || 0));
-  }, [plans, ocrResult, parsedTelecomProvider]);
+  }, [plans, ocrResult, parsedTelecomProvider, setField, setInput, setPlanList]);
 
   const validationSteps = [
     () => isValidDate(data.birthdate),
     () => !!(data.telecomProvider && data.planName && data.planPrice),
-    () => !!data.familyBundle,
-    () => !!data.familyNum,
+    () => !!(data.familyBundle && data.familyNum),
   ];
 
   const isNextDisabled = () => {
@@ -88,14 +102,15 @@ export default function VerticalLinearStepper() {
       },
       {
         label: "새로운 요금제 가입 시 가족 결합을 할 예정인가요?",
-        component: <FamilyBundleGroup />,
-      },
-      {
-        label: "가족 결합으로 몇 대의 휴대폰을 함께 등록하실 예정인가요?",
-        component: <FamilyNumRadioGroup />,
-      },
+        component: (
+          <div>
+            <FamilyBundleGroup />
+            {familyBundle === 'yes' && <FamilyNumRadioGroup />}
+          </div>
+        )
+      }
     ],
-    [telecomProvider, planName]
+    [telecomProvider, planName, familyBundle]
   );
 
   return (
@@ -103,15 +118,16 @@ export default function VerticalLinearStepper() {
       {steps.map((s, i) => (
         <StepItem
           key={i}
+          stepRef={(el) => (stepRefs.current[i] = el)}
           index={i}
-          active={step === i}
-          completed={step > i}
+          active={isEdit ? true : step === i}
+          completed={isEdit ? true : step > i}
           label={s.label}
           isLast={i === steps.length - 1}
           onNext={next}
           onBack={back}
-          showContent={step === i}
-          isNextDisabled={isNextDisabled()}
+          showContent={isEdit ? true : step === i}
+          isNextDisabled={isEdit ? false : isNextDisabled()}
         >
           {s.component}
         </StepItem>

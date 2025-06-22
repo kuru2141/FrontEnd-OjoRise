@@ -1,3 +1,6 @@
+export interface TongBTIResponse {
+  tongResult: string;
+}
 export type Question = {
   questionId: number;
   questionTitle: string;
