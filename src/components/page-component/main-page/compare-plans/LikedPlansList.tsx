@@ -12,7 +12,7 @@ import PlanCard from "./PlanCard";
 import { useAuthStore } from "@/stores/authStore";
 
 export default function LikedPlansList() {
-  const { isLoggedIn } = useAuthStore();
+  const { isSurveyed } = useAuthStore();
   const { likedPlans } = usePlanStore();
 
   const removeLikedPlan = usePlanStore((state) => state.removeLikedPlan);
@@ -21,7 +21,7 @@ export default function LikedPlansList() {
     <section className="w-full mx-auto px-4 mb-9">
       <h2 className="text-2xl font-bold">찜한 요금제</h2>
       <div className="relative min-h-[400px] flex items-center justify-center">
-        {!isLoggedIn ? (
+        {!isSurveyed ? (
           <div className="text-center">
             <p className="text-gray-500 mb-4 text-lg">로그인 후 사용 가능한 서비스입니다.</p>
           </div>

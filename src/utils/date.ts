@@ -1,4 +1,12 @@
-// 입력된 문자열이 'YYYY.MM.DD' 형식의 유효한 날짜인지 확인
+/**
+ * 입력된 문자열이 'YYYY.MM.DD' 형식의 유효한 날짜인지 확인합니다.
+ *
+ * @param dateStr 'YYYY.MM.DD' 형식의 문자열
+ * @returns {boolean} 유효한 날짜이면 true, 아니면 false 반환
+ * @example
+ * isValidDate("2025.06.18"); // true
+ * isValidDate("2025.13.32"); // false
+ */
 export function isValidDate(dateStr: string): boolean {
   if (!/^\d{4}\.\d{2}\.\d{2}$/.test(dateStr)) return false;
 
@@ -13,7 +21,14 @@ export function isValidDate(dateStr: string): boolean {
   );
 }
 
-// Date 객체를 'YYYY.MM.DD' 형식의 문자열로 변환
+/**
+ * Date 객체를 'YYYY.MM.DD' 형식의 문자열로 변환합니다.
+ *
+ * @param date 변환할 Date 객체
+ * @returns {string} 'YYYY.MM.DD' 형식의 문자열
+ * @example
+ * formatDisplay(new Date(2025, 5, 18)); // "2025.06.18"
+ */
 export function formatDisplay(date: Date | undefined): string {
   if (!date) return "";
   const y = date.getFullYear();
@@ -22,7 +37,14 @@ export function formatDisplay(date: Date | undefined): string {
   return `${y}.${m}.${d}`;
 }
 
-// 'YYYY.MM.DD' 형식의 문자열을 Date 객체로 변환
+/**
+ * 'YYYY.MM.DD' 형식의 문자열을 Date 객체로 변환합니다.
+ *
+ * @param value 변환할 문자열
+ * @returns {Date | undefined} 변환된 Date 객체 또는 유효하지 않으면 undefined
+ * @example
+ * parseDateFromString("2025.06.18"); // new Date("2025-06-18")
+ */
 export function parseDateFromString(value: string): Date | undefined {
   const parts = value.split(".");
   if (parts.length !== 3) return undefined;

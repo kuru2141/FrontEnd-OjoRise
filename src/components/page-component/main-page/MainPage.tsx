@@ -9,7 +9,6 @@ import SelectedPlanViewer from "./compare-plans/SelectedPlanViewer";
 import PlanBox from "./plan/PlanBox";
 
 export default function MainPage() {
-
   return (
     <main className="flex flex-col items-center bg-white px-4 pb-20">
       <section className="w-full max-w-[768px] mt-30 flex flex-col items-center gap-20">
