@@ -9,13 +9,13 @@ import { DipCardPlan } from "@/types/plan";
 import { dipPlan } from "@/services/dipPlanService";
 
 const ExplorePlansPage = () => {
-  const { isLoggedIn } = useAuthStore();
+  const { isSurveyed } = useAuthStore();
   const { currentPage, setPage, isOnline } = useBrowsePlanStore();
   const { data: plans } = useBrowsePlans(isOnline, currentPage);
   const { data: likedIds = [], refetch: refetchLikedIds } = useBrowseDip(
     isOnline,
     currentPage,
-    isLoggedIn
+    !!isSurveyed
   );
 
   const totalPages = isOnline ? 5 : 9;
