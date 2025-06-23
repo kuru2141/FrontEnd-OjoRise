@@ -7,14 +7,16 @@ import { useMyPlanStore } from "@/stores/myPlanStore";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
 import { useEffect } from "react";
 import { useGetName } from "@/hooks/useGetUserInfo";
+import { useSurveyResult } from "@/hooks/useSurveyResult";
 
 export default function PlanBox() {
   const { isGuest, isSurveyed } = useAuthStore();
   const {data: username} = useGetName();
+  const {data: survey} = useSurveyResult();
   const {data} = useGetMyPlan();
   const {setMyPlan} = useMyPlanStore();
 
-  const parsingMonthlyFee = numberParsing(String(data?.monthlyFee), 'monthlyFee');
+  const parsingMonthlyFee = numberParsing(String(survey?.planPrice), 'monthlyFee');
   const parsingVoiceCallPrice =  numberParsing(String(data?.voiceCallPrice), 'voiceCallPrice');
   const parsingSms = numberParsing(String(data?.sms), 'sms');
   const parsingThrottleSpeedKbps = numberParsing(String(data?.throttleSpeedKbps), 'throttleSpeedKbps');
@@ -26,7 +28,7 @@ export default function PlanBox() {
     setMyPlan({
       name: data?.name ?? "",
       baseDataGb: data?.baseDataGb ?? "",
-      monthlyFee: data?.monthlyFee ?? 0,
+      monthlyFee: survey?.planPrice ?? 0,
       voiceCallPrice: data?.voiceCallPrice ?? "",
       sharingDataGb: data?.sharingDataGb ?? "",
       sms: data?.sms ?? "",
@@ -39,7 +41,7 @@ export default function PlanBox() {
         <PlanInfoLoggedIn
             username = {username ?? ""}
             planName = {data?.name ?? "알 수 없음"}
-            monthlyFee = {data?.monthlyFee ? parsingMonthlyFee : "0원"}
+            monthlyFee = {survey?.planPrice ? parsingMonthlyFee : "0원"}
             voiceCallPrice = {data?.voiceCallPrice ? parsingVoiceCallPrice : "-"}
             sms = {data?.sms ? parsingSms : "-"}
             telecomProvider = {data?.telecomProvider ?? "-"}
