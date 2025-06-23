@@ -41,7 +41,7 @@ const bannerData: BannerItem[] = [
     title: "통BTI 테스트",
     description: "나는 어떤 요금제 캐릭터일까?",
     buttonText: "테스트 하러가기",
-    buttonLink: "/test-bti",
+    buttonLink: "/tongbti",
     backgroundColor: "bg-yellow-50",
     imageSrc: "/TongBTI.png",
     imageAlt: "통BTI 테스트 캐릭터",
@@ -192,3 +192,4 @@ const wrap = (min: number, max: number, value: number) => {
   const range = max - min;
   return ((((value - min) % range) + range) % range) + min;
 };
+

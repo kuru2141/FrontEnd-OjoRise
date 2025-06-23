@@ -10,7 +10,7 @@ import { useLogout } from "@/hooks/useLogout";
 
 function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const isSurveyed = useAuthStore(state => state.isSurveyed);
+  const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const logoutMutation = useLogout();
 
@@ -24,7 +24,11 @@ function AppHeader() {
   }, []);
 
   const handleKakaoLogin = () => {
-    const kakaoAuthUrl = "http://localhost:8080/ojoRise/auth/kakao/login";
+    const kakaoAuthUrl = process.env.NEXT_PUBLIC_KAKAO_LOGIN_URL;
+    if (!kakaoAuthUrl) {
+      console.error("KAKAO 로그인 URL이 설정되지 않았습니다.");
+      return;
+    }
     window.location.href = kakaoAuthUrl;
   };
 
