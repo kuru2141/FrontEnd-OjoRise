@@ -1,15 +1,11 @@
 "use client";
-
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, Transition } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-{
-  /* Banner Data */
-}
 interface BannerItem {
   id: number;
   title: string;
@@ -17,7 +13,7 @@ interface BannerItem {
   buttonText: string;
   buttonLink: string;
   backgroundColor: string;
-  imageSrc: string; // 이미지 경로
+  imageSrc: string;
   imageAlt: string;
   textColor: string;
   buttonBgColor: string;
@@ -45,7 +41,7 @@ const bannerData: BannerItem[] = [
     title: "통BTI 테스트",
     description: "나는 어떤 요금제 캐릭터일까?",
     buttonText: "테스트 하러가기",
-    buttonLink: "/test-bti",
+    buttonLink: "/tongbti",
     backgroundColor: "bg-yellow-50",
     imageSrc: "/TongBTI.png",
     imageAlt: "통BTI 테스트 캐릭터",
@@ -77,30 +73,45 @@ const spring: Transition = {
   damping: 30,
 };
 
-const IMAGE_HEIGHT = 250;
-
 export default function BannerCarousel() {
   const [[page, direction], setPage] = useState([0, 0]);
   const bannerIndex = wrap(0, bannerData.length, page);
   const currentBanner = bannerData[bannerIndex];
+  const touchStartRef = useRef<number>(0);
+  const touchEndRef = useRef<number>(0);
 
   const paginate = useCallback((newDirection: number) => {
-    setPage(([currentPage]) => {
-      const nextPage = currentPage + newDirection;
-      return [nextPage, newDirection];
-    });
+    setPage(([currentPage]) => [currentPage + newDirection, newDirection]);
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      paginate(1);
-    }, 5000);
-
+    const interval = setInterval(() => paginate(1), 5000);
     return () => clearInterval(interval);
   }, [paginate]);
 
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartRef.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    const distance = touchStartRef.current - touchEndRef.current;
+    if (distance > 50) paginate(1);
+    else if (distance < -50) paginate(-1);
+    touchStartRef.current = 0;
+    touchEndRef.current = 0;
+  }, [paginate]);
+
   return (
-    <div className="relative w-[758px] h-[310px] overflow-hidden rounded-xl">
+    <div
+      className="relative w-full max-w-[758px] overflow-hidden rounded-xl h-[180px] sm:h-[310px]"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={page}
@@ -112,81 +123,63 @@ export default function BannerCarousel() {
           transition={spring}
           className={`absolute inset-0 ${currentBanner.backgroundColor}`}
         >
-          {/* Text Section */}
+          {/* 텍스트/버튼 영역 */}
           <div
-            className={`absolute flex flex-col ${currentBanner.textColor}`}
-            style={{
-              top: "85px",
-              left: currentBanner.imagePosition === "right" ? "114px" : "348px",
-              right: "auto",
-              alignItems: "flex-start",
-            }}
+            className={`absolute flex flex-col ${currentBanner.textColor}
+              ${currentBanner.imagePosition === "right"
+                ? "left-[30px] sm:left-[114px]"
+                : "right-[30px] sm:right-[114px]"}
+              ${currentBanner.imagePosition === "left"
+                ? "items-end text-right"
+                : "items-start text-left"}
+              top-1/2 -translate-y-1/2 w-1/2`}
           >
-            <h2 className="font-bold" style={{ fontSize: "32px" }}>
+            <h2 className="font-bold mb-1 leading-tight text-[16px] sm:text-[32px]">
               {currentBanner.title}
             </h2>
-
-            <p className="font-bold text-gray-60" style={{ fontSize: "18px", marginTop: "5px" }}>
+            <p className="font-bold text-gray-600 mt-1 leading-snug text-[14px] sm:text-[18px]">
               {currentBanner.description}
             </p>
             <Link href={currentBanner.buttonLink}>
               <Button
                 variant="banner"
-                className={`w-[242px] h-[55px] rounded-lg text-2xl font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}`}
-                style={{ fontFamily: "Suit-ExtraBold, sans-serif", marginTop: "30px" }}
+                className={`rounded-lg font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}
+                  w-[140px] sm:w-[242px] h-[36px] sm:h-[55px] mt-3 sm:mt-6 text-[14px] sm:text-[24px]`}
               >
                 {currentBanner.buttonText}
               </Button>
             </Link>
           </div>
 
-          {/* Image Section */}
+          {/* 이미지 영역 */}
           <div
-            className={`absolute w-[300px]`}
-            style={{
-              height: `${IMAGE_HEIGHT}px`,
-              right: currentBanner.imagePosition === "right" ? "110px" : "auto",
-              bottom: currentBanner.imagePosition === "right" ? "0px" : "auto",
-              left: currentBanner.imagePosition === "left" ? "40px" : "auto",
-              top:
-                currentBanner.imagePosition === "left"
-                  ? `calc(50% - ${IMAGE_HEIGHT / 2}px)`
-                  : "auto",
-            }}
+            className={`absolute w-[150px] sm:w-[300px] h-[130px] sm:h-[250px]
+              ${currentBanner.imagePosition === "left"
+                ? "left-[20px] sm:left-[110px]"
+                : "right-[20px] sm:right-[110px]"}
+              ${currentBanner.id === 1 ? "bottom-0" : "top-1/2 -translate-y-1/2"}`}
           >
             <Image
               src={currentBanner.imageSrc}
               alt={currentBanner.imageAlt}
               fill
               className="object-contain"
+              sizes="(max-width: 768px) 40vw, 300px"
+              priority={bannerIndex === 0}
             />
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Page Number */}
-      <span
-        className="absolute bottom-4 left-8 flex items-center justify-center
-                           w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10"
-      >
+      {/* Indicator + Buttons */}
+      <span className="absolute bottom-4 left-8 flex items-center justify-center w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10 text-base">
         {bannerIndex + 1}/{bannerData.length}
       </span>
-
-      {/* Button Container */}
-      <div className="absolute bottom-4 right-8 flex gap-2 z-10">
-        <Button
-          size="icon"
-          onClick={() => paginate(-1)}
-          className="w-[40px] h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90
-                    font-normal text-xs"
-        >
+      <div className="absolute bottom-4 right-8 gap-2 z-10 hidden sm:flex">
+        <Button size="icon" onClick={() => paginate(-1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:opacity-90">
           <ChevronLeft className="text-white size-[24px]" />
         </Button>
-        <Button
-          size="icon"
-          onClick={() => paginate(1)}
-          className="w-[40px] h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90"
-        >
+        <Button size="icon" onClick={() => paginate(1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:opacity-90">
           <ChevronRight className="text-white size-[24px]" />
         </Button>
       </div>
@@ -194,8 +187,9 @@ export default function BannerCarousel() {
   );
 }
 
-// 숫자를 감싸는 헬퍼 함수 (캐러셀 루프를 위함)
+// 숫자를 감싸는 헬퍼 함수
 const wrap = (min: number, max: number, value: number) => {
   const range = max - min;
   return ((((value - min) % range) + range) % range) + min;
 };
+

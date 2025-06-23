@@ -23,4 +23,4 @@ export const logout = async() => {
 export const deleteWithdraw = async () => {
     const response = await api.delete("/auth/withdraw");
     return response.data;
-  }
+}

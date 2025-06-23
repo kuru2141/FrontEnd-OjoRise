@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import BannerCarousel from "../BannerCarousel";
 import ScrollChart from "./compare-chart/ScrollChart";
 import CompareModeToggle from "./compare-plans/CompareModeToggle";
 import LikedPlansList from "./compare-plans/LikedPlansList";
 import RecommendedPlanList from "./compare-plans/RecommendedPlanList";
 import SelectedPlanViewer from "./compare-plans/SelectedPlanViewer";
-import { handleLoginSuccess } from "@/services/initialSetting";
 import PlanBox from "./plan/PlanBox";
 
 export default function MainPage() {
-
-  useEffect(() => {
-    handleLoginSuccess();
-  },[]);
-
   return (
     <main className="flex flex-col items-center bg-white px-4 pb-20">
       <section className="w-full max-w-[768px] mt-30 flex flex-col items-center gap-20">
