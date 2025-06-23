@@ -6,6 +6,7 @@ interface PlanStore {
   setIsCompareWithMine: (flag: boolean) => void;
 
   selectedPlans: Plan[];
+  setSelectedPlans: (plans: Plan[]) => void;
   togglePlanSelection: (plan: Plan) => void;
   clearSelectedPlans: () => void;
 
@@ -34,6 +35,7 @@ export const usePlanStore = create<PlanStore>((set, get) => ({
   },
 
   selectedPlans: [],
+  setSelectedPlans: (plans: Plan[]) => set({ selectedPlans: plans }),
   togglePlanSelection: (plan) => {
     const { selectedPlans, isCompareWithMine } = get();
 
