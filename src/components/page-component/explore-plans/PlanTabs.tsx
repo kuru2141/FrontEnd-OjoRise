@@ -1,26 +1,26 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useBrowsePlanStore } from "@/stores/browsePlanStore";
 
 const tabs = [
-  { id: "5g", label: "5G/LTE" },
-  { id: "online", label: "온라인 전용 요금제" },
+  { id: false, label: "5G/LTE" },
+  { id: true, label: "온라인 전용 요금제" },
 ];
 
 export function PlanTabs() {
-  const [activeTab, setActiveTab] = useState("5g");
+  const { isOnline, setOnline } = useBrowsePlanStore();
 
   return (
     <div className="border-b border-gray-300">
       <div className="flex space-x-6">
         {tabs.map((tab) => (
           <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            key={String(tab.id)}
+            onClick={() => setOnline(tab.id)}
             className={cn(
               "pb-2 text-base font-bold text-black relative",
-              activeTab === tab.id &&
+              isOnline === tab.id &&
                 "after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:h-[2px] after:w-full after:bg-primary-medium"
             )}
           >
