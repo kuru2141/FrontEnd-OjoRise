@@ -20,7 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useProgressing } from "@/stores/progressStore";
 import LoadingLine from "../progress/LoadingLine";
 import { throttle } from "lodash";
-import { UserProfile } from "@/type/UserProfile";
+import { UserProfile } from "@/types/UserProfile";
 
 interface DialogItem {
   teller: "user" | "chatbot";
