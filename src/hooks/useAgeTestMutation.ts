@@ -10,7 +10,7 @@ interface AgeTestResultProps {
 const handleAgeTestMutation = async (message: string): Promise<AgeTestResultProps> => {
   const ageTestResult = await ageTest({ message: message, prompt: AGE_TEST_PROMPT });
 
-  return ageTestResult.item;
+  return ageTestResult;
 };
 
 export const useAgeTestMutation = () => {

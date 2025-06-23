@@ -11,6 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAgeTestMutation } from "@/hooks/useAgeTestMutation";
+import { useRouter } from "next/navigation";
+import { buildSearchParams } from "@/utils/requestHelper";
+import { useQuery } from "@tanstack/react-query";
 
 const tmelines = [
   ["나는 ", "의"],
@@ -24,6 +27,10 @@ function AgeTest() {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [selectedAge, setSelectedAge] = useState<string>("");
   const mutation = useAgeTestMutation();
+  const router = useRouter();
+  // const {data: planList} = useQuery({
+  //   queryKey: [""]
+  // })
 
   const handleTelecomChange = useCallback(
     (e: string) => {
@@ -51,16 +58,21 @@ function AgeTest() {
 
   const handleClickSubmit = useCallback(() => {
     const message = `나는 ${selectedTelecom}의 ${selectedPlan}를 사용 중인 ${selectedAge}세 사용자 입니다.`;
-    mutation.mutateAsync(message, {
-      onSuccess: (result) => {
-        console.log("나이 테스트 결과:", result);
-        
+    mutation.mutate(message, {
+      onSuccess: (response) => {
+        console.log("나이 테스트 결과:", response);
+        router.push(
+          `test-plan-age/result${buildSearchParams({
+            userAge: response?.userAge || "10대",
+            resultAge: response?.resultAge || "10대",
+          })}`
+        );
       },
       onError: (error) => {
         console.error("나이 테스트 에러:", error);
       },
     });
-  },[mutation, selectedAge, selectedPlan, selectedTelecom]);
+  }, [mutation, router, selectedAge, selectedPlan, selectedTelecom]);
 
   const lines = [
     {
@@ -111,7 +123,9 @@ function AgeTest() {
           </MotionSelectLine>
         );
       })}
-      <Button className="absolute bottom-10" onClick={handleClickSubmit}>확인하러 가기</Button>
+      <Button className="absolute bottom-10" onClick={handleClickSubmit}>
+        확인하러 가기
+      </Button>
     </div>
   );
 }
