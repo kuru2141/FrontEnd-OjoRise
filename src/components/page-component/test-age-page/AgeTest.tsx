@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAgeTestMutation } from "@/hooks/useAgeTestMutation";
 
 const tmelines = [
   ["나는 ", "의"],
@@ -17,13 +18,12 @@ const tmelines = [
   ["", "세 사용자 입니다."],
 ];
 
-const telecomList = ["skt", "kt", "uplus"];
-
 function AgeTest() {
   const [current, setCurrent] = useState(0);
   const [selectedTelecom, setSelectedTelecom] = useState<string>("");
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [selectedAge, setSelectedAge] = useState<string>("");
+  const mutation = useAgeTestMutation();
 
   const handleTelecomChange = useCallback(
     (e: string) => {
@@ -48,6 +48,19 @@ function AgeTest() {
     },
     [current]
   );
+
+  const handleClickSubmit = useCallback(() => {
+    const message = `나는 ${selectedTelecom}의 ${selectedPlan}를 사용 중인 ${selectedAge}세 사용자 입니다.`;
+    mutation.mutateAsync(message, {
+      onSuccess: (result) => {
+        console.log("나이 테스트 결과:", result);
+        
+      },
+      onError: (error) => {
+        console.error("나이 테스트 에러:", error);
+      },
+    });
+  },[mutation, selectedAge, selectedPlan, selectedTelecom]);
 
   const lines = [
     {
@@ -98,7 +111,7 @@ function AgeTest() {
           </MotionSelectLine>
         );
       })}
-      <Button className="absolute bottom-10">다음</Button>
+      <Button className="absolute bottom-10" onClick={handleClickSubmit}>확인하러 가기</Button>
     </div>
   );
 }
