@@ -7,8 +7,19 @@ import { Pagination } from "./Pagination";
 import { useAuthStore } from "@/stores/authStore";
 import { DipCardPlan } from "@/types/plan";
 import { dipPlan } from "@/services/dipPlanService";
+import DipModal from "./DipModal";
+import { useState } from "react";
 
 const ExplorePlansPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const handlekakao = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/kakao/login`;
+    closeModal();
+  };
+
   const { isSurveyed } = useAuthStore();
   const { currentPage, setPage, isOnline } = useBrowsePlanStore();
   const { data: plans } = useBrowsePlans(isOnline, currentPage);
@@ -21,7 +32,7 @@ const ExplorePlansPage = () => {
   const totalPages = isOnline ? 5 : 9;
 
   const handleToggle = async (planId: number) => {
-    await dipPlan(planId); 
+    await dipPlan(planId);
     await refetchLikedIds();
   };
 
@@ -46,6 +57,7 @@ const ExplorePlansPage = () => {
               plan={plan}
               isLiked={likedIds.includes(plan.planId)}
               onToggle={handleToggle}
+              openModal={openModal}
             />
           ))}
 
@@ -56,6 +68,7 @@ const ExplorePlansPage = () => {
           />
         </div>
       </div>
+      <DipModal isOpen={isModalOpen} onCancel={() => setIsModalOpen(false)} onKakao={handlekakao} />
     </div>
   );
 };
