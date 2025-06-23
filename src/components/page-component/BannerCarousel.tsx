@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, Transition } from "framer-motion";
@@ -20,6 +20,7 @@ interface BannerItem {
   buttonTextColor: string;
   imagePosition: "left" | "right";
 }
+
 const bannerData: BannerItem[] = [
   {
     id: 1,
@@ -50,6 +51,7 @@ const bannerData: BannerItem[] = [
     imagePosition: "left",
   },
 ];
+
 const variants = {
   enter: (direction: number) => ({
     x: direction > 0 ? 758 : -758,
@@ -64,32 +66,121 @@ const variants = {
     opacity: 0,
   }),
 };
+
 const spring: Transition = {
   type: "spring",
   stiffness: 300,
   damping: 30,
 };
 
+// Interpolation helper
+const interpolate = (
+  val: number,
+  startIn: number,
+  endIn: number,
+  startOut: number,
+  endOut: number,
+) => {
+  if (val <= startIn) return startOut;
+  if (val >= endIn) return endOut;
+  const progress = (val - startIn) / (endIn - startIn);
+  return startOut + (endOut - startOut) * progress;
+};
+
 export default function BannerCarousel() {
   const [[page, direction], setPage] = useState([0, 0]);
   const bannerIndex = wrap(0, bannerData.length, page);
   const currentBanner = bannerData[bannerIndex];
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const touchStartRef = useRef<number>(0);
+  const touchEndRef = useRef<number>(0);
+  const [windowWidth, setWindowWidth] = useState(0);
+  
   const paginate = useCallback((newDirection: number) => {
-    setPage(([currentPage]) => {
-      const nextPage = currentPage + newDirection;
-      return [nextPage, newDirection];
-    });
+    setPage(([currentPage]) => [currentPage + newDirection, newDirection]);
   }, []);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      paginate(1);
-    }, 5000);
+    const interval = setInterval(() => paginate(1), 5000);
     return () => clearInterval(interval);
   }, [paginate]);
 
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartRef.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!touchStartRef.current || !touchEndRef.current) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    if (distance > 50) paginate(1);
+    else if (distance < -50) paginate(-1);
+    touchStartRef.current = 0;
+    touchEndRef.current = 0;
+  }, [paginate]);
+
+  const showButtons = windowWidth > 425;
+
+  // 반응형 스타일 점프 방지
+  const responsiveStyles = {
+    containerHeight: windowWidth < 640 
+      ? interpolate(windowWidth, 375, 640, 180, 220)
+      : interpolate(windowWidth, 640, 768, 220, 310),
+    titleSize: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 16, 20)
+      : interpolate(windowWidth, 640, 768, 20, 32),
+    descSize: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 14, 16)
+      : interpolate(windowWidth, 640, 768, 16, 18),
+    buttonWidth: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 140, 180)
+      : interpolate(windowWidth, 640, 768, 180, 242),
+    buttonHeight: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 36, 44)
+      : interpolate(windowWidth, 640, 768, 44, 55),
+    buttonFontSize: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 14, 16)
+      : interpolate(windowWidth, 640, 768, 16, 24),
+    buttonMarginTop: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 12, 16)
+      : interpolate(windowWidth, 640, 768, 16, 30),
+    textOffset: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 30, 64)
+      : interpolate(windowWidth, 640, 768, 64, 114),
+    imageOffset: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 20, 51)
+      : interpolate(windowWidth, 640, 768, 51, 110),
+    imageWidth: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 150, 243)
+      : interpolate(windowWidth, 640, 768, 243, 300),
+    imageHeight: windowWidth < 640
+      ? interpolate(windowWidth, 375, 640, 130, 211)
+      : interpolate(windowWidth, 640, 768, 211, 250),
+  };
+
   return (
     <div
-      className="relative w-full max-w-[758px] h-[180px] sm:h-[220px] md:w-[758px] md:h-[310px] overflow-hidden rounded-xl"
+      ref={carouselRef}
+      className="relative w-full max-w-[758px] overflow-hidden rounded-xl"
+      style={{ height: `${responsiveStyles.containerHeight}px` }}
+      role="region"
+      aria-label="배너 캐러셀"
+      aria-live="polite"
+      aria-atomic="true"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      tabIndex={0}
     >
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
@@ -101,38 +192,39 @@ export default function BannerCarousel() {
           exit="exit"
           transition={spring}
           className={`absolute inset-0 ${currentBanner.backgroundColor}`}
+          aria-hidden={false}
         >
           {/* 텍스트/버튼 영역 */}
           <div
-            className={`
-              absolute flex flex-col ${currentBanner.textColor}
-              px-4 sm:px-8 md:px-0
-              ${currentBanner.imagePosition === "right"
-                ? "top-[30%] left-[15%] max-w-[80vw] md:top-[85px] md:left-[114px] md:max-w-none"
-                : "top-[30%] right-[15%] max-w-[80vw] md:top-[85px] md:left-[348px] md:right-auto md:max-w-none"
-              }
-            `}
-            style={{ alignItems: "flex-start" }}
+            className={`absolute flex flex-col ${currentBanner.textColor}`}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              left: currentBanner.imagePosition === 'right' ? `${responsiveStyles.textOffset}px` : 'auto',
+              right: currentBanner.imagePosition === 'left' ? `${responsiveStyles.textOffset}px` : 'auto',
+              alignItems: currentBanner.imagePosition === 'left' ? 'flex-end' : 'flex-start',
+              textAlign: currentBanner.imagePosition === 'left' ? 'right' : 'left',
+              width: '50%',
+            }}
           >
-            <h2 className="font-bold text-base sm:text-xl md:text-[32px] mb-1 md:mb-0" style={{ lineHeight: "1.2" }}>
+            <h2 className="font-bold mb-1" style={{ lineHeight: "1.2", fontSize: `${responsiveStyles.titleSize}px` }}>
               {currentBanner.title}
             </h2>
-            <p className="font-bold text-gray-600 text-xs sm:text-base md:text-[18px] mt-0 md:mt-[5px]" style={{ lineHeight: "1.3" }}>
+            <p className="font-bold text-gray-600" style={{ lineHeight: "1.3", fontSize: `${responsiveStyles.descSize}px`, marginTop: '4px' }}>
               {currentBanner.description}
             </p>
             <Link href={currentBanner.buttonLink}>
               <Button
                 variant="banner"
-                className={`
-                  w-full sm:w-[180px] md:w-[242px]
-                  h-[36px] sm:h-[44px] md:h-[55px]
-                  rounded-lg
-                  text-xs sm:text-base md:text-2xl
-                  font-extrabold
-                  ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}
-                  mt-1 md:mt-[30px]
-                `}
-                style={{ fontFamily: "Suit-ExtraBold, sans-serif" }}
+                className={`rounded-lg font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}`}
+                style={{
+                  width: `${responsiveStyles.buttonWidth}px`,
+                  height: `${responsiveStyles.buttonHeight}px`,
+                  fontSize: `${responsiveStyles.buttonFontSize}px`,
+                  marginTop: `${responsiveStyles.buttonMarginTop}px`,
+                  fontFamily: "Suit-ExtraBold, sans-serif",
+                }}
               >
                 {currentBanner.buttonText}
               </Button>
@@ -141,56 +233,48 @@ export default function BannerCarousel() {
 
           {/* 이미지 영역 */}
           <div
-            className={`
-              absolute
-              w-[45vw] h-[32vw] max-w-[180px] max-h-[130px]
-              md:w-[300px] md:h-[250px] md:max-w-none md:max-h-none
-              ${currentBanner.imagePosition === "right"
-                ? "right-[15%] bottom-[0px] md:right-[110px] md:bottom-0"
-                : "left-[15%] top-[calc(15%)] md:left-[40px] md:top-[calc(50%-125px)]"
-              }
-            `}
+            className="absolute"
+            style={{
+              position: 'absolute',
+              width: `${responsiveStyles.imageWidth}px`,
+              height: `${responsiveStyles.imageHeight}px`,
+              left: currentBanner.imagePosition === 'left' ? `${responsiveStyles.imageOffset}px` : 'auto',
+              right: currentBanner.imagePosition === 'right' ? `${responsiveStyles.imageOffset}px` : 'auto',
+              ...(currentBanner.id === 1
+                ? { bottom: 0 }
+                : { top: '50%', transform: 'translateY(-50%)' }),
+            }}
           >
             <Image
               src={currentBanner.imageSrc}
               alt={currentBanner.imageAlt}
               fill
               className="object-contain"
+              sizes="(max-width: 768px) 40vw, 300px"
+              priority={bannerIndex === 0}
             />
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* 페이지 번호 */}
-      <span
-        className="absolute bottom-2 sm:bottom-4 md:bottom-4 left-2 sm:left-8 md:left-8 flex items-center justify-center
-          w-[22px] sm:w-[30px] md:w-[35px] h-[15px] sm:h-[18px] md:h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10 text-xs sm:text-sm md:text-base"
-      >
+      {/* Page indicator and buttons */}
+      <span className="absolute bottom-4 left-8 flex items-center justify-center w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10 text-base">
         {bannerIndex + 1}/{bannerData.length}
       </span>
-
-      {/* 버튼 컨테이너 */}
-      <div
-        className="absolute bottom-2 sm:bottom-4 md:bottom-4 right-2 sm:right-8 md:right-8 flex gap-1 sm:gap-2 md:gap-2 z-10"
-      >
-        <Button
-          size="icon"
-          onClick={() => paginate(-1)}
-          className="w-[28px] sm:w-[36px] md:w-[40px] h-[28px] sm:h-[36px] md:h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90 font-normal text-xs"
-        >
-          <ChevronLeft className="text-white size-[16px] sm:size-[20px] md:size-[24px]" />
-        </Button>
-        <Button
-          size="icon"
-          onClick={() => paginate(1)}
-          className="w-[28px] sm:w-[36px] md:w-[40px] h-[28px] sm:h-[36px] md:h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90"
-        >
-          <ChevronRight className="text-white size-[16px] sm:size-[20px] md:size-[24px]" />
-        </Button>
-      </div>
+      {showButtons && (
+        <div className="absolute bottom-4 right-8 flex gap-2 z-10">
+          <Button size="icon" onClick={() => paginate(-1)} className="w-[40px] h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90">
+            <ChevronLeft className="text-white size-[24px]" />
+          </Button>
+          <Button size="icon" onClick={() => paginate(1)} className="w-[40px] h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90">
+            <ChevronRight className="text-white size-[24px]" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
+
 // 숫자를 감싸는 헬퍼 함수 (캐러셀 루프를 위함)
 const wrap = (min: number, max: number, value: number) => {
   const range = max - min;
