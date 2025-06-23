@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, memo, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import HamburgerIcon from "./HamburgerIcon";
 import OffCanvas from "./OffCanvas";
@@ -13,7 +12,6 @@ function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const isSurveyed = useAuthStore(state => state.isSurveyed);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const router = useRouter();
   const logoutMutation = useLogout();
 
   useEffect(() => {
