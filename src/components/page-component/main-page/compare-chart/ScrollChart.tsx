@@ -23,7 +23,7 @@ function ScrollChart() {
 
       window.scrollTo({ top: y, behavior: 'smooth'});
     }
-  }, [isCompareWithMine, selectedPlans]);
+  }, [isCompareWithMine, selectedPlans, isSelectedFull]);
   
   return (
     <div ref={scrollRef} className="flex flex-col g-[45px] w-full" >

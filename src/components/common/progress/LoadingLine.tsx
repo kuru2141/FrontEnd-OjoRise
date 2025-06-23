@@ -8,6 +8,6 @@ interface LoadingLineProps {
 export default function LoadingLine({ isShow }: LoadingLineProps) {
   const { isLoading } = useProgressing();
   return (
-    isLoading && isShow && <Image src={"/loadingLine.gif"} alt="loading" width={50} height={50} />
+    isLoading && isShow && <Image src={"/loadingLine.gif"} alt="loading" width={25} height={25} />
   );
 }

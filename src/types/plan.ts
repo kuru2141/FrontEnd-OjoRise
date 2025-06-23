@@ -1,10 +1,16 @@
+type PlanSource = "recommend" | "like";
+
 export interface Plan {
-  label: string;
-  title: string;
+  planId: number;
+  name: string;
+  baseDataGb: string;
+  monthlyFee: number;
+  voiceCallPrice: string;
+  sms: string;
   description: string;
-  price: number;
-  discountedPrice?: number;
+  mobileType: string;
   onRemove?: () => void;
+  source?: PlanSource;
 }
 
 export interface MyPlan {
@@ -18,4 +24,9 @@ export interface MyPlan {
   speed: string;
   extraCall: string;
   numberChangeFee: string;
+}
+
+export interface ApiPlan {
+  planId: number;
+  name: string;
 }
