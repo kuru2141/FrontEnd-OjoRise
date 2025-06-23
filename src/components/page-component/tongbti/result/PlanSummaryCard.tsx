@@ -51,7 +51,10 @@ export default function PlanSummaryCard(props: TongBTIResultInfo) {
         <p className="text-sm text-gray-600 leading-snug max-w-[220px]">{planDescription}</p>
         <div className="flex items-center gap-3">
           <span className="text-lg font-bold text-black">월 {monthlyFee.toLocaleString()}원</span>
-          <button className="bg-[#FF008C] hover:bg-[#e6007e] text-white text-sm px-4 py-2 rounded-md">
+          <button
+            onClick={() => window.open(planUrl, "_blank")}
+            className="bg-[#FF008C] hover:bg-[#e6007e] text-white text-sm px-4 py-2 rounded-md"
+          >
             신청하기
           </button>
         </div>
