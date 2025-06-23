@@ -40,7 +40,7 @@ const bannerData: BannerItem[] = [
     title: "통BTI 테스트",
     description: "나는 어떤 요금제 캐릭터일까?",
     buttonText: "테스트 하러가기",
-    buttonLink: "/test-bti",
+    buttonLink: "/tongbti",
     backgroundColor: "bg-yellow-50",
     imageSrc: "/TongBTI.png",
     imageAlt: "통BTI 테스트 캐릭터",
@@ -88,9 +88,7 @@ export default function BannerCarousel() {
   }, [paginate]);
 
   return (
-    <div
-      className="relative w-full max-w-[758px] h-[180px] sm:h-[220px] md:w-[758px] md:h-[310px] overflow-hidden rounded-xl"
-    >
+    <div className="relative w-full max-w-[758px] h-[180px] sm:h-[220px] md:w-[758px] md:h-[310px] overflow-hidden rounded-xl">
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={page}
@@ -107,17 +105,24 @@ export default function BannerCarousel() {
             className={`
               absolute flex flex-col ${currentBanner.textColor}
               px-4 sm:px-8 md:px-0
-              ${currentBanner.imagePosition === "right"
-                ? "top-[30%] left-[15%] max-w-[80vw] md:top-[85px] md:left-[114px] md:max-w-none"
-                : "top-[30%] right-[15%] max-w-[80vw] md:top-[85px] md:left-[348px] md:right-auto md:max-w-none"
+              ${
+                currentBanner.imagePosition === "right"
+                  ? "top-[30%] left-[15%] max-w-[80vw] md:top-[85px] md:left-[114px] md:max-w-none"
+                  : "top-[30%] right-[15%] max-w-[80vw] md:top-[85px] md:left-[348px] md:right-auto md:max-w-none"
               }
             `}
             style={{ alignItems: "flex-start" }}
           >
-            <h2 className="font-bold text-base sm:text-xl md:text-[32px] mb-1 md:mb-0" style={{ lineHeight: "1.2" }}>
+            <h2
+              className="font-bold text-base sm:text-xl md:text-[32px] mb-1 md:mb-0"
+              style={{ lineHeight: "1.2" }}
+            >
               {currentBanner.title}
             </h2>
-            <p className="font-bold text-gray-600 text-xs sm:text-base md:text-[18px] mt-0 md:mt-[5px]" style={{ lineHeight: "1.3" }}>
+            <p
+              className="font-bold text-gray-600 text-xs sm:text-base md:text-[18px] mt-0 md:mt-[5px]"
+              style={{ lineHeight: "1.3" }}
+            >
               {currentBanner.description}
             </p>
             <Link href={currentBanner.buttonLink}>
@@ -145,9 +150,10 @@ export default function BannerCarousel() {
               absolute
               w-[45vw] h-[32vw] max-w-[180px] max-h-[130px]
               md:w-[300px] md:h-[250px] md:max-w-none md:max-h-none
-              ${currentBanner.imagePosition === "right"
-                ? "right-[15%] bottom-[0px] md:right-[110px] md:bottom-0"
-                : "left-[15%] top-[calc(15%)] md:left-[40px] md:top-[calc(50%-125px)]"
+              ${
+                currentBanner.imagePosition === "right"
+                  ? "right-[15%] bottom-[0px] md:right-[110px] md:bottom-0"
+                  : "left-[15%] top-[calc(15%)] md:left-[40px] md:top-[calc(50%-125px)]"
               }
             `}
           >
@@ -170,9 +176,7 @@ export default function BannerCarousel() {
       </span>
 
       {/* 버튼 컨테이너 */}
-      <div
-        className="absolute bottom-2 sm:bottom-4 md:bottom-4 right-2 sm:right-8 md:right-8 flex gap-1 sm:gap-2 md:gap-2 z-10"
-      >
+      <div className="absolute bottom-2 sm:bottom-4 md:bottom-4 right-2 sm:right-8 md:right-8 flex gap-1 sm:gap-2 md:gap-2 z-10">
         <Button
           size="icon"
           onClick={() => paginate(-1)}
