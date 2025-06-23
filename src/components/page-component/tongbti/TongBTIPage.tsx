@@ -15,7 +15,7 @@ export default function TongBTIPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#fcff63]/20 flex justify-center items-center px-4">
+      <div className="h-screen bg-[#fcff63]/20 flex justify-center items-center px-4">
         <div className="w-full max-w-md animate-pulse space-y-6 text-left">
           <div className="h-8 bg-[#FF008C]/30 rounded w-1/4" />
           <div className="h-6 bg-gray-300 rounded w-3/4" />

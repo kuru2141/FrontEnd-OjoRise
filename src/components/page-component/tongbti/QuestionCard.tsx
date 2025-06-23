@@ -51,7 +51,7 @@ export default function QuestionCard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fcff63]/20 flex flex-col justify-center items-center px-4 text-center">
+    <div className="h-screen bg-[#fcff63]/20 flex flex-col justify-center items-center px-4 text-center">
       <div className="w-full max-w-md text-left">
         <motion.div
           key={currentStep}

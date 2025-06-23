@@ -41,7 +41,7 @@ export default function ResultPage() {
     <>
       <KakaoInitializer />
 
-      <div className="min-h-screen bg-[#fcff63]/20 flex flex-col items-center pt-10 px-4">
+      <div className="h-screen bg-[#fcff63]/20 flex flex-col items-center pt-10 px-4">
         <h2 className="font-bold text-[18px] text-gray-100/60 mt-20 mb-2">나의 통BTI는</h2>
         <h1 className="font-bold text-[32px] text-[#FF008C] mb-4">{resultInfo.tongName}</h1>
         <img

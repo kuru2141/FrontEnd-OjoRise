@@ -40,7 +40,7 @@ export default function TongBTILoadingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-[#fcff63]/20">
+    <div className="h-screen flex flex-col justify-center items-center bg-[#fcff63]/20">
       <motion.p
         className="text-xl font-semibold mb-4"
         initial={{ opacity: 0 }}
