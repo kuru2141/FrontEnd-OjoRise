@@ -15,6 +15,7 @@ export default function PlanSummaryCard(props: TongBTIResultInfo) {
     sms,
     planDescription,
     telecomProvider,
+    planUrl,
   } = props;
 
   return (
