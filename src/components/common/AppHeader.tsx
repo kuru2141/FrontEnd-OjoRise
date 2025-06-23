@@ -3,49 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, memo, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import HamburgerIcon from "./HamburgerIcon";
 import OffCanvas from "./OffCanvas";
-import { router } from "next/client";
-
-const menuForLoggedIn = [
-  { label: "마이페이지", href: "/mypage" },
-  { label: "요금제 둘러보기", href: "/" },
-  {
-    label: "로그아웃",
-    href: "#",
-    onClick: () => {
-      console.log("로그아웃 처리 (임시)");
-      // 로그아웃 실제 로직 넣기
-      router.push("/");
-    },
-  },
-];
-
-const menuForLoggedOut = [
-  {
-    label: "카카오 로그인",
-    href: "#",
-    onClick: () => {
-      console.log("카카오 로그인 처리 (임시)");
-      // 로그인 실제 로직 넣기
-      router.push("/");
-    },
-  },
-  { label: "요금제 둘러보기", href: "/" },
-];
-
-const handleKakaoLogin = () => {
-  const kakaoAuthUrl = "http://localhost:8080/ojoRise/auth/kakao/login";
-  window.location.href = kakaoAuthUrl;
-};
+import { useLogout } from "@/hooks/useLogout";
 
 function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const isSurveyed = useAuthStore(state => state.isSurveyed);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const router = useRouter();
+  const logoutMutation = useLogout();
 
   useEffect(() => {
     const handler = () => {
@@ -56,11 +23,33 @@ function AppHeader() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // 현재 상태에 따른 메뉴 선택
+  const handleKakaoLogin = () => {
+    const kakaoAuthUrl = "http://localhost:8080/ojoRise/auth/kakao/login";
+    window.location.href = kakaoAuthUrl;
+  };
+
   const currentMenu = useMemo(() => {
-    if (isSurveyed) return menuForLoggedIn;
-    return menuForLoggedOut;
-  }, [isSurveyed]);
+    if (isSurveyed) {
+      return [
+        { label: "마이페이지", href: "/mypage" },
+        { label: "요금제 둘러보기", href: "/" },
+        {
+          label: "로그아웃",
+          href: "/",
+          onClick: () => logoutMutation.mutate(),
+        },
+      ];
+    }
+
+    return [
+      {
+        label: "카카오 로그인",
+        href: "#",
+        onClick: handleKakaoLogin,
+      },
+      { label: "요금제 둘러보기", href: "/" },
+    ];
+  }, [isSurveyed, logoutMutation]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -103,10 +92,7 @@ function AppHeader() {
                 마이페이지
               </Link>
               <button
-                onClick={() => {
-                  console.log("데스크톱 로그아웃 클릭 (임시)");
-                  router.push("/");
-                }}
+                onClick={() => logoutMutation.mutate()}
                 className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
               >
                 로그아웃
