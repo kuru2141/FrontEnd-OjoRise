@@ -25,19 +25,19 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   }, []);
 
   useEffect(() => {
-    if(!accessToken) return;
+    if (!accessToken) return;
 
-    if(isAccessTokenExpired(accessToken)){
+    if (isAccessTokenExpired(accessToken)) {
       refetch().then((res) => {
         if (res.data?.accessToken) {
-          sessionStorage.setItem('accessToken',res.data.accessToken);
+          sessionStorage.setItem("accessToken", res.data.accessToken);
           console.log("토큰 재발급");
         } else {
           console.error("토큰 재발급 실패");
         }
       });
     }
-  },[accessToken, refetch]);
+  }, [accessToken, refetch]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
@@ -48,11 +48,11 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   return (
     <Fragment>
       <AppHeader />
+      <LinearProgress colorClassName="bg-[black]" />
       <ToastContainer position="top-right" autoClose={2000} newestOnTop />
       {children}
-      <Footer />
-      <LinearProgress colorClassName="bg-[black]" />
       <ChatBotModal />
+      <Footer />
     </Fragment>
   );
 }
