@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { FC } from "react";
 
 interface DipModalProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface DipModalProps {
   onKakao: () => void;
 }
 
-const DipModal: React.FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
+const DipModal: FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
   if (!isOpen) return null;
 
   return (

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { FC } from "react";
 import { Button } from "@/components/ui/button";
 
 interface WithdrawModalProps {
@@ -8,7 +8,7 @@ interface WithdrawModalProps {
   onConfirm: () => void;
 }
 
-const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onCancel, onConfirm }) => {
+const WithdrawModal: FC<WithdrawModalProps> = ({ isOpen, onCancel, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
