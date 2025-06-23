@@ -20,6 +20,7 @@ const buttonVariants = cva(
         kakao: "bg-[#FEE500] text-black hover:bg-[#e0c200]",
         next: "font-suit bg-primary-medium text-white foreground shadow-xs hover:bg-primary-medium/90 font-bold text-[18px]",
         back: "font-suit hover:bg-accent text-primary-medium dark:hover:bg-accent/50 font-bold text-[18px]",
+        banner: "font-suit shadow-xs rounded-lg text-2xl font-extrabold hover:opacity-80",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
