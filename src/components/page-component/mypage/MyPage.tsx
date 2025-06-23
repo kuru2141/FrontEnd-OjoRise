@@ -10,6 +10,7 @@ import { usePlanAge } from "@/hooks/usePlanAge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useLogout } from "@/hooks/useLogout";
 
 const MyPage = () => {
   const router = useRouter();
@@ -21,9 +22,11 @@ const MyPage = () => {
   const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI();
   const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge();
   const { mutate: withdraw } = useWithdraw();
+  const { mutate: logout } = useLogout();
 
   //회원탈퇴
   const handleWithdraw = () => {
+    logout();
     withdraw();
     closeModal();
   };

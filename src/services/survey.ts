@@ -11,7 +11,7 @@ import { SurveyRequest, SurveyResponse } from "@/types/survey";
  */
 export const Plans = async (telecomProvider: string): Promise<ApiPlan[]> => {
   try {
-    const response = await api.get("/survey", {
+    const response = await api.get("/survey/plan", {
       params: { telecom_provider: telecomProvider },
     });
     return response.data;
