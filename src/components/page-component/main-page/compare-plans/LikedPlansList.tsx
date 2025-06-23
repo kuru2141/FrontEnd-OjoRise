@@ -19,7 +19,7 @@ export default function LikedPlansList() {
 
   return (
     <section className="w-full mx-auto px-4 mb-9">
-      <h2 className="text-2xl font-bold">찜한 요금제</h2>
+      <h2 className="text-2xl font-bold">관심 요금제</h2>
       <div className="relative min-h-[400px] flex items-center justify-center">
         {!isSurveyed ? (
           <div className="text-center">
