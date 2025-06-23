@@ -56,7 +56,7 @@ function ChatBotModal() {
     ],
     time: new Date(),
   });
-  const [initialGhestDialog, setInitialGhestDialog] = useState<DialogItem>({
+  const [initialGuestDialog, setInitialGuestDialog] = useState<DialogItem>({
     teller: "chatbot",
     block: [
       `LG U+ 요금제 추천 도우미입니다.\n사진을 통해 데이터 사용량, 가족 결합 여부, 요금 고민 등을 보내주시면, 그에 맞는 요금제를 추천해드려요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요`,
@@ -68,6 +68,17 @@ function ChatBotModal() {
   const [input, setInput] = useState("");
   const [dialog, setDialog] = useState<DialogItem[]>([]);
   const [history, setHistory] = useState<string[]>([]);
+
+  const setGuestDialog = useCallback(() => {
+    setUserProfile(initialProfile);
+    setInitialGuestDialog({ ...initialGuestDialog, time: new Date() });
+    setDialog([initialGuestDialog]);
+  }, [initialGuestDialog]);
+
+  const setLoginDialog = useCallback(() => {
+    setInitialLoginDialog({ ...initialLoginDialog, time: new Date() });
+    setDialog([initialLoginDialog]);
+  }, [initialLoginDialog]);
 
   const onComplete = async (result: ResultItem) => {
     const ocrMessage =
@@ -128,9 +139,7 @@ function ChatBotModal() {
           });
 
           if (res.status !== 200) {
-            setUserProfile(initialProfile);
-            setInitialGhestDialog({ ...initialGhestDialog, time: new Date() });
-            setDialog([initialGhestDialog]);
+            setGuestDialog();
             return;
           }
 
@@ -143,17 +152,12 @@ function ChatBotModal() {
             familyBundle: data.familyBundle ?? "",
             tongName: data.tongName ?? "",
           });
-          setInitialLoginDialog({ ...initialLoginDialog, time: new Date() });
-          setDialog([initialLoginDialog]);
+          setLoginDialog();
         } else {
-          setUserProfile(initialProfile);
-          setInitialGhestDialog({ ...initialGhestDialog, time: new Date() });
-          setDialog([initialGhestDialog]);
+          setGuestDialog();
         }
       } else {
-        setUserProfile(initialProfile);
-        setInitialGhestDialog({ ...initialGhestDialog, time: new Date() });
-        setDialog([initialGhestDialog]);
+        setGuestDialog();
       }
     }
 
@@ -328,7 +332,6 @@ function ChatBotModal() {
       ]);
     }
 
-    console.log(itemsRef);
     setDisableButton(false);
   }, [input, mutateAsync]);
 
@@ -346,8 +349,8 @@ function ChatBotModal() {
       setInitialLoginDialog({ ...initialLoginDialog, time: new Date() });
       setDialog((prev) => [...prev, initialLoginDialog]);
     } else {
-      setInitialGhestDialog({ ...initialGhestDialog, time: new Date() });
-      setDialog((prev) => [...prev, initialGhestDialog]);
+      setInitialGuestDialog({ ...initialGuestDialog, time: new Date() });
+      setDialog((prev) => [...prev, initialGuestDialog]);
     }
     itemIndexRef.current = 0;
     itemsRef.current = [];
@@ -358,38 +361,41 @@ function ChatBotModal() {
     setAmbiguousCount(0);
   }, []);
 
-  const handleOCR = (e: ChangeEvent<HTMLInputElement>) => {
-    setDisableButton(true);
-    const file = e.target.files?.[0];
-    if (!file) {
+  const handleOCR = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setDisableButton(true);
+      const file = e.target.files?.[0];
+      if (!file) {
+        e.target.value = "";
+        setDisableButton(false);
+        return;
+      }
+
+      setDialog((prev) => [...prev, { teller: "user", block: [file], time: new Date() }]);
+
+      if (isSameFile(file, imgFile)) {
+        setDialog((prev) => [
+          ...prev,
+          {
+            teller: "chatbot",
+            block: ["동일한 사진을 입력하셨습니다. 다른 사진을 이용해주세요."],
+            time: new Date(),
+          },
+        ]);
+        e.target.value = "";
+        setDisableButton(false);
+        return;
+      }
+
       e.target.value = "";
-      setDisableButton(false);
-      return;
-    }
+      setImgFile(file);
+    },
+    [imgFile]
+  );
 
-    setDialog((prev) => [...prev, { teller: "user", block: [file], time: new Date() }]);
-
-    if (isSameFile(file, imgFile)) {
-      setDialog((prev) => [
-        ...prev,
-        {
-          teller: "chatbot",
-          block: ["동일한 사진을 입력하셨습니다. 다른 사진을 이용해주세요."],
-          time: new Date(),
-        },
-      ]);
-      e.target.value = "";
-      setDisableButton(false);
-      return;
-    }
-
-    e.target.value = "";
-    setImgFile(file);
-  };
-
-  const handleOCRClick = () => {
+  const handleOCRClick = useCallback(() => {
     fileInputRef.current?.click();
-  };
+  }, []);
 
   useEffect(() => {
     if (imgFile) {
@@ -450,7 +456,7 @@ function ChatBotModal() {
                 </ChatBotBubble>
                 {item.teller === "chatbot" &&
                 i === dialog.length - 1 &&
-                item.block !== initialGhestDialog.block &&
+                item.block !== initialGuestDialog.block &&
                 item.block !== initialLoginDialog.block ? (
                   <div className="ml-2 mb-2">
                     <Button
