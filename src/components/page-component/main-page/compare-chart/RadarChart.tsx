@@ -38,7 +38,7 @@ function RadarChart() {
 
   const toRadarData = useCallback((data: ComparePlan) => {
     return [
-      safeNumber(data.monthlyFee) / 1000,
+      safeNumber(data.monthlyFee) / 1300,
       data.voiceCallPrice === "무제한" ? 100 : safeNumber(data.voiceCallPrice) / 10,
       data.sms === "기본제공" ? 100 : safeNumber(data.sms) / 10,
       safeNumber(data.sharingDataGb) / 1.8,
