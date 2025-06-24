@@ -7,10 +7,8 @@ export default function KakaoInitializer() {
     script.src = "https://developers.kakao.com/sdk/js/kakao.js";
     script.async = true;
     script.onload = () => {
-      // @ts-ignore
       if (window.Kakao && !window.Kakao.isInitialized()) {
         const jsKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-        // @ts-ignore
         window.Kakao.init(jsKey);
       }
     };

@@ -16,14 +16,7 @@ import { Radar } from "react-chartjs-2";
 import { useBaseAndCompareItem } from "./comparePlan";
 import { ComparePlan } from "@/types/plan";
 
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-);
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
 function RadarChart() {
   const [dpr, setDpr] = useState<number>();
@@ -35,7 +28,7 @@ function RadarChart() {
     setDpr(window.devicePixelRatio);
   }, []);
 
-  const labels = ["월정액", "음성통화", "문자", "쉐어링 데이터", "데이터"];
+  const labels = useMemo(() => ["월정액", "음성통화", "문자", "쉐어링 데이터", "데이터"], []);
   const { baseItem, compareItem } = useBaseAndCompareItem();
 
   const safeNumber = (value: number | string, fallback = 0.01) => {
@@ -43,7 +36,7 @@ function RadarChart() {
     return isNaN(num) ? fallback : num;
   };
 
-  const toRadarData = (data: ComparePlan) => {
+  const toRadarData = useCallback((data: ComparePlan) => {
     return [
       safeNumber(data.monthlyFee) / 1000,
       data.voiceCallPrice === "무제한" ? 100 : safeNumber(data.voiceCallPrice) / 10,
@@ -51,15 +44,15 @@ function RadarChart() {
       safeNumber(data.sharingDataGb) / 1.8,
       data.baseDataGb === "무제한" ? 100 : safeNumber(data.baseDataGb) / 1.8,
     ];
-  };
+  }, []);
 
-  const baseData = useMemo(() => toRadarData(baseItem), [baseItem]);
-  const compareData = useMemo(() => toRadarData(compareItem), [compareItem]);
+  const baseData = useMemo(() => toRadarData(baseItem), [baseItem, toRadarData]);
+  const compareData = useMemo(() => toRadarData(compareItem), [compareItem, toRadarData]);
   const baseReady = useMemo(() => baseData.some((v) => v > 0), [baseData]); //baseData에 값 있는지 확인
 
   const legendPositionPlugin = {
     id: "legendPositionPlugin",
-    afterLayout(chart: Chart < "radar", number[], string>) {
+    afterLayout(chart: Chart<"radar", number[], string>) {
       const scale = chart.scales.r as unknown as {
         yCenter: number;
         drawingArea: number;
@@ -73,56 +66,58 @@ function RadarChart() {
   };
 
   const generateLabels = useCallback((chart: Chart<"radar", number[], string>) => {
-    return [...chart.data.datasets].map((dataset, i) => ({
+    return [...chart.data.datasets].reverse().map((dataset, i) => ({
       text: dataset.label ?? "",
       fillStyle: i === 0 ? "#FCFF63" : "#03C75A",
       strokeStyle: "transparent",
     }));
   }, []);
 
-  const options = useMemo<ChartOptions<"radar">>(() => ({
-    responsive: true,
-    maintainAspectRatio: false,
-    devicePixelRatio: dpr,
-    animation: {
-      duration: 1000,
-      easing: "easeOutQuart",
-    },
-    plugins: {
-      title: { display: false },
-      legend: {
-        position: "chartArea",
-        labels: {
-          font: { family: "Pretendard", size: 14 },
-          usePointStyle: true,
-          pointStyle: "circle",
-          boxWidth: 10,
-          boxHeight: 10,
-          color: "var(--color-gray-100)",
-          generateLabels,
+  const options = useMemo<ChartOptions<"radar">>(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      devicePixelRatio: dpr,
+      animation: {
+        duration: 1000,
+        easing: "easeOutQuart",
+      },
+      plugins: {
+        title: { display: false },
+        legend: {
+          position: "chartArea",
+          labels: {
+            font: { family: "Pretendard", size: 14 },
+            usePointStyle: true,
+            pointStyle: "circle",
+            boxWidth: 10,
+            boxHeight: 10,
+            color: "var(--color-gray-100)",
+            generateLabels,
+          },
         },
       },
-    },
-    layout: { padding: 0 },
-    elements: {
-      line: { borderWidth: 1 },
-      point: { radius: 0 },
-    },
-    scales: {
-      r: {
-        backgroundColor: "white",
-        pointLabels: {
-          padding: 5,
-          font: { family: "Pretendard", weight: "bold", size: 18 },
-          color: "var(--color-gray-100)",
-        },
-        ticks: { stepSize: 20, display: false },
-        beginAtZero: true,
-        max: 100,
+      layout: { padding: 0 },
+      elements: {
+        line: { borderWidth: 1 },
+        point: { radius: 0 },
       },
-    },
-  }), [dpr, generateLabels]);
-
+      scales: {
+        r: {
+          backgroundColor: "white",
+          pointLabels: {
+            padding: 5,
+            font: { family: "Pretendard", weight: "bold", size: 18 },
+            color: "var(--color-gray-100)",
+          },
+          ticks: { stepSize: 20, display: false },
+          beginAtZero: true,
+          max: 100,
+        },
+      },
+    }),
+    [dpr, generateLabels]
+  );
 
   useEffect(() => {
     if (!baseReady) return;
@@ -136,15 +131,15 @@ function RadarChart() {
             labels,
             datasets: [
               {
-                label: "기준 요금제",
+                label: "비교 요금제",
                 data: [...baseData],
                 backgroundColor: "rgba(3, 199, 90, 0.4)",
                 borderColor: "rgba(3, 199, 90, 1)",
                 borderWidth: 2,
               },
               {
-                label: "비교 요금제",
-                data: [...baseData], // 처음엔 겹쳐서 시작
+                label: "기준 요금제",
+                data: [...baseData],
                 backgroundColor: "rgba(252, 255, 99, 0.4)",
                 borderColor: "rgba(252, 255, 99, 1)",
                 borderWidth: 2,
@@ -158,8 +153,11 @@ function RadarChart() {
     );
 
     observer.observe(target);
-    return () => observer.disconnect();
-  }, [baseReady]);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [baseData, baseReady, labels]);
 
   useEffect(() => {
     if (!data) return;
@@ -170,11 +168,10 @@ function RadarChart() {
         return {
           ...prev,
           datasets: [
-            prev.datasets[0],
             {
-              ...prev.datasets[1],
+              ...prev.datasets[0],
               data: [...compareData],
-            },
+            }, prev.datasets[1],
           ],
         };
       });
