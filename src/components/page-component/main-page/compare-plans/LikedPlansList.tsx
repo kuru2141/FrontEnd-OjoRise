@@ -18,14 +18,14 @@ import PlanCardSkeleton from "./PlanCardSkeleton";
 export default function LikedPlansList() {
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const { likedPlans, removeLikedPlan } = usePlanStore();
-  const { refetch, isPending, error } = useLikedPlans();
+  const { refetch, isPending } = useLikedPlans();
   const hasHydrated = usePlanStoreRehydrated();
 
   useEffect(() => {
     if (isSurveyed) {
       refetch();
     }
-  }, [isSurveyed]);
+  }, [isSurveyed, refetch]);
 
   const showSkeleton = !hasHydrated || isPending;
 
