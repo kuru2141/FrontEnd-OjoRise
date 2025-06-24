@@ -5,7 +5,7 @@ import TextsmsIcon from "@mui/icons-material/Textsms";
 import FiveGIcon from "@mui/icons-material/FiveG";
 import LteMobiledataIcon from "@mui/icons-material/LteMobiledata";
 import { deleteRecommendedPlan } from "@/services/recommenendPlanService";
-import { deleteLikedPlan } from "@/services/dipPlanService";
+import { dipPlan } from "@/services/dipPlanService";
 
 export default function PlanCard(props: Plan) {
   const {
@@ -57,7 +57,7 @@ export default function PlanCard(props: Plan) {
               if (props.source === "recommend") {
                 await deleteRecommendedPlan(planId);
               } else if (props.source === "like") {
-                await deleteLikedPlan(planId);
+                await dipPlan(planId);
               } else {
                 console.warn("삭제 타입 미지정");
               }

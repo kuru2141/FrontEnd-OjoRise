@@ -67,6 +67,9 @@
   --primary-medium: #ff008c;
   --primary-light: #edb3d2;
   --primary-bright: #fce8f3;
+  --secondary-chatbot-color: #f2edf5;
+  --secondary-userChatbot-color: #e0f7fa;
+  --secondary-hover-color: #d63384;
   --gray-100: #222022;
   --gray-60: #7a797a;
   --gray-40: #a7a6a7;
@@ -173,5 +176,11 @@
   .font-pretendard {
     font-family: "Pretendard", sans-serif;
     color: var(--gray-100);
+  }
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 1px 1px 15px 0 rgba(234, 234, 234, 1);
   }
 }

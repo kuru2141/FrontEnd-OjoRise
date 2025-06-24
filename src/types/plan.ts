@@ -30,3 +30,17 @@ export interface ApiPlan {
   planId: number;
   name: string;
 }
+
+export interface DipCardPlan {
+  planId: number;
+  name: string;
+  baseDataGb: string;
+  dailyDataGb: string;
+  sharingDataGb: string;
+  monthlyFee: number;
+  voiceCallPrice: string;
+  sms: string;
+  mobileType: string;
+  planUrl: string;
+  online: boolean;
+}

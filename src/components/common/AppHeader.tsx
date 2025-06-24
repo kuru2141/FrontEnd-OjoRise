@@ -36,7 +36,7 @@ function AppHeader() {
     if (isSurveyed) {
       return [
         { label: "마이페이지", href: "/mypage" },
-        { label: "요금제 둘러보기", href: "/" },
+        { label: "요금제 둘러보기", href: "/explore-plans" },
         {
           label: "로그아웃",
           href: "/",
@@ -51,7 +51,7 @@ function AppHeader() {
         href: "#",
         onClick: handleKakaoLogin,
       },
-      { label: "요금제 둘러보기", href: "/" },
+      { label: "요금제 둘러보기", href: "/explore-plans" },
     ];
   }, [isSurveyed, logoutMutation]);
 
@@ -72,7 +72,7 @@ function AppHeader() {
 
         <div className="hidden md:flex items-center space-x-[50px]">
           <Link
-            href="/"
+            href="/explore-plans"
             className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
           >
             요금제 둘러보기
