@@ -1,6 +1,5 @@
 "use client";
 import { useBrowseDip, useBrowsePlans } from "@/hooks/useBrowsePlans";
-import { useBrowsePlanStore } from "@/stores/browsePlanStore";
 import { PlanTabs } from "./PlanTabs";
 import { PlanDipCard } from "./PlanDipCard";
 import { useAuthStore } from "@/stores/authStore";
@@ -9,6 +8,7 @@ import { dipPlan } from "@/services/dipPlanService";
 import DipModal from "./DipModal";
 import { useState } from "react";
 import { CustomPagination } from "./CustomPagination";
+import { useBrowseQueryParams } from "@/hooks/useBrowseQueryParams"; 
 
 const ExplorePlansPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +21,7 @@ const ExplorePlansPage = () => {
   };
 
   const { isSurveyed } = useAuthStore();
-  const { currentPage, setPage, isOnline } = useBrowsePlanStore();
+  const { currentPage, isOnline, updateParams } = useBrowseQueryParams();
   const { data: plans } = useBrowsePlans(isOnline, currentPage);
   const { data: likedIds = [], refetch: refetchLikedIds } = useBrowseDip(
     isOnline,
@@ -34,6 +34,10 @@ const ExplorePlansPage = () => {
   const handleToggle = async (planId: number) => {
     await dipPlan(planId);
     await refetchLikedIds();
+  };
+
+  const handlePageChange = (page: number) => {
+    updateParams({ currentPage: page });
   };
 
   if (!plans) return <div className="p-6">로딩 중...</div>;
@@ -64,11 +68,11 @@ const ExplorePlansPage = () => {
           <CustomPagination
             totalPages={totalPages}
             currentPage={currentPage}
-            onPageChange={(page) => setPage(page)}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>
-      <DipModal isOpen={isModalOpen} onCancel={() => setIsModalOpen(false)} onKakao={handlekakao} />
+      <DipModal isOpen={isModalOpen} onCancel={closeModal} onKakao={handlekakao} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useBrowsePlanStore } from "@/stores/browsePlanStore";
+import { useBrowseQueryParams } from "@/hooks/useBrowseQueryParams";
 
 const tabs = [
   { id: false, label: "5G/LTE" },
@@ -9,7 +9,11 @@ const tabs = [
 ];
 
 export function PlanTabs() {
-  const { isOnline, setOnline } = useBrowsePlanStore();
+  const { isOnline, updateParams } = useBrowseQueryParams();
+
+  const handleTabChange = (id: boolean) => {
+    updateParams({ isOnline: id, currentPage: 1 });
+  };
 
   return (
     <div className="border-b border-gray-300">
@@ -17,7 +21,7 @@ export function PlanTabs() {
         {tabs.map((tab) => (
           <button
             key={String(tab.id)}
-            onClick={() => setOnline(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={cn(
               "cursor-pointer hover:cursor-pointer pb-2 text-base font-bold text-black relative",
               isOnline === tab.id &&
