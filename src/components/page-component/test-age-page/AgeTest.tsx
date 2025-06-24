@@ -14,12 +14,11 @@ import { useAgeTestMutation } from "@/hooks/useAgeTestMutation";
 import { useRouter } from "next/navigation";
 import { buildSearchParams } from "@/utils/requestHelper";
 import { useQuery } from "@tanstack/react-query";
+import { Plans } from "@/services/survey";
 
-const tmelines = [
-  ["나는 ", "의"],
-  ["", "를 사용 중인"],
-  ["", "세 사용자 입니다."],
-];
+const isString = (value: unknown): value is string => {
+  return typeof value === "string" || value instanceof String;
+};
 
 function AgeTest() {
   const [current, setCurrent] = useState(0);
@@ -28,33 +27,26 @@ function AgeTest() {
   const [selectedAge, setSelectedAge] = useState<string>("");
   const mutation = useAgeTestMutation();
   const router = useRouter();
-  // const {data: planList} = useQuery({
-  //   queryKey: [""]
-  // })
+  const { data: planList } = useQuery({
+    queryKey: ["survey/plan", selectedTelecom],
+    queryFn: () => Plans(selectedTelecom),
+    enabled: !!selectedTelecom,
+  });
 
-  const handleTelecomChange = useCallback(
-    (e: string) => {
-      setSelectedTelecom(e);
-      if (current < tmelines.length) setCurrent((prev) => prev + 1);
-    },
-    [current]
-  );
+  const handleTelecomChange = useCallback((e: string) => {
+    setSelectedTelecom(e);
+    setCurrent(1);
+  }, []);
 
-  const handlePlanChange = useCallback(
-    (e: string) => {
-      setSelectedPlan(e);
-      if (current < tmelines.length) setCurrent((prev) => prev + 1);
-    },
-    [current]
-  );
+  const handlePlanChange = useCallback((e: string) => {
+    setSelectedPlan(e);
+    setCurrent(2);
+  }, []);
 
-  const handleAgeChange = useCallback(
-    (e: string) => {
-      setSelectedAge(e);
-      if (current < tmelines.length) setCurrent((prev) => prev + 1);
-    },
-    [current]
-  );
+  const handleAgeChange = useCallback((e: string) => {
+    setSelectedAge(e);
+    setCurrent(3);
+  }, []);
 
   const handleClickSubmit = useCallback(() => {
     const message = `나는 ${selectedTelecom}의 ${selectedPlan}를 사용 중인 ${selectedAge}세 사용자 입니다.`;
@@ -83,7 +75,7 @@ function AgeTest() {
     },
     {
       prompt: ["", "를 사용 중인"],
-      selectList: ["5GX 프리미엄", "요고 다이렉트 42", "너겟 47"],
+      selectList: planList || [],
       value: selectedPlan,
       handler: handlePlanChange,
     },
@@ -110,11 +102,19 @@ function AgeTest() {
                     <SelectValue placeholder="통신사" className="h-[250px]" />
                   </SelectTrigger>
                   <SelectContent>
-                    {selectList.map((item) => (
-                      <SelectItem key={item} value={item}>
-                        {item}
-                      </SelectItem>
-                    ))}
+                    {selectList.map((item) => {
+                      if (isString(item))
+                        return (
+                          <SelectItem key={item} value={item}>
+                            {item}
+                          </SelectItem>
+                        );
+                      return (
+                        <SelectItem key={item.name} value={item.name}>
+                          {item.name}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               }
@@ -123,7 +123,10 @@ function AgeTest() {
           </MotionSelectLine>
         );
       })}
-      <Button className="absolute bottom-10" onClick={handleClickSubmit}>
+      <Button
+        className={`absolute bottom-10 ${current === 3 ? "" : "hidden"}`}
+        onClick={handleClickSubmit}
+      >
         확인하러 가기
       </Button>
     </div>

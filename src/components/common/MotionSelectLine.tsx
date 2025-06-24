@@ -14,7 +14,7 @@ function MotionSelectLine({ state, children }: PropsWithChildren<MotionSelectLin
     next: { y: 50, opacity: 0, scale: 0.95 },
   };
 
-  const animateTo = state === "active" ? "active" : state === "previous" ? "previous" : "next";
+  const animateTo = state;
 
   return (
     <motion.div

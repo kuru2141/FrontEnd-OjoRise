@@ -3,7 +3,6 @@ import KakaoInitializer from "@/components/common/kakao/KakaoInitializer";
 import { ageTestResult } from "@/services/ageTest";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import PlanSummaryCard from "../../tongbti/result/PlanSummaryCard";
 import ShareButton from "@/components/common/button/ShareButton";
 
 interface ResultType {
