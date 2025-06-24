@@ -1,6 +1,4 @@
 import { api } from "@/lib/axios";
-import { fetchRecommendedPlans } from "./recommenendPlanService";
-import { fetchLikedPlans } from "./dipPlanService";
 
 export async function handleLoginSuccess() {
   let localRecommendations: string[] = [];
@@ -22,17 +20,5 @@ export async function handleLoginSuccess() {
     } catch (err) {
       console.error("추천 요금제 동기화 실패", err);
     }
-  }
-
-  try {
-    await fetchRecommendedPlans();
-  } catch (err) {
-    console.error("추천 목록 가져오기 실패:", err);
-  }
-
-  try {
-    await fetchLikedPlans();
-  } catch (err) {
-    console.error("찜한 요금제 가져오기 실패:", err);
   }
 }
