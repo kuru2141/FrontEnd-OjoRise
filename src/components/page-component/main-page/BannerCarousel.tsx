@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, Transition } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface BannerItem {
   id: number;
@@ -42,11 +41,11 @@ const bannerData: BannerItem[] = [
     description: "나는 어떤 요금제 캐릭터일까?",
     buttonText: "테스트 하러가기",
     buttonLink: "/tongbti",
-    backgroundColor: "bg-yellow-50",
+    backgroundColor: "bg-[rgba(252,255,99,0.2)]",
     imageSrc: "/TongBTI.png",
     imageAlt: "통BTI 테스트 캐릭터",
     textColor: "text-neutral-800",
-    buttonBgColor: "bg-pink-200",
+    buttonBgColor: "bg-primary-bright",
     buttonTextColor: "text-neutral-800",
     imagePosition: "left",
   },
@@ -69,7 +68,7 @@ const variants = {
 
 const spring: Transition = {
   type: "spring",
-  stiffness: 300,
+  stiffness: 100,
   damping: 30,
 };
 
@@ -130,21 +129,21 @@ export default function BannerCarousel() {
                 ? "left-[30px] sm:left-[114px]"
                 : "right-[30px] sm:right-[114px]"}
               ${currentBanner.imagePosition === "left"
-                ? "items-end text-right"
+                ? "items-start text-left"
                 : "items-start text-left"}
               top-1/2 -translate-y-1/2 w-1/2`}
           >
-            <h2 className="font-bold mb-1 leading-tight text-[16px] sm:text-[32px]">
+            <h2 className={`mb-1 leading-tight ${currentBanner.id === 2 ? 'sm:ml-[168px] sm:font-pretendard font-bold text-[16px] sm:text-[32px]' : 'font-bold text-[16px] sm:text-[32px]'}`}>
               {currentBanner.title}
             </h2>
-            <p className="font-bold text-gray-600 mt-1 leading-snug text-[14px] sm:text-[18px]">
+            <p className={`mt-1 leading-snug ${currentBanner.id === 2 ? 'sm:ml-[168px] sm:font-pretendard font-bold text-gray-400 text-[14px] sm:text-[18px]' : 'font-bold text-gray-400 text-[14px] sm:text-[18px]'}`}>
               {currentBanner.description}
             </p>
             <Link href={currentBanner.buttonLink}>
               <Button
                 variant="banner"
                 className={`rounded-lg font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}
-                  w-[140px] sm:w-[242px] h-[36px] sm:h-[55px] mt-3 sm:mt-6 text-[14px] sm:text-[24px]`}
+                  w-[140px] sm:w-[242px] h-[36px] sm:h-[55px] mt-3 sm:mt-6 text-[14px] sm:text-[24px] ${currentBanner.id === 2 ? 'sm:ml-[168px]' : ''}`}
               >
                 {currentBanner.buttonText}
               </Button>
@@ -172,15 +171,15 @@ export default function BannerCarousel() {
       </AnimatePresence>
 
       {/* Indicator + Buttons */}
-      <span className="absolute bottom-4 left-8 flex items-center justify-center w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10 text-base">
+      <span className="absolute bottom-[32px] left-8 flex items-center justify-center w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 z-10 font-pretendard text-[12px] !text-white">
         {bannerIndex + 1}/{bannerData.length}
       </span>
-      <div className="absolute bottom-4 right-8 gap-2 z-10 hidden sm:flex">
-        <Button size="icon" onClick={() => paginate(-1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:opacity-90">
-          <ChevronLeft className="text-white size-[24px]" />
+      <div className="absolute bottom-[23px] right-[23px] gap-[10px] z-10 hidden sm:flex">
+        <Button size="icon" onClick={() => paginate(-1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:bg-transparent">
+          <Image src="/prevBtn.png" alt="Previous" width={40} height={40} />
         </Button>
-        <Button size="icon" onClick={() => paginate(1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:opacity-90">
-          <ChevronRight className="text-white size-[24px]" />
+        <Button size="icon" onClick={() => paginate(1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:bg-transparent">
+          <Image src="/nextBtn.png" alt="Next" width={40} height={40} />
         </Button>
       </div>
     </div>
