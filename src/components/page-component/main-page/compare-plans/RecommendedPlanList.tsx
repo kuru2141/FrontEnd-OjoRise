@@ -18,7 +18,7 @@ import { useEffect } from "react";
 export default function RecommendedPlanList() {
   const { recommendedPlans, removePlan } = usePlanStore();
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
-  const { refetch, isLoading, error } = useRecommendedPlans();
+  const { refetch, isPending, error } = useRecommendedPlans();
 
   useEffect(() => {
     if (isSurveyed) {
@@ -27,7 +27,7 @@ export default function RecommendedPlanList() {
   }, [isSurveyed]);
 
   const hasHydrated = usePlanStoreRehydrated();
-  const showSkeleton = !hasHydrated || isLoading;
+  const showSkeleton = !hasHydrated || isPending;
 
   if (error) return <div>에러 발생!</div>;
 

@@ -18,7 +18,7 @@ import PlanCardSkeleton from "./PlanCardSkeleton";
 export default function LikedPlansList() {
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const { likedPlans, removeLikedPlan } = usePlanStore();
-  const { refetch, isLoading, error } = useLikedPlans();
+  const { refetch, isPending, error } = useLikedPlans();
   const hasHydrated = usePlanStoreRehydrated();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function LikedPlansList() {
     }
   }, [isSurveyed]);
 
-  const showSkeleton = !hasHydrated || isLoading;
+  const showSkeleton = !hasHydrated || isPending;
 
   return (
     <section className="w-full mx-auto px-4 mb-9">
