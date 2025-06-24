@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useLogout } from "@/hooks/useLogout";
+import { useGetName } from "@/hooks/useGetUserInfo";
 
 const MyPage = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const MyPage = () => {
   const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge();
   const { mutate: withdraw } = useWithdraw();
   const { mutate: logout } = useLogout();
+  const {data: username} = useGetName();
 
   //회원탈퇴
   const handleWithdraw = () => {
@@ -88,7 +90,9 @@ const MyPage = () => {
       <div className="w-full max-w-sm mt-30 md:max-w-3xl flex flex-col items-start text-left overflow-hidden">
         <div>
           <p className="text-[20px] sm:text-[24px] mb-2">안녕하세요</p>
-          <p className="font-bold text-[20px] sm:text-[24px]">이다예 님의 마이페이지입니다.</p>
+          <p className="font-bold text-[20px] sm:text-[24px]">
+            {username ?? ""} 님의 마이페이지입니다.
+          </p>
         </div>
         <p className="font-bold text-[14px] sm:text-[18px] mb-2 sm:mb-5 mt-10">회원 정보</p>
         <div className="flex flex-col rounded-[14px] sm:rounded-[20px] border-[0.7px] sm:border p-3 sm:p-5 gap-3 sm:gap-5 w-full">
