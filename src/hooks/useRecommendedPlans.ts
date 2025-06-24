@@ -9,6 +9,6 @@ export const useRecommendedPlans = () => {
   return useQuery<Plan[]>({
     queryKey: ["recommendedPlans"],
     queryFn: fetchRecommendedPlans,
-    enabled: isSurveyed === true,
+    enabled: !!isSurveyed,
   });
 };

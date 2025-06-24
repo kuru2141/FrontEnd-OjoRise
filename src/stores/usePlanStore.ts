@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import type { MyPlan, Plan } from "@/types/plan";
+
 import { persist } from "zustand/middleware";
+import type { Plan } from "@/types/plan";
 
 interface PlanStore {
   isCompareWithMine: boolean;
@@ -84,12 +85,3 @@ export const usePlanStore = create<PlanStore>()(
     }
   )
 );
-
-export const useMyPlanStore = create<MyPlanStore>((set) => ({
-  username: null,
-  isGuest: false,
-  selectedPlan: null,
-  setUsername: (name) => set({ username: name }),
-  setGuest: (value) => set({ isGuest: value }),
-  setSelectedPlan: (plan) => set({ selectedPlan: plan }),
-}));

@@ -22,7 +22,7 @@ export default function LikedPlansList() {
   const hasHydrated = usePlanStoreRehydrated();
 
   useEffect(() => {
-    if (isSurveyed === true) {
+    if (isSurveyed) {
       refetch();
     }
   }, [isSurveyed]);
