@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { api } from "@/lib/axios";
 import { userRequest } from "@/types/chatbot";
 import { buildSearchParams } from "@/utils/requestHelper";
 import axios from "axios";
