@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import ShareButton from "@/components/common/button/ShareButton";
 import { useCallback } from "react";
+import { PlanDipCard } from "../../explore-plans/PlanDipCard";
 
 interface ResultType {
   age: string;
@@ -23,7 +24,7 @@ export interface RecommendPlanType {
   sms: string;
   mobileType: string;
   planUrl: string;
-  onLine: boolean;
+  online: boolean;
 }
 
 interface AgeTestResultProps {
@@ -44,6 +45,7 @@ export default function AgeTestResult() {
   const handleClickRetry = useCallback(() => {
     router.push("/test-plan-age");
   }, [router]);
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const shareUrl = `${baseUrl}/test-plan-age/result?userAge=${userAge}&resultAge=${resultAge}`;
   const imageUrl = `${baseUrl}/${data?.result.age || "default.png"}`;
@@ -62,8 +64,12 @@ export default function AgeTestResult() {
         <p className="text-center text-[16px] text-gray-700 mb-8 leading-relaxed max-w-md">
           {data?.result.description}
         </p>
-        {/* <PlanSummaryCard {...data?.recommendPlan} /> */}
-        <div className="flex flex-col gap-3 w-full max-w-xs">
+        {data?.recommendPlan && (
+          <div className="flex flex-col items-center">
+            <PlanDipCard isRecommended={true} plan={data.recommendPlan} />
+          </div>
+        )}
+        <div className="flex flex-col gap-3 w-full max-w-xs pt-5">
           <ShareButton
             title={`나의 통신 연령은 ${data?.result.age}`}
             description="LG U+ 통BTI로 내 통신 성격도 보고 요금제까지 추천받아보세요!"
