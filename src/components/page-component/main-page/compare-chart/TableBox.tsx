@@ -56,7 +56,10 @@ function TableBox() {
 
     //compare result 함수
     const getResult = (): JSX.Element => {
-      if (base === compare) {
+      if(!base || !compare){
+        return <p>-</p>
+      }
+      else if (base === compare) {
         return <p>-</p>;
       }
       else if (key === 'name'){
@@ -110,11 +113,11 @@ function TableBox() {
                   <td></td>
                   <td className="font-bold text-lg">{item.label}</td>
                   <td></td>
-                </tr>
+                </tr> 
                 <tr className="bg-white text-lg">
-                  <td className={cn(item.label === '혜택' ? "py-[40px]" : "py-[20px]", "bg-[#FFFFFB]")}>{item.base}</td>
+                  <td className={cn(item.label === '혜택' ? "py-[40px]" : "py-[20px]")}>{item.base}</td>
                   <td className={item.label === '혜택' ? "py-[40px] border-[var(--color-gray-20)] border-x-[1px]" : "py-[20px] border-[var(--color-gray-20)] border-x-[1px]"}>{item.result}</td>
-                  <td className={cn(item.label === '혜택' ? "py-[40px]" : "py-[20px]", "bg-[#F8FEFB]")}>{item.compare}</td>
+                  <td className={cn(item.label === '혜택' ? "py-[40px]" : "py-[20px]")}>{item.compare}</td>
                 </tr>
               </React.Fragment>
             ))}
