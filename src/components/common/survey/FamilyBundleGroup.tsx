@@ -1,20 +1,17 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSurveyStore } from "@/stores/surveyStore";
-
-const isValueValid = (value: string): value is "yes" | "no" | "" => {
-  return value === "yes" || value === "no" || value === "";
-};
+import { isTypeof } from "@/utils/requestHelper";
 
 export function FamilyBundleGroup() {
   const { data, setField } = useSurveyStore();
 
   const handleValueChange = (value: string) => {
-    setField("familyNum", '');
-    if (!isValueValid(value)) return;
+    setField("familyNum", "");
+    if (!isTypeof<"yes" | "no" | "">(value)) return;
     setField("familyBundle", value);
-    if (value === 'no') {
-      setField("familyNum", '1');
+    if (value === "no") {
+      setField("familyNum", "1");
     }
   };
 

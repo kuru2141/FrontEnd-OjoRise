@@ -12,13 +12,9 @@ import {
 } from "@/components/ui/select";
 import { useAgeTestMutation } from "@/hooks/useAgeTestMutation";
 import { useRouter } from "next/navigation";
-import { buildSearchParams } from "@/utils/requestHelper";
+import { buildSearchParams, isTypeof } from "@/utils/requestHelper";
 import { useQuery } from "@tanstack/react-query";
 import { Plans } from "@/services/survey";
-
-const isString = (value: unknown): value is string => {
-  return typeof value === "string" || value instanceof String;
-};
 
 function AgeTest() {
   const [current, setCurrent] = useState(0);
@@ -103,7 +99,7 @@ function AgeTest() {
                   </SelectTrigger>
                   <SelectContent>
                     {selectList.map((item) => {
-                      if (isString(item))
+                      if (isTypeof<string>(item))
                         return (
                           <SelectItem key={item} value={item}>
                             {item}

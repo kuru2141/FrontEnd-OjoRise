@@ -6,7 +6,7 @@
  * const tmp:unknown = "abc";
  * console.log(isTypeof<string>(tmp)); // true
  */
-function isTypeof<T = { [key: string]: unknown }>(target: unknown): target is T {
+export function isTypeof<T = { [key: string]: unknown }>(target: unknown): target is T {
   if (target as T) return true;
   else return false;
 }
