@@ -41,7 +41,7 @@ const bannerData: BannerItem[] = [
     description: "나는 어떤 요금제 캐릭터일까?",
     buttonText: "테스트 하러가기",
     buttonLink: "/tongbti",
-    backgroundColor: "bg-yellow-50",
+    backgroundColor: "bg-[rgba(252,255,99,0.2)]",
     imageSrc: "/TongBTI.png",
     imageAlt: "통BTI 테스트 캐릭터",
     textColor: "text-neutral-800",
