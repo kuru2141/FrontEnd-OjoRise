@@ -16,10 +16,10 @@ export const PlanDipCard = ({ plan, isLiked, onToggle, openModal }: PlanDipCardP
 
   const handleHeartClick = () => {
     if (!isSurveyed) {
-      openModal(); // 설문 안 했으면 모달 열기
+      openModal();
       return;
     }
-    onToggle(plan.planId); // 설문 했으면 찜 등록
+    onToggle(plan.planId);
   };
 
   const renderDataInfo = () => {

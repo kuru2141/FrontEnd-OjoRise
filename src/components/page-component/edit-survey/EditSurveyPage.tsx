@@ -30,7 +30,7 @@ const EditSurveyPage = () => {
         <div>
           <p className="font-bold text-[32px] mb-3">회원 정보 수정하기</p>
           <p className="text-[18px] text-gray-60">
-            정보를 작성해주시면 적합한 요금제를 추천해드려요
+            정보를 작성해 주시면 적합한 요금제를 추천해 드려요
           </p>
         </div>
         <VerticalLinearStepper />

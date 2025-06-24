@@ -36,13 +36,13 @@ const DipModal: FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
               <Image src="/benefit1.png" alt="관심요금제" width={48} height={48} />
               <div className="flex flex-col text-[14px] m-3">
                 <p className="text-gray-40">요금제를 선택하여</p>
-                <p className="font-bold text-[16px]">관심있는 요금제와 비교해요</p>
+                <p className="font-bold text-[16px]">관심 있는 요금제와 비교해요</p>
               </div>
             </li>
             <li className="flex items-center">
               <Image src="/benefit2.png" alt="챗봇 추천" width={48} height={48} />
               <div className="flex flex-col text-[14px] m-3">
-                <p className="text-gray-40">사용중인 요금제 정보를 기반으로</p>
+                <p className="text-gray-40">사용 중인 요금제 정보를 기반으로</p>
                 <p className="font-bold text-[16px]">챗봇에게 요금제 추천을 받아요</p>
               </div>
             </li>
