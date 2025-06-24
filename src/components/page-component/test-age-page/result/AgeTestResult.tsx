@@ -82,7 +82,10 @@ export default function AgeTestResult() {
           >
             링크 공유하기
           </button>
-          <button className="text-sm text-gray-600 underline mt-1" onClick={handleClickRetry}>
+          <button
+            className="text-sm text-gray-600 underline mt-1 hover:cursor-pointer"
+            onClick={handleClickRetry}
+          >
             테스트 다시하기
           </button>
         </div>

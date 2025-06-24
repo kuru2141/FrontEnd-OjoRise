@@ -61,7 +61,7 @@ export default function QuestionCard() {
         >
           <h2 className="text-[#FF008C] text-4xl font-bold mb-8">{`Q${currentStep}`}</h2>
           <p className="text-2xl font-bold mb-8 min-h-[80px]">
-            {formatQuestion(question.questionTitle)}
+            {formatQuestion(question.questionTitle || "")}
           </p>
         </motion.div>
 

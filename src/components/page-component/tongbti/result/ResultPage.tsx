@@ -23,6 +23,7 @@ export default function ResultPage() {
           setResultInfo(info);
         } catch (err) {
           alert("결과를 불러오는 데 실패했습니다.");
+          console.error("Error fetching TongBTI info:", err);
           router.replace("/tongbti");
         }
       }
