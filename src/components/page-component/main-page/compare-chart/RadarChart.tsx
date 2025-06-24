@@ -159,7 +159,7 @@ function RadarChart() {
 
     observer.observe(target);
     return () => observer.disconnect();
-  }, [baseReady, baseData]);
+  }, [baseReady]);
 
   useEffect(() => {
     if (!data) return;
