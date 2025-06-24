@@ -97,27 +97,27 @@ function TableBox() {
     <>
     <table className="w-full h-[60px] table-fixed text-center">
     <thead>
-      <tr className="font-bold text-lg">
+      <tr className="text-sm font-bold md:text-lg">
         <th>기준 요금제</th>
         <th></th>
         <th>비교 요금제</th>
       </tr>
       </thead>
       </table>
-      <div className="rounded-[20px] overflow-hidden border-[var(--color-gray-20)] border-[1px]">
-        <table className="w-full table-fixed text-center rounded-[20px] overflow-hidden border-collapse">
+      <div className="rounded-[10px] md:rounded-[20px] overflow-hidden border-[var(--color-gray-20)] border-[1px]">
+        <table className="w-full table-fixed text-center rounded-[10px] md:rounded-[20px] overflow-hidden border-collapse">
           <tbody>
             {itemList.map((item, idx) => (
               <React.Fragment key={idx}>
-                <tr className="bg-[var(--color-gray-20)] h-[60px]">
+                <tr className="bg-[var(--color-gray-20)] h-[50px] md:h-[60px]">
                   <td></td>
-                  <td className="font-bold text-lg">{item.label}</td>
+                  <td className="font-bold text-sm md:text-lg">{item.label}</td>
                   <td></td>
                 </tr> 
-                <tr className="bg-white text-lg">
-                  <td className={cn(item.label === '혜택' ? "py-[40px]" : "py-[20px]")}>{item.base}</td>
-                  <td className={item.label === '혜택' ? "py-[40px] border-[var(--color-gray-20)] border-x-[1px]" : "py-[20px] border-[var(--color-gray-20)] border-x-[1px]"}>{item.result}</td>
-                  <td className={cn(item.label === '혜택' ? "py-[40px]" : "py-[20px]")}>{item.compare}</td>
+                <tr className="bg-white text-sm md:text-lg">
+                  <td className={cn(item.label === '혜택' ? "py-[35px] md:py-[40px]" : "py-[15px] md:py-[20px]")}>{item.base}</td>
+                  <td className={item.label === '혜택' ? "md:py-[40px] border-[var(--color-gray-20)] border-x-[1px]" : "md:py-[20px] border-[var(--color-gray-20)] border-x-[1px]"}>{item.result}</td>
+                  <td className={cn(item.label === '혜택' ? "py-[35px] md:py-[40px]" : "py-[15px] md:py-[20px]")}>{item.compare}</td>
                 </tr>
               </React.Fragment>
             ))}

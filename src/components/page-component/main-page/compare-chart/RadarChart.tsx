@@ -23,6 +23,31 @@ function RadarChart() {
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartKey, setChartKey] = useState(0);
   const [data, setData] = useState<ChartData<"radar"> | null>(null);
+  const [fontsize, setFontsize] = useState<number>(14);
+  const [labelsize, setLabelsize] = useState<number>(18);
+  const [labelGap, setLabelGap] = useState<number>(84); 
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      if (screenWidth >= 768 ){
+        setLabelsize(14);
+        setFontsize(18);
+        setLabelGap(84);
+      }
+      else{
+        setLabelsize(8);
+        setFontsize(14);
+        setLabelGap(0);
+      }; 
+    }
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    }
+  },[]);
 
   useEffect(() => {
     setDpr(window.devicePixelRatio);
@@ -31,7 +56,7 @@ function RadarChart() {
   const labels = useMemo(() => ["월정액", "음성통화", "문자", "쉐어링 데이터", "데이터"], []);
   const { baseItem, compareItem } = useBaseAndCompareItem();
 
-  const safeNumber = (value: number | string, fallback = 0.01) => {
+  const safeNumber = (value: number | string, fallback = 0) => {
     const num = Number(value);
     return isNaN(num) ? fallback : num;
   };
@@ -59,7 +84,7 @@ function RadarChart() {
         getPointPosition: (index: number, distance: number) => { x: number; y: number };
       };
       if (chart.legend) {
-        chart.legend.left = chart.width - chart.legend.width - 84;
+        chart.legend.left = chart.width - chart.legend.width - labelGap;
         chart.legend.top = scale.getPointPosition(2, scale.drawingArea).y - 14 - 52;
       }
     },
@@ -87,7 +112,7 @@ function RadarChart() {
         legend: {
           position: "chartArea",
           labels: {
-            font: { family: "Pretendard", size: 14 },
+            font: { family: "Pretendard", size: labelsize },
             usePointStyle: true,
             pointStyle: "circle",
             boxWidth: 10,
@@ -107,7 +132,7 @@ function RadarChart() {
           backgroundColor: "white",
           pointLabels: {
             padding: 5,
-            font: { family: "Pretendard", weight: "bold", size: 18 },
+            font: { family: "Pretendard", weight: "bold", size: fontsize },
             color: "var(--color-gray-100)",
           },
           ticks: { stepSize: 20, display: false },
@@ -183,7 +208,7 @@ function RadarChart() {
   if (!data) return <div ref={chartRef} className="h-[432px]" />;
 
   return (
-    <div ref={chartRef} className="h-[432px]">
+    <div ref={chartRef} className="h-[300px] md:h-[432px]">
       <Radar key={chartKey} options={options} data={data} plugins={[legendPositionPlugin]} />
     </div>
   );
