@@ -18,7 +18,7 @@ const DipModal: FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
         {/* 닫기 버튼 */}
         <button
           onClick={onCancel}
-          className="absolute top-4 right-4 text-gray-400 hover:text-black"
+          className="cursor-pointer hover:cursor-pointer absolute top-4 right-4 text-gray-400 hover:text-black"
         >
           ✕
         </button>
@@ -62,7 +62,10 @@ const DipModal: FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
             <Image src="/kakao.png" alt="카카오" width={15} height={15} />
             카카오로 시작하기
           </Button>
-          <button onClick={onCancel} className="text-sm text-gray-500 m-2">
+          <button
+            onClick={onCancel}
+            className="cursor-pointer hover:cursor-pointer text-sm text-gray-500 m-2"
+          >
             일단 둘러볼게요
           </button>
         </div>

@@ -19,9 +19,9 @@ export function PlanTabs() {
             key={String(tab.id)}
             onClick={() => setOnline(tab.id)}
             className={cn(
-              "pb-2 text-base font-bold text-black relative",
+              "cursor-pointer hover:cursor-pointer pb-2 text-base font-bold text-black relative",
               isOnline === tab.id &&
-                "after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:h-[2px] after:w-full after:bg-primary-medium"
+                "cursor-pointer hover:cursor-pointer after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:h-[2px] after:w-full after:bg-primary-medium"
             )}
           >
             {tab.label}

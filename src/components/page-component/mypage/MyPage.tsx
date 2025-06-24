@@ -148,7 +148,7 @@ const MyPage = () => {
           <div className="flex justify-end items-center gap-1">
             <button
               onClick={handleGoEditSurvey}
-              className="font-bold text-primary-medium text-[12px] sm:text-[18px] flex items-center"
+              className="cursor-pointer hover:cursor-pointer font-bold text-primary-medium text-[12px] sm:text-[18px] flex items-center"
             >
               정보 수정하기
             </button>
@@ -253,7 +253,10 @@ const MyPage = () => {
           </div>
         )}
       </div>
-      <button onClick={openModal} className="text-gray-40 mt-10 text-[8px] sm:text-[12px]">
+      <button
+        onClick={openModal}
+        className="cursor-pointer hover:cursor-pointer text-gray-40 mt-10 text-[8px] sm:text-[12px]"
+      >
         회원탈퇴하기
       </button>
       <WithdrawModal
