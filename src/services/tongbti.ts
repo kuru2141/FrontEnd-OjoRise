@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { Question, TongBTIResultInfo } from "@/types/tongBTI";
+import { Question, RawQuestion, TongBTIResultInfo } from "@/types/tongBTI";
 import { typeKeyMap } from "@/utils/tongbtiMap";
 
 /**
@@ -24,9 +24,9 @@ export const tongbti = async () => {
  * @returns {Promise<Question[]>} 질문 객체 배열
  * @throws {Error} 데이터 조회 실패 시 예외 발생
  */
-export const fetchQuestions = async (): Promise<Question[]> => {
+export const fetchQuestions = async (): Promise<RawQuestion[]> => {
   try {
-    const res = await api.get<Question[]>("/question");
+    const res = await api.get<RawQuestion[]>("/question");
     return res.data;
   } catch (err) {
     console.error("질문 조회 실패:", err);

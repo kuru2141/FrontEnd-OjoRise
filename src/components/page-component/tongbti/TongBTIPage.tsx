@@ -4,13 +4,17 @@ import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import QuestionCard from "./QuestionCard";
 import { useEffect } from "react";
 import { useFetchQuestions } from "@/hooks/useTongBTI";
+import { convertToCamelCase } from "@/utils/convertCase";
 
 export default function TongBTIPage() {
   const { data, isLoading, error } = useFetchQuestions();
   const { setQuestions } = useTongBTIStore();
 
   useEffect(() => {
-    if (data) setQuestions(data);
+    if (data) {
+      const camelCaseQuestions = data.map(convertToCamelCase);
+      setQuestions(camelCaseQuestions);
+    }
   }, [data, setQuestions]);
 
   if (isLoading) {
