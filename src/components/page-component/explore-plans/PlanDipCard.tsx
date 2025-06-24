@@ -2,14 +2,41 @@
 import { DipCardPlan } from "@/types/plan";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
 
 interface PlanDipCardProps {
   plan: DipCardPlan;
   isLiked: boolean;
   onToggle: (planId: number) => void;
+  openModal: () => void;
 }
 
-export const PlanDipCard = ({ plan, isLiked, onToggle }: PlanDipCardProps) => {
+export const PlanDipCard = ({ plan, isLiked, onToggle, openModal }: PlanDipCardProps) => {
+  const { isSurveyed } = useAuthStore();
+
+  const handleHeartClick = () => {
+    if (!isSurveyed) {
+      openModal(); // 설문 안 했으면 모달 열기
+      return;
+    }
+    onToggle(plan.planId); // 설문 했으면 찜 등록
+  };
+
+  const renderDataInfo = () => {
+    if (plan.baseDataGb === "무제한") {
+      return "데이터 무제한";
+    } else if (plan.baseDataGb === '0') {
+      return `데이터 매일 ${plan.dailyDataGb}GB`;
+    } else {
+      return `데이터 ${plan.baseDataGb}GB`;
+    }
+  };
+
+  const renderSharingInfo = () => {
+    if (plan.sharingDataGb === '0') return "";
+    return ` + 테더링/쉐어링 ${plan.sharingDataGb}GB`;
+  };
+
   return (
     <div className="flex flex-col w-full p-4 rounded-2xl shadow-soft bg-white mt-5 gap-2">
       <div className="flex flex-row justify-between items-start">
@@ -20,7 +47,7 @@ export const PlanDipCard = ({ plan, isLiked, onToggle }: PlanDipCardProps) => {
           <span className="text-sm text-black font-medium">{plan.name}</span>
         </div>
         <Heart
-          onClick={() => onToggle(plan.planId)}
+          onClick={handleHeartClick}
           className={`w-5 h-5 cursor-pointer ${
             isLiked ? "text-primary-medium fill-primary-medium" : "text-gray-300"
           }`}
@@ -29,7 +56,8 @@ export const PlanDipCard = ({ plan, isLiked, onToggle }: PlanDipCardProps) => {
 
       <div>
         <h3 className="text-lg font-bold text-black">
-          데이터 {plan.baseDataGb} + 테더링/쉐어링 {plan.sharingDataGb}GB
+          {renderDataInfo()}
+          {renderSharingInfo()}
         </h3>
         <p className="text-sm text-gray-500">
           통화 {plan.voiceCallPrice} | 문자 {plan.sms}
