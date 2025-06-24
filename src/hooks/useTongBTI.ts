@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Question, TongBTIResponse } from "@/types/tongBTI";
+import { RawQuestion, TongBTIResponse } from "@/types/tongBTI";
 import { fetchQuestions, tongbti } from "@/services/tongbti";
 
 export const useTongBTI = () => {
@@ -10,7 +10,7 @@ export const useTongBTI = () => {
 };
 
 export const useFetchQuestions = () =>
-  useQuery<Question[]>({
+  useQuery<RawQuestion[]>({
     queryKey: ["questions"],
     queryFn: fetchQuestions,
   });
