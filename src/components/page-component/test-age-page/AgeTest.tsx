@@ -50,7 +50,10 @@ function AgeTest() {
       onSuccess: (response) => {
         console.log("나이 테스트 결과:", response);
         router.push(
-          `test-plan-age/result${buildSearchParams({
+          `test-plan-age/result${buildSearchParams<{
+            userAge: string;
+            resultAge: string;
+          }>({
             userAge: response?.userAge || "10대",
             resultAge: response?.resultAge || "10대",
           })}`
@@ -65,7 +68,7 @@ function AgeTest() {
   const lines = [
     {
       prompt: ["나는 ", "의"],
-      selectList: ["skt", "kt", "uplus"],
+      selectList: ["SKT", "KT", "LG"],
       value: selectedTelecom,
       handler: handleTelecomChange,
     },
@@ -98,15 +101,15 @@ function AgeTest() {
                     <SelectValue placeholder="통신사" className="h-[250px]" />
                   </SelectTrigger>
                   <SelectContent>
-                    {selectList.map((item) => {
+                    {selectList.map((item, i) => {
                       if (isTypeof<string>(item))
                         return (
-                          <SelectItem key={item} value={item}>
+                          <SelectItem key={`select_${item}_${i}`} value={item}>
                             {item}
                           </SelectItem>
                         );
                       return (
-                        <SelectItem key={item.name} value={item.name}>
+                        <SelectItem key={`select_ ${item.planId}_${i}`} value={item.name}>
                           {item.name}
                         </SelectItem>
                       );

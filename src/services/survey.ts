@@ -11,7 +11,7 @@ import { SurveyRequest, SurveyResponse } from "@/types/survey";
  */
 export const Plans = async (telecomProvider: string): Promise<ApiPlan[]> => {
   try {
-    const response = await api.get("/survey", {
+    const response = await api.get("/survey/plan", {
       params: { telecom_provider: telecomProvider },
     });
     return response.data;
@@ -23,7 +23,7 @@ export const Plans = async (telecomProvider: string): Promise<ApiPlan[]> => {
 
 /**
  * 사용자의 설문 완료 상태를 서버에 true로 설정합니다.
- * 
+ *
  * PATCH /auth/survey/complete 요청을 통해 isSurvey 값을 false → true로 변경합니다.
  *
  * @returns 설문 완료 처리 결과 응답 데이터
