@@ -4,7 +4,7 @@ import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import QuestionCard from "./QuestionCard";
 import { useEffect } from "react";
 import { useFetchQuestions } from "@/hooks/useTongBTI";
-import { convertToCamelCase } from "@/components/ui/convertCase";
+import { convertToCamelCase } from "@/utils/convertCase";
 
 export default function TongBTIPage() {
   const { data, isLoading, error } = useFetchQuestions();
