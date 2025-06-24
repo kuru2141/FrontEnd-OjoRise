@@ -45,7 +45,7 @@ const bannerData: BannerItem[] = [
     imageSrc: "/TongBTI.png",
     imageAlt: "통BTI 테스트 캐릭터",
     textColor: "text-neutral-800",
-    buttonBgColor: "bg-pink-200",
+    buttonBgColor: "bg-primary-bright",
     buttonTextColor: "text-neutral-800",
     imagePosition: "left",
   },
@@ -68,7 +68,7 @@ const variants = {
 
 const spring: Transition = {
   type: "spring",
-  stiffness: 300,
+  stiffness: 100,
   damping: 30,
 };
 
