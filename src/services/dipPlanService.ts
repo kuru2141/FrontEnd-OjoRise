@@ -3,11 +3,17 @@ import { usePlanStore } from "@/stores/usePlanStore";
 import { Plan } from "@/types/plan";
 
 export async function fetchLikedPlans() {
-  const res = await api.get<Plan[]>("/api/dips");
+  try {
+    const res = await api.get<Plan[]>("/api/dips");
+    const refinedPlans = res.data;
 
-  const refinedPlans = res.data;
+    usePlanStore.getState().setLikedPlans(refinedPlans);
 
-  usePlanStore.getState().setLikedPlans(refinedPlans);
+    return refinedPlans;
+  } catch (error) {
+    console.error("찜한 요금제 조회 실패:", (error as Error).message);
+    return [];
+  }
 }
 
 export async function deleteLikedPlan(planId: number): Promise<boolean> {
