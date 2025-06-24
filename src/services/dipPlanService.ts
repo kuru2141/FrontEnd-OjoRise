@@ -10,7 +10,7 @@ export async function fetchLikedPlans() {
   usePlanStore.getState().setLikedPlans(refinedPlans);
 }
 
-export async function deleteLikedPlan(planId: number): Promise<boolean> {
-  await api.delete(`/api/dips/${planId}`);
+export async function dipPlan(planId: number): Promise<boolean> {
+  await api.post(`/api/dips/${planId}`);
   return true;
 }

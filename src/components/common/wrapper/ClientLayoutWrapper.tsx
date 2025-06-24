@@ -51,7 +51,9 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       <LinearProgress colorClassName="bg-[black]" />
       <ToastContainer position="top-right" autoClose={2000} newestOnTop />
       {children}
-      <ChatBotModal />
+      <div className="fixed bottom-8 right-8">
+        <ChatBotModal />
+      </div>
       <Footer />
     </Fragment>
   );

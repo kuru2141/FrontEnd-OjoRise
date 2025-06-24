@@ -1,0 +1,33 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { useBrowsePlanStore } from "@/stores/browsePlanStore";
+
+const tabs = [
+  { id: false, label: "5G/LTE" },
+  { id: true, label: "온라인 전용 요금제" },
+];
+
+export function PlanTabs() {
+  const { isOnline, setOnline } = useBrowsePlanStore();
+
+  return (
+    <div className="border-b border-gray-300">
+      <div className="flex space-x-6">
+        {tabs.map((tab) => (
+          <button
+            key={String(tab.id)}
+            onClick={() => setOnline(tab.id)}
+            className={cn(
+              "pb-2 text-base font-bold text-black relative",
+              isOnline === tab.id &&
+                "after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:h-[2px] after:w-full after:bg-primary-medium"
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
