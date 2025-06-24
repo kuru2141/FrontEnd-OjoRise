@@ -6,9 +6,15 @@
  * const tmp:unknown = "abc";
  * console.log(isTypeof<string>(tmp)); // true
  */
-function isTypeof<T = { [key: string]: unknown }>(target: unknown): target is T {
-  if (target as T) return true;
+export function isTypeof<T = { [key: string]: unknown }>(target: unknown): target is T {
+  const tmp = "";
+  if (typeof target === typeof (tmp as T)) return true;
   else return false;
+}
+
+function asTypeof<T = { [key: string]: unknown }>(target: unknown): target is T {
+  if (target as T) return true;
+  return false;
 }
 
 /**
@@ -20,7 +26,7 @@ function isTypeof<T = { [key: string]: unknown }>(target: unknown): target is T 
  */
 export function buildSearchParams<T = { [key: string]: unknown }>(req: T) {
   const queryArr = [];
-  if (isTypeof(req)) {
+  if (asTypeof(req)) {
     for (const [key, value] of Object.entries(req)) {
       if (value) queryArr.push(`${key}=${value}`);
     }

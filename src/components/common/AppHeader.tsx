@@ -36,7 +36,7 @@ function AppHeader() {
     if (isSurveyed) {
       return [
         { label: "마이페이지", href: "/mypage" },
-        { label: "요금제 둘러보기", href: "/" },
+        { label: "요금제 둘러보기", href: "/explore-plans" },
         {
           label: "로그아웃",
           href: "/",
@@ -51,7 +51,7 @@ function AppHeader() {
         href: "#",
         onClick: handleKakaoLogin,
       },
-      { label: "요금제 둘러보기", href: "/" },
+      { label: "요금제 둘러보기", href: "/explore-plans" },
     ];
   }, [isSurveyed, logoutMutation]);
 
@@ -65,15 +65,15 @@ function AppHeader() {
         isScrolled ? "border-b border-solid border-[#EAEAEA]" : ""
       }`}
     >
-      <div className="max-w-[1480px] flex items-center justify-between h-[56px] xl:h-[80px] mx-auto px-4 xl:px-[74px]">
-        <div className="text-lg font-bold">
+      <div className="max-w-[100vw] flex items-center justify-between h-[56px] xl:h-[80px] mx-auto px-8 xl:px-[120px]">
+        <Link href="/" className="text-lg font-bold">
           <Image src="/logo.svg" alt="Logo" width={110} height={42} />
-        </div>
+        </Link>
 
         <div className="hidden md:flex items-center space-x-[50px]">
           <Link
-            href="/"
-            className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
+            href="/explore-plans"
+            className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
           >
             요금제 둘러보기
           </Link>
@@ -81,9 +81,8 @@ function AppHeader() {
           {!isSurveyed && (
             <button
               onClick={handleKakaoLogin}
-              className="text-sm bg-yellow-400 hover:bg-yellow-300 px-4 py-2 rounded transition-colors duration-300"
             >
-              카카오 로그인
+              <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45}/>
             </button>
           )}
 
@@ -91,13 +90,13 @@ function AppHeader() {
             <Fragment>
               <Link
                 href="/mypage"
-                className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
+                className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
               >
                 마이페이지
               </Link>
               <button
                 onClick={() => logoutMutation.mutate()}
-                className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
+                className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
               >
                 로그아웃
               </button>

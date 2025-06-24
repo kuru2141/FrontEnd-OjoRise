@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, Transition } from "framer-motion";
@@ -20,6 +20,7 @@ interface BannerItem {
   buttonTextColor: string;
   imagePosition: "left" | "right";
 }
+
 const bannerData: BannerItem[] = [
   {
     id: 1,
@@ -50,6 +51,7 @@ const bannerData: BannerItem[] = [
     imagePosition: "left",
   },
 ];
+
 const variants = {
   enter: (direction: number) => ({
     x: direction > 0 ? 758 : -758,
@@ -64,6 +66,7 @@ const variants = {
     opacity: 0,
   }),
 };
+
 const spring: Transition = {
   type: "spring",
   stiffness: 300,
@@ -74,21 +77,41 @@ export default function BannerCarousel() {
   const [[page, direction], setPage] = useState([0, 0]);
   const bannerIndex = wrap(0, bannerData.length, page);
   const currentBanner = bannerData[bannerIndex];
+  const touchStartRef = useRef<number>(0);
+  const touchEndRef = useRef<number>(0);
+
   const paginate = useCallback((newDirection: number) => {
-    setPage(([currentPage]) => {
-      const nextPage = currentPage + newDirection;
-      return [nextPage, newDirection];
-    });
+    setPage(([currentPage]) => [currentPage + newDirection, newDirection]);
   }, []);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      paginate(1);
-    }, 5000);
+    const interval = setInterval(() => paginate(1), 5000);
     return () => clearInterval(interval);
   }, [paginate]);
 
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartRef.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    const distance = touchStartRef.current - touchEndRef.current;
+    if (distance > 50) paginate(1);
+    else if (distance < -50) paginate(-1);
+    touchStartRef.current = 0;
+    touchEndRef.current = 0;
+  }, [paginate]);
+
   return (
-    <div className="relative w-full max-w-[758px] h-[180px] sm:h-[220px] md:w-[758px] md:h-[310px] overflow-hidden rounded-xl">
+    <div
+      className="relative w-full max-w-[758px] overflow-hidden rounded-xl h-[180px] sm:h-[310px]"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={page}
@@ -102,42 +125,26 @@ export default function BannerCarousel() {
         >
           {/* 텍스트/버튼 영역 */}
           <div
-            className={`
-              absolute flex flex-col ${currentBanner.textColor}
-              px-4 sm:px-8 md:px-0
-              ${
-                currentBanner.imagePosition === "right"
-                  ? "top-[30%] left-[15%] max-w-[80vw] md:top-[85px] md:left-[114px] md:max-w-none"
-                  : "top-[30%] right-[15%] max-w-[80vw] md:top-[85px] md:left-[348px] md:right-auto md:max-w-none"
-              }
-            `}
-            style={{ alignItems: "flex-start" }}
+            className={`absolute flex flex-col ${currentBanner.textColor}
+              ${currentBanner.imagePosition === "right"
+                ? "left-[30px] sm:left-[114px]"
+                : "right-[30px] sm:right-[114px]"}
+              ${currentBanner.imagePosition === "left"
+                ? "items-end text-right"
+                : "items-start text-left"}
+              top-1/2 -translate-y-1/2 w-1/2`}
           >
-            <h2
-              className="font-bold text-base sm:text-xl md:text-[32px] mb-1 md:mb-0"
-              style={{ lineHeight: "1.2" }}
-            >
+            <h2 className="font-bold mb-1 leading-tight text-[16px] sm:text-[32px]">
               {currentBanner.title}
             </h2>
-            <p
-              className="font-bold text-gray-600 text-xs sm:text-base md:text-[18px] mt-0 md:mt-[5px]"
-              style={{ lineHeight: "1.3" }}
-            >
+            <p className="font-bold text-gray-600 mt-1 leading-snug text-[14px] sm:text-[18px]">
               {currentBanner.description}
             </p>
             <Link href={currentBanner.buttonLink}>
               <Button
                 variant="banner"
-                className={`
-                  w-full sm:w-[180px] md:w-[242px]
-                  h-[36px] sm:h-[44px] md:h-[55px]
-                  rounded-lg
-                  text-xs sm:text-base md:text-2xl
-                  font-extrabold
-                  ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}
-                  mt-1 md:mt-[30px]
-                `}
-                style={{ fontFamily: "Suit-ExtraBold, sans-serif" }}
+                className={`rounded-lg font-extrabold ${currentBanner.buttonBgColor} ${currentBanner.buttonTextColor}
+                  w-[140px] sm:w-[242px] h-[36px] sm:h-[55px] mt-3 sm:mt-6 text-[14px] sm:text-[24px]`}
               >
                 {currentBanner.buttonText}
               </Button>
@@ -146,57 +153,43 @@ export default function BannerCarousel() {
 
           {/* 이미지 영역 */}
           <div
-            className={`
-              absolute
-              w-[45vw] h-[32vw] max-w-[180px] max-h-[130px]
-              md:w-[300px] md:h-[250px] md:max-w-none md:max-h-none
-              ${
-                currentBanner.imagePosition === "right"
-                  ? "right-[15%] bottom-[0px] md:right-[110px] md:bottom-0"
-                  : "left-[15%] top-[calc(15%)] md:left-[40px] md:top-[calc(50%-125px)]"
-              }
-            `}
+            className={`absolute w-[150px] sm:w-[300px] h-[130px] sm:h-[250px]
+              ${currentBanner.imagePosition === "left"
+                ? "left-[20px] sm:left-[110px]"
+                : "right-[20px] sm:right-[110px]"}
+              ${currentBanner.id === 1 ? "bottom-0" : "top-1/2 -translate-y-1/2"}`}
           >
             <Image
               src={currentBanner.imageSrc}
               alt={currentBanner.imageAlt}
               fill
               className="object-contain"
+              sizes="(max-width: 768px) 40vw, 300px"
+              priority={bannerIndex === 0}
             />
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* 페이지 번호 */}
-      <span
-        className="absolute bottom-2 sm:bottom-4 md:bottom-4 left-2 sm:left-8 md:left-8 flex items-center justify-center
-          w-[22px] sm:w-[30px] md:w-[35px] h-[15px] sm:h-[18px] md:h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10 text-xs sm:text-sm md:text-base"
-      >
+      {/* Indicator + Buttons */}
+      <span className="absolute bottom-4 left-8 flex items-center justify-center w-[35px] h-[21px] rounded-xl bg-[#A7A6A7] opacity-80 text-white z-10 text-base">
         {bannerIndex + 1}/{bannerData.length}
       </span>
-
-      {/* 버튼 컨테이너 */}
-      <div className="absolute bottom-2 sm:bottom-4 md:bottom-4 right-2 sm:right-8 md:right-8 flex gap-1 sm:gap-2 md:gap-2 z-10">
-        <Button
-          size="icon"
-          onClick={() => paginate(-1)}
-          className="w-[28px] sm:w-[36px] md:w-[40px] h-[28px] sm:h-[36px] md:h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90 font-normal text-xs"
-        >
-          <ChevronLeft className="text-white size-[16px] sm:size-[20px] md:size-[24px]" />
+      <div className="absolute bottom-4 right-8 gap-2 z-10 hidden sm:flex">
+        <Button size="icon" onClick={() => paginate(-1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:opacity-90">
+          <ChevronLeft className="text-white size-[24px]" />
         </Button>
-        <Button
-          size="icon"
-          onClick={() => paginate(1)}
-          className="w-[28px] sm:w-[36px] md:w-[40px] h-[28px] sm:h-[36px] md:h-[40px] rounded-ml bg-[#A7A6A7] opacity-80 hover:bg-[#A7A6A7] hover:bg-opacity-90"
-        >
-          <ChevronRight className="text-white size-[16px] sm:size-[20px] md:size-[24px]" />
+        <Button size="icon" onClick={() => paginate(1)} className="w-[40px] h-[40px] bg-[#A7A6A7] opacity-80 hover:opacity-90">
+          <ChevronRight className="text-white size-[24px]" />
         </Button>
       </div>
     </div>
   );
 }
-// 숫자를 감싸는 헬퍼 함수 (캐러셀 루프를 위함)
+
+// 숫자를 감싸는 헬퍼 함수
 const wrap = (min: number, max: number, value: number) => {
   const range = max - min;
   return ((((value - min) % range) + range) % range) + min;
 };
+

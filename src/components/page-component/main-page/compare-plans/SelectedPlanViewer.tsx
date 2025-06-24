@@ -28,17 +28,13 @@ export default function SelectedPlanViewer() {
   return (
     <section className="mt-10 mb-10">
       <h2 className="text-2xl font-bold mb-4">선택한 요금제</h2>
-      {/* 하나일 경우 */}
-      {visibleLength === 1 && (
+      {selectedPlans.length === 1 ? (
         <div className="flex justify-start w-full">
           <div className="min-w-[330px] px-10 py-6 rounded-xl bg-white text-xl font-semibold text-center w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
             {selectedPlans[0]?.name}
           </div>
         </div>
-      )}
-
-      {/* 두 개일 경우 */}
-      {visibleLength === 2 && (
+      ) : selectedPlans.length === 2 ? (
         <div className="flex items-center justify-center gap-2">
           <div className="min-w-[330px] px-10 py-6 rounded-xl bg-white text-xl font-semibold text-center w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
             {selectedPlans[0]?.name}
@@ -55,6 +51,17 @@ export default function SelectedPlanViewer() {
           <div className="min-w-[330px] px-10 py-6 rounded-xl bg-white text-xl font-semibold text-center w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
             {selectedPlans[1]?.name}
           </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {selectedPlans.map((plan, index) => (
+            <div
+              key={`${plan.name}-${index}`}
+              className="px-10 py-6 rounded-xl bg-white shadow-md text-xl font-semibold text-center w-fit"
+            >
+              {plan.name}
+            </div>
+          ))}
         </div>
       )}
     </section>

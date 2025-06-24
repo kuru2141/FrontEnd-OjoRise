@@ -3,6 +3,5 @@ export interface UserProfile {
   telecomProvider: string;
   planName: string;
   familyBundle: string;
-  tongResult: string;
-  ambiguousCount: number;
+  tongName: string;
 }

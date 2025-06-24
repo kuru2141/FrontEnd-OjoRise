@@ -1,33 +1,78 @@
 "use client";
 import { memo, PropsWithChildren } from "react";
 import { format } from "date-fns";
+import Image from "next/image";
 
 interface ChatBotBubbleProp {
   teller: "user" | "chatbot";
   block: (
     | string
+    | File
     | {
         name: string;
         link: string;
       }
   )[];
   time: Date;
+  nextTeller: string;
+  prevTeller: string;
+  zoom: boolean;
 }
 
-function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<ChatBotBubbleProp>) {
+function ChatBotBubble({
+  teller,
+  block,
+  time,
+  nextTeller,
+  prevTeller,
+  zoom,
+  children,
+}: PropsWithChildren<ChatBotBubbleProp>) {
   return (
     <div className={`flex flex-col ${teller === "user" ? "items-end" : ""} pb-2`}>
-      <div className={`flex ${teller === "user" ? "flex-row-reverse" : "flex-row"} pb-1 space-x-2`}>
-        <div className="pl-1 pr-2 text-xs text-gray-500">
-          {Number(format(time, "H")) >= 12 ? "오후" : "오전"} {format(time, "h:mm")}
-        </div>
+      <div
+        className={`flex items-end ${
+          teller === "user" ? "flex-row-reverse" : "flex-row"
+        } space-x-2`}
+      >
+        {teller === "chatbot" && teller !== prevTeller ? (
+          <div className="flex w-fit h-fit items-end gap-1 mb-1 pb-0.5">
+            <Image width={30} height={30} src="/chatbot.svg" alt="chatbot" />
+            <p className="font-[--font-pretendard] flex items-end leading-none text-[16px]">
+              요플맨
+            </p>
+            <div className="font-[--font-pretendard] flex items-end leading-none pr-2 text-[10px] text-gray-500">
+              {Number(format(time, "H")) >= 12 ? "오후" : "오전"} {format(time, "h:mm")}
+            </div>
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
       <div
-        className={
-          teller === "user"
-            ? "bg-(--color-primary-medium) mr-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded items-end"
-            : "bg-gray-200 ml-1 max-w-[300px] break-words whitespace-pre-wrap p-2 rounded"
-        }
+        className={`
+          font-[--font-pretendard] text-[16px]
+          ${
+            teller === "user"
+              ? `bg-(--secondary-userChatbot-color) ml-1 mt-1 ${
+                  zoom ? `max-w-2/5` : `max-w-1/2`
+                } break-words whitespace-pre-wrap p-2 ${
+                  nextTeller === teller
+                    ? prevTeller !== teller
+                      ? `rounded-tl-[16px]`
+                      : ``
+                    : `rounded-b-[16px] ${prevTeller !== "chatbot" ? `` : `rounded-tl-[16px]`}`
+                } items-end`
+              : `bg-(--secondary-chatbot-color) ml-1 mt-1 ${
+                  zoom ? `max-w-2/5` : `max-w-1/2`
+                } break-words whitespace-pre-wrap p-2 ${
+                  nextTeller === teller
+                    ? prevTeller !== teller
+                      ? `rounded-tr-[16px]`
+                      : ``
+                    : `rounded-b-[16px] ${prevTeller === "chatbot" ? `` : `rounded-tr-[16px]`}`
+                }`
+          }`}
       >
         {children}
         {block.map((item, i) =>
@@ -36,13 +81,21 @@ function ChatBotBubble({ teller, block, time, children }: PropsWithChildren<Chat
               {item}
               <br />
             </span>
+          ) : item instanceof File ? (
+            <Image
+              key={i}
+              src={URL.createObjectURL(item)}
+              alt={item.name}
+              width={100}
+              height={150}
+            />
           ) : (
             <a
               key={`plan-${item.name}-${i}`}
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block my-2 bg-purple-100 hover:bg-purple-200 text-purple-800 py-2 px-4 rounded text-center shadow"
+              className="block my-2 bg-(--primary-light) hover:bg-(--secondary-hover-color) text-white py-2 px-4 rounded text-center shadow"
             >
               {item.name} 가입하러 가기
               <br />

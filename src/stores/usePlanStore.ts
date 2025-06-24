@@ -20,15 +20,6 @@ interface PlanStore {
   removeLikedPlan: (title: string) => void;
 }
 
-interface MyPlanStore {
-  username: string | null;
-  isGuest: boolean;
-  selectedPlan: MyPlan | null;
-  setUsername: (name: string | null) => void;
-  setGuest: (value: boolean) => void;
-  setSelectedPlan: (plan: MyPlan | null) => void;
-}
-
 export const usePlanStore = create<PlanStore>()(
   persist(
     (set, get) => ({

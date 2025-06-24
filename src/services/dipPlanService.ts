@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { api } from "@/lib/axios";
 import { usePlanStore } from "@/stores/usePlanStore";
 import { Plan } from "@/types/plan";
 
@@ -16,7 +16,7 @@ export async function fetchLikedPlans() {
   }
 }
 
-export async function deleteLikedPlan(planId: number): Promise<boolean> {
-  await api.delete(`/api/dips/${planId}`);
+export async function dipPlan(planId: number): Promise<boolean> {
+  await api.post(`/api/dips/${planId}`);
   return true;
 }

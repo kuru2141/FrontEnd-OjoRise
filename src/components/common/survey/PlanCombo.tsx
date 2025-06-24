@@ -13,8 +13,9 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useSurveyStore } from "@/stores/surveyStore";
+import { TypeOfSelector } from "@/types/survey";
 
-export function PlanCombo() {
+export function PlanCombo({type}: TypeOfSelector) {
   const { data, planList, setField, input, setInput } = useSurveyStore();
   const [showList, setShowList] = React.useState(true);
 
@@ -36,7 +37,7 @@ export function PlanCombo() {
 
   return (
     <div>
-      <p className="font-bold text-[18px] mb-3 mt-4">요금제 선택</p>
+      <p className={cn("font-bold text-[18px] mb-3 mt-4", type === "myPlan" && "hidden")}>요금제 선택</p>
       <Command className="w-[260px]">
         <CommandInput
           placeholder="요금제를 선택해 주세요."

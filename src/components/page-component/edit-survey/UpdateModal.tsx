@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { FC } from "react";
 
 interface updateModalProps {
   isOpen: boolean;
@@ -7,7 +8,7 @@ interface updateModalProps {
   onConfirm: () => void;
 }
 
-const UpdateModal: React.FC<updateModalProps> = ({ isOpen, onCancel, onConfirm }) => {
+const UpdateModal: FC<updateModalProps> = ({ isOpen, onCancel, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
