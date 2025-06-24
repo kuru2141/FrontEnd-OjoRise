@@ -87,6 +87,8 @@ export const usePlanStore = create<PlanStore>()(
       name: "plan-store",
       partialize: (state) => ({
         isCompareWithMine: state.isCompareWithMine,
+        selectedPlans: state.selectedPlans,
+        recommendedPlans: state.recommendedPlans,
       }),
     }
   )
