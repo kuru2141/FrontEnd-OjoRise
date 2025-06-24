@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { toast, ToastOptions } from "react-toastify";
+import { isTypeof } from "@/utils/requestHelper";
 
 type ToastType = "info" | "success" | "error" | "warn";
 
@@ -45,11 +46,7 @@ export const useToastStore = create<ToastStore>((set, get) => ({
     //API 에러 응답 자동 처리
     let message = "알 수 없는 오류가 발생하였습니다.";
 
-    function isError(error: unknown): error is ResponseErrorProps {
-      return true;
-    }
-
-    if (isError(error)) {
+    if (isTypeof<ResponseErrorProps>(error)) {
       if (error?.response?.status) {
         const status = error.response.status;
         switch (status) {

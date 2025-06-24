@@ -1,6 +1,6 @@
 "use client";
 
-import BannerCarousel from "../BannerCarousel";
+import BannerCarousel from "./BannerCarousel";
 import ScrollChart from "./compare-chart/ScrollChart";
 import CompareModeToggle from "./compare-plans/CompareModeToggle";
 import LikedPlansList from "./compare-plans/LikedPlansList";

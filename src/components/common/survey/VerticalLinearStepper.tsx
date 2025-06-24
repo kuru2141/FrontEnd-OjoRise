@@ -94,8 +94,8 @@ export default function VerticalLinearStepper() {
         component: (
           <div>
             <ScreenshotOCR onComplete={onComplete} />
-            <SelectCarrier />
-            {telecomProvider && <PlanCombo />}
+            <SelectCarrier type="survey"/>
+            {telecomProvider && <PlanCombo type="survey"/>}
             {planName.trim() !== '' && <PlanPrice/>}
           </div>
         ),
