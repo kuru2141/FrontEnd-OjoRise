@@ -13,6 +13,6 @@ export const useGetGuestPlan = (guestPlan: guestPlan) => {
     return(useQuery<MyPlan, Error>({
         queryKey:['getGuestPlan' , guestPlan],
         queryFn: () => getGuestPlan(guestPlan),
-        enabled: !!guestPlan
+        enabled: !!guestPlan.telecomProvider && !!guestPlan.planName
     }))
 }
