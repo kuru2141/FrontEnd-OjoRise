@@ -36,15 +36,13 @@ const MyPage = () => {
   };
 
   // 통비티아이로 이동
-  // 통비티아이 주소 추가하기
   const handleGoTongTest = () => {
-    router.push("/");
+    router.push("/tongbti");
   };
 
   // 요금제 나이 테스트로 이동
-  // 요금제 나이 테스트 주소 추가하기
   const handleGoAgeTest = () => {
-    router.push("/");
+    router.push("/test-plan-age");
   };
 
   if (isSurveyPending || isTongPending || isAgePending)
