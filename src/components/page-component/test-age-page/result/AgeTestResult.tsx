@@ -53,7 +53,7 @@ export default function AgeTestResult() {
   return (
     <>
       <KakaoInitializer />
-      <div className="h-screen bg-[#fcff63]/20 flex flex-col items-center pt-10 px-4">
+      <div className="h-screen bg-[#E0F7FA]/20 flex flex-col items-center pt-10 px-4">
         <h2 className="font-bold text-[18px] text-gray-100/60 mt-20 mb-2">나의 통신 연령은 </h2>
         <h1 className="font-bold text-[32px] text-[#FF008C] mb-4">{data?.result.age}</h1>
         <img
