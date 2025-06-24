@@ -3,11 +3,11 @@ import { numberParsing } from "@/utils/numberParsing";
 import { presentParsing } from "@/utils/presentParsing";
 import Image from "next/image";
 import React, { JSX, memo } from "react";
-import { getBaseAndCompareItem } from "./comparePlan";
+import { useBaseAndCompareItem } from "./comparePlan";
 
 function TableBox() {
-  const baseItem = getBaseAndCompareItem().baseItem;
-  const compareItem  = getBaseAndCompareItem().compareItem;
+  const baseItem = useBaseAndCompareItem().baseItem;
+  const compareItem  = useBaseAndCompareItem().compareItem;
   
   const labelList = {
     name: '이름',

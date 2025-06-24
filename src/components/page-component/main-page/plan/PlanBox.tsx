@@ -34,7 +34,7 @@ export default function PlanBox() {
       sms: data?.sms ?? "",
       benefit: data?.benefit ? parsingBenefit : "",
     });
-  }, [data, parsingBenefit]);
+  }, [data, parsingBenefit, setMyPlan, survey?.planPrice]);
 
   if (isSurveyed) {
     return (

@@ -13,7 +13,7 @@ import {
   Chart,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
-import { getBaseAndCompareItem } from "./comparePlan";
+import { useBaseAndCompareItem } from "./comparePlan";
 import { ComparePlan } from "@/types/plan";
 
 ChartJS.register(
@@ -36,9 +36,9 @@ function RadarChart() {
   }, []);
 
   const labels = ["월정액", "음성통화", "문자", "쉐어링 데이터", "데이터"];
-  const { baseItem, compareItem } = getBaseAndCompareItem();
+  const { baseItem, compareItem } = useBaseAndCompareItem();
 
-  const safeNumber = (value: any, fallback = 0.01) => {
+  const safeNumber = (value: number | string, fallback = 0.01) => {
     const num = Number(value);
     return isNaN(num) ? fallback : num;
   };
@@ -121,7 +121,7 @@ function RadarChart() {
         max: 100,
       },
     },
-  }), [dpr]);
+  }), [dpr, generateLabels]);
 
 
   useEffect(() => {
@@ -159,7 +159,7 @@ function RadarChart() {
 
     observer.observe(target);
     return () => observer.disconnect();
-  }, [baseReady]);
+  }, [baseReady, baseData]);
 
   useEffect(() => {
     if (!data) return;
@@ -181,7 +181,7 @@ function RadarChart() {
     }, 400);
 
     return () => clearTimeout(timeout);
-  }, [chartKey, compareData]);
+  }, [chartKey, compareData, data]);
 
   if (!data) return <div ref={chartRef} className="h-[432px]" />;
 

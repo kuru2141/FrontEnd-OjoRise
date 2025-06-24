@@ -14,7 +14,7 @@ const toComparePlan = (plan: Plan): ComparePlan => {
     };
   }
 
-export const getBaseAndCompareItem = () => {
+export const useBaseAndCompareItem = () => {
   const defaultPlan:ComparePlan = {name: '', monthlyFee: 0, baseDataGb: '', voiceCallPrice: '', sharingDataGb: '', sms: '', benefit: ''}
   const isCompareWithMine = usePlanStore(state => state.isCompareWithMine);
   const selectedPlans = usePlanStore(state => state.selectedPlans);

@@ -22,7 +22,6 @@ export default function GuestPlanSelector() {
     const parsingThrottleSpeedKbps = numberParsing(String(data?.throttleSpeedKbps), 'throttleSpeedKbps');
     const parsingbaseDataGb = numberParsing(String(data?.baseDataGb), 'baseDataGb');
     const parsingSharingDataGb = numberParsing(String(data?.sharingDataGb), 'sharingDataGb');
-    const parsingBenefit = numberParsing(String(data?.benefit), 'benefit');
 
     return (
         <div className="w-full md:w-[758px] bg-[#FAFAFA] rounded-xl shadow px-4 py-6 flex flex-col gap-6">
