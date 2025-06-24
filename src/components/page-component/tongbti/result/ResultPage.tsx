@@ -24,14 +24,14 @@ export default function ResultPage() {
           setResultInfo(info);
         } catch (err) {
           alert("결과를 불러오는 데 실패했습니다.");
-          console.error(err);
+          console.error("Error fetching TongBTI info:", err);
           router.replace("/tongbti");
         }
       }
     };
 
     loadResult();
-  }, [resultInfo, typeKey]);
+  }, [resultInfo, router, setResultInfo, typeKey]);
 
   if (!resultInfo) return null;
 
@@ -46,7 +46,7 @@ export default function ResultPage() {
       <div className="h-screen bg-[#fcff63]/20 flex flex-col items-center pt-10 px-4">
         <h2 className="font-bold text-[18px] text-gray-100/60 mt-20 mb-2">나의 통BTI는</h2>
         <h1 className="font-bold text-[32px] text-[#FF008C] mb-4">{resultInfo.tongName}</h1>
-        <Image 
+        <Image
           src={`/TongBTI/${typeKey}.svg`}
           width={289}
           height={289}
