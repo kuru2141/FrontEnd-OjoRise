@@ -2,7 +2,7 @@
 
 import { useMediaQuery } from "react-responsive";
 import { Fab } from "@mui/material";
-import { Image, Send, X, Maximize2, Minimize2 } from "lucide-react";
+import { Image as ImageIcon, Send, X, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import {
   Drawer,
@@ -26,7 +26,8 @@ import { UserProfile } from "@/types/UserProfile";
 import { ResultItem } from "@/types/ocr";
 import { useOCRToGptMutation } from "@/hooks/useOCRToGptMutation";
 import { isSameFile } from "@/utils/isSameFile";
-import api from "@/lib/axios";
+import {api} from "@/lib/axios";
+import Image from "next/image";
 
 interface DialogItem {
   teller: "user" | "chatbot";
@@ -359,7 +360,7 @@ function ChatBotModal() {
     jsonParsedRef.current = false;
     isNewLineRef.current = true;
     setAmbiguousCount(0);
-  }, []);
+  }, [initialGuestDialog, initialLoginDialog, isLoggedIn]);
 
   const handleOCR = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -404,13 +405,13 @@ function ChatBotModal() {
 
       mutate(formData);
     }
-  }, [imgFile]);
+  }, [imgFile, mutate]);
 
   return (
     <Drawer modal={false}>
       <DrawerTrigger asChild>
         <Fab color="primary" aria-label="add">
-          <img className="w-full h-full" src="/chatbot.svg" alt="chatbot" />
+          <Image fill src="/chatbot.svg" alt="chatbot" />
         </Fab>
       </DrawerTrigger>
       <DrawerContent
@@ -483,7 +484,7 @@ function ChatBotModal() {
             disabled={disableButton}
           >
             <input className="hidden" type="file" onChange={handleOCR} ref={fileInputRef} />
-            <Image />
+            <ImageIcon />
           </Button>
           <Input
             ref={inputRef}
