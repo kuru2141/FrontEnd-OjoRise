@@ -3,18 +3,13 @@ import { memo, useCallback } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import MotionSelectLine from "@/components/common/MotionSelectLine";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { useAgeTestMutation } from "@/hooks/useAgeTestMutation";
 import { useRouter } from "next/navigation";
-import { buildSearchParams, isTypeof } from "@/utils/requestHelper";
+import { buildSearchParams } from "@/utils/requestHelper";
 import { useQuery } from "@tanstack/react-query";
 import { Plans } from "@/services/survey";
+import ItemSelector from "./ItemSelector";
 
 function AgeTest() {
   const [current, setCurrent] = useState(0);
@@ -30,18 +25,21 @@ function AgeTest() {
   });
 
   const handleTelecomChange = useCallback((e: string) => {
-    setSelectedTelecom(e);
-    setCurrent(1);
+    if (e) setSelectedTelecom(e);
+    else setSelectedTelecom("");
+    setCurrent((prev) => (prev === 0 ? 1 : prev));
   }, []);
 
   const handlePlanChange = useCallback((e: string) => {
-    setSelectedPlan(e);
-    setCurrent(2);
+    if (e) setSelectedPlan(e);
+    else setSelectedTelecom("");
+    setCurrent((prev) => (prev === 1 ? 2 : prev));
   }, []);
 
   const handleAgeChange = useCallback((e: string) => {
-    setSelectedAge(e);
-    setCurrent(3);
+    if (e) setSelectedAge(e);
+    else setSelectedTelecom("");
+    setCurrent((prev) => (prev === 2 ? 3 : prev));
   }, []);
 
   const handleClickSubmit = useCallback(() => {
@@ -74,7 +72,7 @@ function AgeTest() {
     },
     {
       prompt: ["", "를 사용 중인"],
-      selectList: planList || [],
+      selectList: planList?.map((item) => item.name) || [],
       value: selectedPlan,
       handler: handlePlanChange,
     },
@@ -95,28 +93,12 @@ function AgeTest() {
           <MotionSelectLine key={i} state={state}>
             <div className="flex flex-row text-black  text-5xl">
               {prompt[0]}
-              {
-                <Select onValueChange={handler} value={value}>
-                  <SelectTrigger className="text-5xl text-primary-medium border-primary-medium">
-                    <SelectValue placeholder="통신사" className="h-[250px]" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {selectList.map((item, i) => {
-                      if (isTypeof<string>(item))
-                        return (
-                          <SelectItem key={`select_${item}_${i}`} value={item}>
-                            {item}
-                          </SelectItem>
-                        );
-                      return (
-                        <SelectItem key={`select_ ${item.planId}_${i}`} value={item.name}>
-                          {item.name}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              }
+              <ItemSelector
+                handler={handler}
+                isSelect={i !== 1}
+                selectList={selectList}
+                value={value}
+              />
               {prompt[1]}
             </div>
           </MotionSelectLine>

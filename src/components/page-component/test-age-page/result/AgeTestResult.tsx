@@ -2,8 +2,9 @@
 import KakaoInitializer from "@/components/common/kakao/KakaoInitializer";
 import { ageTestResult } from "@/services/ageTest";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import ShareButton from "@/components/common/button/ShareButton";
+import { useCallback } from "react";
 
 interface ResultType {
   age: string;
@@ -38,7 +39,11 @@ export default function AgeTestResult() {
     queryKey: ["age", userAge, resultAge],
     queryFn: () => ageTestResult(userAge, resultAge),
   });
+  const router = useRouter();
 
+  const handleClickRetry = useCallback(() => {
+    router.push("/test-plan-age");
+  }, [router]);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const shareUrl = `${baseUrl}/test-plan-age/result?userAge=${userAge}&resultAge=${resultAge}`;
   const imageUrl = `${baseUrl}/${data?.result.age || "default.png"}`;
@@ -77,7 +82,9 @@ export default function AgeTestResult() {
           >
             링크 공유하기
           </button>
-          <button className="text-sm text-gray-600 underline mt-1">테스트 다시하기</button>
+          <button className="text-sm text-gray-600 underline mt-1" onClick={handleClickRetry}>
+            테스트 다시하기
+          </button>
         </div>
       </div>
     </>
