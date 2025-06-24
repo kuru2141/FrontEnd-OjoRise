@@ -3,12 +3,12 @@ import { useBrowseDip, useBrowsePlans } from "@/hooks/useBrowsePlans";
 import { useBrowsePlanStore } from "@/stores/browsePlanStore";
 import { PlanTabs } from "./PlanTabs";
 import { PlanDipCard } from "./PlanDipCard";
-import { Pagination } from "./Pagination";
 import { useAuthStore } from "@/stores/authStore";
 import { DipCardPlan } from "@/types/plan";
 import { dipPlan } from "@/services/dipPlanService";
 import DipModal from "./DipModal";
 import { useState } from "react";
+import { CustomPagination } from "./CustomPagination";
 
 const ExplorePlansPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,7 +61,7 @@ const ExplorePlansPage = () => {
             />
           ))}
 
-          <Pagination
+          <CustomPagination
             totalPages={totalPages}
             currentPage={currentPage}
             onPageChange={(page) => setPage(page)}
