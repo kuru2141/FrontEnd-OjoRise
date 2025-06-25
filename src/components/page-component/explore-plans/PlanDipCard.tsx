@@ -21,13 +21,8 @@ export const PlanDipCard = ({
 }: PlanDipCardProps) => {
   const { isSurveyed } = useAuthStore();
 
-  const handleHeartClick = () => {
-    if (!isSurveyed) {
-      openModal();
-      return;
-    }
-    onToggle(plan.planId);
-  };
+  const handleHeartClick = async () =>
+    !isSurveyed ? openModal?.() : await onToggle?.(plan.planId);
 
   const renderDataInfo = () => {
     if (plan.baseDataGb === "무제한") {

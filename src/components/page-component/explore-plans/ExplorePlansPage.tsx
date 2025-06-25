@@ -8,7 +8,7 @@ import { dipPlan } from "@/services/dipPlanService";
 import DipModal from "./DipModal";
 import { useState } from "react";
 import { CustomPagination } from "./CustomPagination";
-import { useBrowseQueryParams } from "@/hooks/useBrowseQueryParams"; 
+import { useBrowseQueryParams } from "@/hooks/useBrowseQueryParams";
 
 const ExplorePlansPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,7 +17,6 @@ const ExplorePlansPage = () => {
 
   const handlekakao = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/kakao/login`;
-    closeModal();
   };
 
   const { isSurveyed } = useAuthStore();
