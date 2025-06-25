@@ -1,17 +1,35 @@
 import { create } from "zustand";
-import type { MyPlan } from "@/types/plan";
 import { persist } from "zustand/middleware";
+import type { PersistStorage, StorageValue } from "zustand/middleware";
+import type { MyPlan } from "@/types/plan";
 
-type AuthState = {
+// 🔹 저장할 상태만 분리 (함수 제외)
+type AuthPersistedState = {
   isSurveyed: boolean | null;
   isGuest: boolean | null;
   selectedPlan: MyPlan | null;
+};
 
+type AuthState = AuthPersistedState & {
   login: () => void;
   logout: () => void;
   setIsSurveyed: (state: boolean) => void;
   setIsGuest: (state: boolean) => void;
   setSelectedPlan: (plan: MyPlan | null) => void;
+};
+
+// 🔹 세션 스토리지 구현 (타입 맞춤)
+const sessionStoragePersist: PersistStorage<AuthPersistedState> = {
+  getItem: (name) => {
+    const value = sessionStorage.getItem(name);
+    return value ? JSON.parse(value) : null;
+  },
+  setItem: (name, value) => {
+    sessionStorage.setItem(name, JSON.stringify(value));
+  },
+  removeItem: (name) => {
+    sessionStorage.removeItem(name);
+  },
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -28,7 +46,8 @@ export const useAuthStore = create<AuthState>()(
       setSelectedPlan: (plan) => set({ selectedPlan: plan }),
     }),
     {
-      name: "auth-store", // localStorage key
+      name: "auth-store",
+      storage: sessionStoragePersist,
       partialize: (state) => ({
         isSurveyed: state.isSurveyed,
         isGuest: state.isGuest,
