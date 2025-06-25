@@ -1,38 +1,26 @@
-import api from "@/lib/axios";
-import { fetchRecommendedPlans } from "./recommenendPlanService";
-import { fetchLikedPlans } from "./dipPlanService";
+import { api } from "@/lib/axios";
 
 export async function handleLoginSuccess() {
-  let localRecommendations: string[] = [];
+  let recommendedPlans: string[] = [];
+  console.log("called handleLoginSuccess", recommendedPlans);
+
   try {
-    const stored = localStorage.getItem("planList");
+    const stored = sessionStorage.getItem("recommendedPlans");
     if (stored) {
-      localRecommendations = JSON.parse(stored);
+      recommendedPlans = JSON.parse(stored);
     }
   } catch (e) {
-    console.error("planList 파싱 실패:", e);
+    console.error("recommendedPlans 파싱 실패:", e);
   }
-  console.log(localRecommendations);
-  if (localRecommendations.length > 0) {
+
+  if (recommendedPlans.length > 0) {
     try {
       await api.post("/api/recommendations", {
-        planNames: localRecommendations,
+        planNames: recommendedPlans,
       });
-      localStorage.removeItem("planList");
+      sessionStorage.removeItem("recommendedPlans");
     } catch (err) {
       console.error("추천 요금제 동기화 실패", err);
     }
-  }
-
-  try {
-    await fetchRecommendedPlans();
-  } catch (err) {
-    console.error("추천 목록 가져오기 실패:", err);
-  }
-
-  try {
-    await fetchLikedPlans();
-  } catch (err) {
-    console.error("찜한 요금제 가져오기 실패:", err);
   }
 }

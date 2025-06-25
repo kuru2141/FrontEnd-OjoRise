@@ -1,33 +1,28 @@
+import { cn } from "@/lib/utils";
+import { numberParsing } from "@/utils/numberParsing";
 import { presentParsing } from "@/utils/presentParsing";
 import Image from "next/image";
 import React, { JSX, memo } from "react";
+import { useBaseAndCompareItem } from "./comparePlan";
+import { ComparePlan } from "@/types/plan";
+
+export function isPlanDefault(plan: ComparePlan) {
+  return Object.values(plan).every((item) => item === "" || item === 0);
+}
 
 function TableBox() {
-  const baseItem = {
-    name: '유쓰 5G 데이터 플러스',
-    monthlyFee: 75000,
-    baseDataGb: -1,
-    voiceCallPrice: 400,
-    sms: '기본 제공',
-    present: '넷플릭스/티빙/웨이브 택 1,네이버 페이 매월 20000원 제공'
-  }
-
-  const compareItem = {
-    name: '유쓰 5G 데이터 플러스2',
-    monthlyFee: 65000,
-    baseDataGb: 100,
-    voiceCallPrice: 500,
-    sms: '기본 제공',
-    present: '네이버 페이 매월 20000원 제공'
-  }
+  const baseItem = useBaseAndCompareItem().baseItem;
+  const compareItem  = useBaseAndCompareItem().compareItem;
+  const isDefaultPlan = isPlanDefault(baseItem) && isPlanDefault(compareItem);
   
   const labelList = {
     name: '이름',
     monthlyFee: '월정액',
     baseDataGb: '데이터',
+    sharingDataGb: '쉐어링 데이터',
     voiceCallPrice: '음성통화',
     sms: '문자',
-    present: '혜택',
+    benefit: '혜택',
   };
 
   const itemList = Object.keys(labelList).map((key) => {
@@ -35,74 +30,64 @@ function TableBox() {
     const base = baseItem[key as keyof typeof baseItem];
     const compare = compareItem[key as keyof typeof compareItem];
 
-    let unit = '원';
-    if (key === 'baseDataGb') unit = 'Gb';
-    if (key === 'voiceCallPrice') unit = '원(1초 당)';
-
     //일괄적으로 쓰는 표현 함수
-    const getDisplayValue = (value: string | number): string | JSX.Element => {
-      if ((key === 'baseDataGb' || key === 'voiceCallPrice') && value === -1) {
-        return '무제한';
-      }
-      if (key === 'present') {
+    const getDisplayValue = (value: string | number | undefined): string | JSX.Element => {
+      if (value === undefined || value === null) return "-";
+
+      if (key === 'benefit') {
         const arr = presentParsing(String(value));
         return (<div className="w-full">
           {arr.map((item, idx) => (
-            <p key={idx}>{item}</p>
+            <p key={idx}>{numberParsing(item, key)}</p>
           ))}
         </div>);
       }
-      if (typeof value === 'number') {
-        return value.toLocaleString() + unit;
+      else{
+        return numberParsing(String(value), key);
       }
-      return String(value);
     };
     
     //base, compare 값이 number일 때, 비교하는 함수
-    const getDiffValue = (base: number, compare: number): JSX.Element => {
+    const getDiffValue = (base: number, compare: number, key: string): JSX.Element => {
       const isCompare = compare > base;
       const icon = isCompare ? "/increase.svg" : "/decrease.svg";
-      const diff = isCompare ? (Number(compare) - Number(base)).toLocaleString() : (Number(base) - Number(compare)).toLocaleString();
+      const diff = isCompare ? compare - base : base - compare;
 
       return(
         <div className="flex flex-row items-center justify-center w-full">
           <Image src={icon} alt="diff" width={18} height={18} />
-          {diff}{unit}
+          {numberParsing(String(diff), key)}
         </div>);
     }
 
     //compare result 함수
     const getResult = (): JSX.Element => {
-      if (base === compare) {
+      if(!base || !compare){
+        return <p>-</p>
+      }
+      else if (base === compare) {
         return <p>-</p>;
       }
-      else if (key === 'monthlyFee') {
-        return getDiffValue(Number(base), Number(compare));
+      else if (key === 'name'){
+        return <p></p>;
       }
-      else if (key === 'baseDataGb' || key === 'voiceCallPrice') {
-        if (base === -1) return <p>무제한 → {compare}{unit}</p>;
-        else if (compare === -1) return <p>{base}{unit} → 무제한</p>;
-        else return getDiffValue(Number(base), Number(compare));
-      }
-      else if (key === 'sms') {
-        return <p>{base} → {compare}</p>;
-      }
-      else if (key === 'present') {
+      else if (key === 'benefit') {
         const baseArr = presentParsing(String(base));
         const compareArr = presentParsing(String(compare));
         
         return (
           <div>
             {baseArr.filter((item) => !compareArr.includes(item)).map((baseItem, idx) => (
-              <s key={idx}>{baseItem}</s>
+              <div key={idx}><s>{numberParsing(baseItem, key)}</s></div>
             ))}
             {compareArr.map((compareItem, idx) => (
-              <p key={idx}>{compareItem}</p>
+              <div key={idx}><p>{numberParsing(compareItem, key)}</p></div>
             ))}
           </div>);
       }
-      else {
-        return <p>-</p>;
+      else{
+        if (base === '무제한' || compare === '무제한') return <p>{numberParsing(String(compare), key)} → {numberParsing(String(compare), key)}</p>;
+        else return getDiffValue(Number(base), Number(compare), key);
       }
     };
     
@@ -116,35 +101,39 @@ function TableBox() {
 
   return (
     <>
+    {isDefaultPlan ? <></> :     
+    <>
     <table className="w-full h-[60px] table-fixed text-center">
     <thead>
-      <tr className="font-bold text-lg">
+      <tr className="text-sm font-bold md:text-lg">
         <th>기준 요금제</th>
         <th></th>
         <th>비교 요금제</th>
       </tr>
       </thead>
       </table>
-      <div className="rounded-[20px] overflow-hidden border-[var(--color-gray-20)] border-[1px]">
-        <table className="w-full table-fixed text-center rounded-[20px] overflow-hidden border-collapse">
+      <div className="rounded-[10px] md:rounded-[20px] overflow-hidden border-[var(--color-gray-20)] border-[1px]">
+        <table className="w-full table-fixed text-center rounded-[10px] md:rounded-[20px] overflow-hidden border-collapse">
           <tbody>
             {itemList.map((item, idx) => (
               <React.Fragment key={idx}>
-                <tr className="bg-[var(--color-gray-20)] h-[60px]">
+                <tr className="bg-[var(--color-gray-20)] h-[50px] md:h-[60px]">
                   <td></td>
-                  <td className="font-bold text-lg">{item.label}</td>
+                  <td className="font-bold text-sm md:text-lg">{item.label}</td>
                   <td></td>
-                </tr>
-                <tr className="bg-white text-lg">
-                  <td className={item.label === '혜택' ? "py-[40px]" : "py-[20px]"}>{item.base}</td>
-                  <td className={item.label === '혜택' ? "py-[40px] border-[var(--color-gray-20)] border-x-[1px]" : "py-[20px] border-[var(--color-gray-20)] border-x-[1px]"}>{item.result}</td>
-                  <td className={item.label === '혜택' ? "py-[40px]" : "py-[20px]"}>{item.compare}</td>
+                </tr> 
+                <tr className="bg-white text-sm md:text-lg">
+                  <td className={cn(item.label === '혜택' ? "py-[35px] md:py-[40px]" : "py-[15px] md:py-[20px]")}>{item.base}</td>
+                  <td className={item.label === '혜택' ? "md:py-[40px] border-[var(--color-gray-20)] border-x-[1px]" : "md:py-[20px] border-[var(--color-gray-20)] border-x-[1px]"}>{item.result}</td>
+                  <td className={cn(item.label === '혜택' ? "py-[35px] md:py-[40px]" : "py-[15px] md:py-[20px]")}>{item.compare}</td>
                 </tr>
               </React.Fragment>
             ))}
           </tbody>
         </table>
       </div>
+    </>}
+
     </>
   )
 }
