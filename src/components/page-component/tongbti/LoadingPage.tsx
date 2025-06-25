@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { fetchTongBTIInfo, saveTongBTIResult, sendRecommendations } from "@/services/tongbti";
+import { saveRecommendedPlan } from "@/lib/recommendationStorage";
 
 export default function TongBTILoadingPage() {
   const router = useRouter();
@@ -21,6 +22,11 @@ export default function TongBTILoadingPage() {
 
         const info = await fetchTongBTIInfo(resultKey);
         setResultInfo(info);
+
+        // 여기서 sessionStorage에 추천 저장
+        if (info.planName) {
+          saveRecommendedPlan(info.planName);
+        }
 
         const token = sessionStorage.getItem("accessToken");
         if (token) {

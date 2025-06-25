@@ -16,10 +16,15 @@ export default function SuccessPageRoute() {
   useEffect(() => {
     if (accessToken) {
       sessionStorage.setItem("accessToken", accessToken);
-      handleLoginSuccess();
       queryClient.invalidateQueries({ queryKey: ["user"] });
     }
   }, [accessToken, queryClient]);
+
+  useEffect(() => {
+    if (!isLoading && isSurveyed === true) {
+      handleLoginSuccess();
+    }
+  }, [isSurveyed, isLoading]);
 
   useEffect(() => {
     if (!isLoading && isSurveyed !== undefined) {
