@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import MotionSelectLine from "@/components/common/MotionSelectLine";
 
-import { useAgeTestMutation } from "@/hooks/useAgeTestMutation";
+import { useAgeTestMutation, useSaveAgeTest } from "@/hooks/useAgeTestMutation";
 import { useRouter } from "next/navigation";
 import { buildSearchParams } from "@/utils/requestHelper";
 import { useQuery } from "@tanstack/react-query";
 import { Plans } from "@/services/survey";
 import ItemSelector from "./ItemSelector";
+import { useAuthStore } from "@/stores/authStore";
 
 function AgeTest() {
   const [current, setCurrent] = useState(0);
@@ -17,6 +18,8 @@ function AgeTest() {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [selectedAge, setSelectedAge] = useState<string>("");
   const mutation = useAgeTestMutation();
+  const saveMutate = useSaveAgeTest();
+  const { isSurveyed } = useAuthStore();
   const router = useRouter();
   const { data: planList } = useQuery({
     queryKey: ["survey/plan", selectedTelecom],
@@ -32,13 +35,13 @@ function AgeTest() {
 
   const handlePlanChange = useCallback((e: string) => {
     if (e) setSelectedPlan(e);
-    else setSelectedTelecom("");
+    else setSelectedPlan("");
     setCurrent((prev) => (prev === 1 ? 2 : prev));
   }, []);
 
   const handleAgeChange = useCallback((e: string) => {
     if (e) setSelectedAge(e);
-    else setSelectedTelecom("");
+    else setSelectedAge("");
     setCurrent((prev) => (prev === 2 ? 3 : prev));
   }, []);
 
@@ -47,6 +50,11 @@ function AgeTest() {
     mutation.mutate(message, {
       onSuccess: (response) => {
         console.log("나이 테스트 결과:", response);
+        if (isSurveyed)
+          saveMutate.mutate({
+            age: response?.userAge || "10대",
+            result: response.resultAge || "10대",
+          });
         router.push(
           `test-plan-age/result${buildSearchParams<{
             userAge: string;
@@ -61,32 +69,35 @@ function AgeTest() {
         console.error("나이 테스트 에러:", error);
       },
     });
-  }, [mutation, router, selectedAge, selectedPlan, selectedTelecom]);
+  }, [isSurveyed, mutation, router, saveMutate, selectedAge, selectedPlan, selectedTelecom]);
 
   const lines = [
     {
       prompt: ["나는 ", "의"],
       selectList: ["SKT", "KT", "LG"],
       value: selectedTelecom,
+      placeHolder: "통신사",
       handler: handleTelecomChange,
     },
     {
       prompt: ["", "를 사용 중인"],
       selectList: planList?.map((item) => item.name) || [],
       value: selectedPlan,
+      placeHolder: "요금제",
       handler: handlePlanChange,
     },
     {
       prompt: ["", "세 사용자 입니다."],
       selectList: Array.from({ length: 100 }, (_, i) => String(i + 1)),
       value: selectedAge,
+      placeHolder: "나이",
       handler: handleAgeChange,
     },
   ];
 
   return (
     <div className="h-screen flex flex-col justify-center items-center relative overflow-hidden  px-4 py-2 rounded-xl shadow-lg">
-      {lines.map(({ prompt, selectList, handler, value }, i) => {
+      {lines.map(({ prompt, selectList, handler, value, placeHolder }, i) => {
         const state = i < current ? "previous" : i === current ? "active" : "next";
 
         return (
@@ -98,6 +109,7 @@ function AgeTest() {
                 isSelect={i !== 1}
                 selectList={selectList}
                 value={value}
+                placehoder={placeHolder}
               />
               {prompt[1]}
             </div>
@@ -105,7 +117,9 @@ function AgeTest() {
         );
       })}
       <Button
-        className={`absolute bottom-10 ${current === 3 ? "" : "hidden"}`}
+        className={`absolute bottom-10 ${
+          current === 3 || selectedPlan !== "" ? "" : "hidden"
+        } text-white`}
         onClick={handleClickSubmit}
       >
         확인하러 가기

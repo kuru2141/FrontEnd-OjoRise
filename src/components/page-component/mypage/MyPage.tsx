@@ -70,6 +70,18 @@ const MyPage = () => {
     "보조금 헌터": "subsidyHunter",
   };
 
+  const planAgeImageMap: Record<string, string> = {
+    "9세 이하": "9",
+    "10대": "10",
+    "20대": "20",
+    "30대": "30",
+    "40대": "40",
+    "50대": "50",
+    "60대": "60",
+    "70대": "70",
+    "80대 이상": "80",
+  };
+
   const tongResultKey = tongBTIImageMap[tongBTI.tongResult] || "default";
 
   return (

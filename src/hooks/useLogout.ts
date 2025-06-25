@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "@/services/auth";
 import { useAuthStore } from "@/stores/authStore";
+import { usePlanStore } from "@/stores/usePlanStore";
 
 export const useLogout = () => {
   const { logout: logoutFromStore } = useAuthStore.getState();
@@ -10,6 +11,15 @@ export const useLogout = () => {
     onSuccess: () => {
       logoutFromStore();
       sessionStorage.removeItem("accessToken");
+
+      usePlanStore.setState({
+        isCompareWithMine: true,
+        selectedPlans: [],
+        recommendedPlans: [],
+        likedPlans: [],
+      });
+      localStorage.removeItem("plan-store");
+
       window.location.href = "/";
     },
     onError: (error) => {

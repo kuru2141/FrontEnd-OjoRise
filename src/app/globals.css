@@ -75,6 +75,7 @@
   --gray-40: #a7a6a7;
   --gray-20: #eaeaea;
   --gray-10: #f8f8f8;
+  --gray-chatbot-backgroud: #d9d9d9;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);

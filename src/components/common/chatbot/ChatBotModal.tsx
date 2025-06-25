@@ -2,19 +2,17 @@
 
 import { useMediaQuery } from "react-responsive";
 import { Fab } from "@mui/material";
-import { Image as ImageIcon, Send, X, Maximize2, Minimize2 } from "lucide-react";
+import { Paperclip, ArrowUp, X, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "../../ui/drawer";
-import { Input } from "../../ui/input";
 import { ChangeEvent, KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
 import { ScrollArea } from "../../ui/scroll-area";
@@ -26,13 +24,14 @@ import { UserProfile } from "@/types/UserProfile";
 import { ResultItem } from "@/types/ocr";
 import { useOCRToGptMutation } from "@/hooks/useOCRToGptMutation";
 import { isSameFile } from "@/utils/isSameFile";
-import {api} from "@/lib/axios";
+import { api } from "@/lib/axios";
 import Image from "next/image";
 
 interface DialogItem {
   teller: "user" | "chatbot";
   block: (string | File | PlanItem)[];
   time: Date;
+  status?: boolean;
 }
 
 interface PlanItem {
@@ -53,14 +52,14 @@ function ChatBotModal() {
   const [initialLoginDialog, setInitialLoginDialog] = useState<DialogItem>({
     teller: "chatbot",
     block: [
-      `LG U+ 요금제 추천 도우미입니다.\n데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요`,
+      "LG U+ 요금제 추천 도우미입니다.\n-데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.\n-\n-예:\n-- 유튜브를 자주 봐요\n-- 가족 결합할 예정이에요\n-- 무제한 요금제 쓰고 싶어요",
     ],
     time: new Date(),
   });
   const [initialGuestDialog, setInitialGuestDialog] = useState<DialogItem>({
     teller: "chatbot",
     block: [
-      `LG U+ 요금제 추천 도우미입니다.\n사진을 통해 데이터 사용량, 가족 결합 여부, 요금 고민 등을 보내주시면, 그에 맞는 요금제를 추천해드려요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요`,
+      "LG U+ 요금제 추천 도우미입니다.\n-사진을 통해 데이터 사용량, 가족 결합 여부, 요금 고민 등을 보내주시면, 그에 맞는 요금제를 추천해드려요.\n-\n-예:\n-- 유튜브를 자주 봐요\n-- 가족 결합할 예정이에요\n-- 무제한 요금제 쓰고 싶어요",
     ],
     time: new Date(),
   });
@@ -123,14 +122,14 @@ function ChatBotModal() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    setIsLoggedIn(localStorage.getItem("accessToken") ? true : false);
+    setIsLoggedIn(sessionStorage.getItem("accessToken") ? true : false);
   }, []);
 
   useEffect(() => {
     async function updateProfile() {
       setDisableButton(true);
       if (isLoggedIn) {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = sessionStorage.getItem("accessToken");
         if (accessToken) {
           const res = await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile`, {
             method: "GET",
@@ -180,6 +179,7 @@ function ChatBotModal() {
         updated[lastIndex] = {
           ...updated[lastIndex],
           block: [...botBlock],
+          status: statusRef.current,
         };
         return updated;
       });
@@ -225,6 +225,22 @@ function ChatBotModal() {
           }
 
           if (statusRef.current) setHistory((prev) => [...prev, message]);
+
+          if (itemsRef.current) {
+            const plans = itemsRef.current.map((item) => item.name);
+            try {
+              const res = await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recommendations`, {
+                method: "POST",
+                data: { planNames: plans },
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              console.log(res.status);
+            } catch (error) {
+              console.log(error);
+            }
+          }
 
           throttledUpdateDialog(botBlock);
           break;
@@ -411,37 +427,51 @@ function ChatBotModal() {
     <Drawer modal={false}>
       <DrawerTrigger asChild>
         <Fab color="primary" aria-label="add">
-          <Image fill src="/chatbot.svg" alt="chatbot" />
+          <Image layout="fill" src="/chatbot.svg" alt="chatbot" />
         </Fab>
       </DrawerTrigger>
       <DrawerContent
         className={`${
           !isMobile
             ? zoom
-              ? "fixed bottom-0 left-0 max-w-[100%] h-screen z-50 bg-white"
+              ? "fixed bottom-0 left-0 max-w-[100%] h-screen z-50"
               : "w-1/2 max-w-[650px] h-[80vh]"
-            : "fixed bottom-0 left-0 max-w-[100%] h-screen z-50 bg-white"
-        } ml-auto pr-2 pl-2 flex flex-col`}
+            : "fixed bottom-0 left-0 max-w-[100%] h-screen z-50"
+        } ml-auto pr-2 pl-2 flex flex-col bg-gray-10`}
       >
-        <DrawerHeader className="flex flex-row justify-between border-b border-gray-200">
+        <DrawerHeader className="flex flex-row justify-between border-b border-gray-200 bg-gray-10">
           <div onClick={handleZoom}>
             {zoom ? (
-              <Minimize2 className={`text-gray-600 ${!isMobile ? "visible" : "invisible"}`} />
+              <Minimize2 className={`text-gray-40 ${!isMobile ? "visible" : "invisible"}`} />
             ) : (
-              <Maximize2 className={`text-gray-600 ${!isMobile ? "visible" : "invisible"}`} />
+              <Maximize2 className={`text-gray-40 ${!isMobile ? "visible" : "invisible"}`} />
             )}
           </div>
-          <div className="flex flex-col items-center w-full">
+          <div className="text-[16px] flex flex-col items-center w-full">
             <DrawerTitle>챗봇</DrawerTitle>
-            <DrawerDescription>요금제 추천을 받아보세요.</DrawerDescription>
           </div>
           <DrawerClose className="hover:cursor-pointer h-fit">
-            <X className="text-gray-600" />
+            <X className="text-gray-40" />
           </DrawerClose>
         </DrawerHeader>
 
-        <div className="flex-1 overflow-y-auto px-1 pt-4">
-          <ScrollArea className="flex flex-col gap-2 w-full pr-3">
+        <div className="flex justify-center w-full flex-1 scroll-hide overflow-y-auto px-1 pt-4">
+          <ScrollArea className={`${zoom && !isMobile ? "w-2/3" : "w-full"} gap-2 pr-3`}>
+            <div className="h-full flex justify-center items-center mb-4">
+              <div className="pl-3 md:pl-5 flex text-[14px] md:text-[16px] gap-4 md:gap-8 items-center w-full h-[80px] bg-white mb-4 rounded-[16px] ">
+                <div className="w-fit h-fit rounded-[100px] bg-(--gray-chatbot-backgroud)">
+                  <Image width={50} height={50} src="/chatbot.svg" alt="chatbot" />
+                </div>
+                <div className="w-full font-bold">
+                  <p className="flex items-center">
+                    챗봇 입력창의
+                    <Paperclip className="ml-1 mr-1 text-gray-40 w-[16px] h-[16px]" />
+                    버튼을 눌러
+                  </p>
+                  <p>요금제 캡쳐 이미지 기반의 추천을 받아보세요!</p>
+                </div>
+              </div>
+            </div>
             {dialog.map((item, i) => (
               <div key={`${item}-${i}`}>
                 <ChatBotBubble
@@ -452,14 +482,16 @@ function ChatBotModal() {
                   nextTeller={dialog[i + 1]?.teller}
                   prevTeller={dialog[i - 1]?.teller}
                   zoom={zoom}
+                  isMobile={isMobile}
                 >
-                  {<LoadingLine isShow={dialog.length - 1 === i && item.block.length === 0} />}
+                  {<LoadingLine />}
                 </ChatBotBubble>
                 {item.teller === "chatbot" &&
                 i === dialog.length - 1 &&
                 item.block !== initialGuestDialog.block &&
                 item.block !== initialLoginDialog.block ? (
-                  <div className="ml-2 mb-2">
+                  <div className="flex ml-1 mt-1">
+                    <div className="w-[48px] h-[24px]" />
                     <Button
                       variant="outline"
                       size="sm"
@@ -477,26 +509,40 @@ function ChatBotModal() {
           </ScrollArea>
         </div>
 
-        <DrawerFooter className="flex flex-row items-center gap-2 sticky bottom-0 bg-white pt-2 pb-4">
-          <Button
-            className="bg-gray-50 hover:bg-gray-200"
-            onClick={handleOCRClick}
-            disabled={disableButton}
-          >
-            <input className="hidden" type="file" onChange={handleOCR} ref={fileInputRef} />
-            <ImageIcon />
-          </Button>
-          <Input
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="border px-2 py-1"
-            placeholder="메시지를 입력하세요"
-            onKeyDown={handleEnter}
-          />
-          <Button onClick={handleClick} disabled={disableButton}>
-            <Send />
-          </Button>
+        <DrawerFooter className="flex flex-row items-center gap-2 sticky bottom-0 bg-gray-10 pt-2 pb-4">
+          <div className="flex w-full h-[48px] rounded-[24px] border-[1px] border-gray-30 bg-white shadow-md">
+            <button
+              onClick={handleOCRClick}
+              disabled={disableButton}
+              className={`w-[40px] h-full ml-3 flex items-center justify-center ${
+                disableButton ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              <input type="file" className="hidden" onChange={handleOCR} ref={fileInputRef} />
+              <Paperclip className="w-[20px] h-[20px] text-gray-40" />
+            </button>
+
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleEnter}
+              placeholder="챗봇에게 물어보세요!"
+              className="w-full px-1 bg-transparent focus:outline-none focus:border-0 focus:ring-0 text-black"
+            />
+
+            <div className="h-[full] w-[50px] flex items-center">
+              <button
+                onClick={handleClick}
+                disabled={disableButton}
+                className={`flex justify-center items-center rounded-4xl w-[30px] h-[30px] bg-primary-medium ${
+                  disableButton ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                <ArrowUp className="w-[20px] h-[20px] text-white" />
+              </button>
+            </div>
+          </div>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
