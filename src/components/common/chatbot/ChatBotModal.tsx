@@ -200,7 +200,7 @@ function ChatBotModal() {
           : [...prev.slice(0, -1), newEntry];
       });
 
-      const res = await fetch("http://localhost:8000/search", {
+      const res = await fetch(`${process.env.PYTHON_SERVER_URL}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: message, userProfile, history, ambiguousCount }),

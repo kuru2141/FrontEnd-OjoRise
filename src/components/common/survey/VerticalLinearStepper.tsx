@@ -86,11 +86,11 @@ export default function VerticalLinearStepper() {
   const steps = useMemo(
     () => [
       {
-        label: "생년월일을 작성해주세요.",
+        label: "생년월일을 작성해 주세요",
         component: <DateInput />,
       },
       {
-        label: "현재 사용 중인 요금제를 알려주세요.",
+        label: "현재 사용 중인 요금제를 알려주세요",
         component: (
           <div>
             <ScreenshotOCR onComplete={onComplete} />

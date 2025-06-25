@@ -21,13 +21,8 @@ export const PlanDipCard = ({
 }: PlanDipCardProps) => {
   const { isSurveyed } = useAuthStore();
 
-  const handleHeartClick = () => {
-    if (!isSurveyed) {
-      if (openModal) openModal(); // 설문 안 했으면 모달 열기
-      return;
-    }
-    if (onToggle) onToggle(plan.planId); // 설문 했으면 찜 등록
-  };
+  const handleHeartClick = async () =>
+    !isSurveyed ? openModal?.() : await onToggle?.(plan.planId);
 
   const renderDataInfo = () => {
     if (plan.baseDataGb === "무제한") {
