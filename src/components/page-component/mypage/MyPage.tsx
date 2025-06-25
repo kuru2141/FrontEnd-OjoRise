@@ -208,8 +208,8 @@ const MyPage = () => {
                 src={`/planAge/${planAge.age}.svg`}
                 alt="캐릭터"
                 width={100}
-                height={100}
-                className="w-[100px] h-[100px] md:w-[160px] md:h-[160px]"
+                height={80}
+                className="w-[100px] h-[80px] md:w-[200px] md:h-[150px]"
               />
               <span className="text-primary-medium">{planAge.age}</span>
               <p>입니다</p>
@@ -231,7 +231,7 @@ const MyPage = () => {
               </Button>
             </div>
             <Image
-              src="/BannerIMG.png"
+              src="/agetest.svg"
               alt="plan"
               width={220}
               height={220}
