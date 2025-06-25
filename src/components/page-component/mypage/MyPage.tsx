@@ -77,7 +77,9 @@ const MyPage = () => {
       <div className="w-full max-w-sm mt-30 md:max-w-3xl flex flex-col items-start text-left overflow-hidden">
         <div>
           <p className="text-[20px] md:text-[24px] mb-2">안녕하세요</p>
-          <p className="font-bold text-[20px] md:text-[24px]">{username} 님의 마이페이지입니다.</p>
+          <p className="font-bold text-[20px] md:text-[24px]">
+            {username || "-"}님의 마이페이지입니다.
+          </p>
         </div>
         <p className="font-bold text-[14px] md:text-[18px] mb-2 md:mb-5 mt-10">회원 정보</p>
         <div className="flex flex-col rounded-[14px] md:rounded-[20px] border-2 md:border-3 border-gray-10 p-3 md:p-5 gap-3 md:gap-5 w-full">
