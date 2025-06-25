@@ -16,10 +16,9 @@ function AppHeader() {
 
   useEffect(() => {
     const handler = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 0);
     };
     window.addEventListener("scroll", handler);
-    handler();
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
@@ -71,36 +70,37 @@ function AppHeader() {
         </Link>
 
         <div className="hidden md:flex items-center space-x-[50px]">
-          <Link
-            href="/explore-plans"
-            className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
-          >
-            요금제 둘러보기
-          </Link>
-
-          {!isSurveyed && (
-            <button
-              onClick={handleKakaoLogin}
-            >
-              <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45}/>
-            </button>
-          )}
-
-          {isSurveyed && (
+          {isSurveyed !== null ? (
             <Fragment>
               <Link
-                href="/mypage"
+                href="/explore-plans"
                 className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
               >
-                마이페이지
+                요금제 둘러보기
               </Link>
-              <button
-                onClick={() => logoutMutation.mutate()}
-                className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
-              >
-                로그아웃
-              </button>
+              {isSurveyed ? (
+                <Fragment>
+                  <Link
+                    href="/mypage"
+                    className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                  >
+                    마이페이지
+                  </Link>
+                  <button
+                    onClick={() => logoutMutation.mutate()}
+                    className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                  >
+                    로그아웃
+                  </button>
+                </Fragment>
+              ) : (
+                <button onClick={handleKakaoLogin}>
+                  <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45} />
+                </button>
+              )}
             </Fragment>
+          ) : (
+            <></>
           )}
         </div>
 
