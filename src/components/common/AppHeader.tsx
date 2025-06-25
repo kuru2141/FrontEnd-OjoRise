@@ -23,12 +23,7 @@ function AppHeader() {
   }, []);
 
   const handleKakaoLogin = () => {
-    const kakaoAuthUrl = process.env.NEXT_PUBLIC_KAKAO_LOGIN_URL;
-    if (!kakaoAuthUrl) {
-      console.error("KAKAO 로그인 URL이 설정되지 않았습니다.");
-      return;
-    }
-    window.location.href = kakaoAuthUrl;
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/kakao/login`;
   };
 
   const currentMenu = useMemo(() => {
@@ -66,14 +61,20 @@ function AppHeader() {
     >
       <div className="max-w-[100vw] flex items-center justify-between h-[56px] xl:h-[80px] mx-auto px-8 xl:px-[120px]">
         <Link href="/" className="text-lg font-bold">
-          <Image src="/logo.svg" alt="Logo" width={110} height={42} />
+          <Image
+            src="/logo.svg"
+            alt="Logo"
+            width={80}
+            height={30}
+            className="w-[80px] h-[30px] xl:w-[110px] xl:h-[42px]"
+          />
         </Link>
 
         <div className="hidden md:flex items-center space-x-[50px]">
           <Fragment>
             <Link
               href="/explore-plans"
-              className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+              className="text-[16px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
             >
               요금제 둘러보기
             </Link>
