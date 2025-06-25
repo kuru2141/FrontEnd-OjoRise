@@ -14,8 +14,6 @@ function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const logoutMutation = useLogout();
 
-  console.log("surveyed", isSurveyed);
-
   useEffect(() => {
     const handler = () => {
       setIsScrolled(window.scrollY > 0);
