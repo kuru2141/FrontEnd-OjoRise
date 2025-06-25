@@ -14,7 +14,7 @@ const DipModal: FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-[20px] p-6 w-[90%] max-w-md shadow-lg relative">
+      <div className="bg-white rounded-[20px] p-6 w-[80%] max-w-md shadow-lg relative">
         {/* 닫기 버튼 */}
         <button
           onClick={onCancel}
@@ -57,8 +57,8 @@ const DipModal: FC<DipModalProps> = ({ isOpen, onCancel, onKakao }) => {
         </ul>
 
         {/* 버튼 */}
-        <div className="flex flex-col gap-2">
-          <Button className="bg-[#FEE500] text-black hover:bg-[#ffe812]" onClick={onKakao}>
+        <div className="flex flex-col gap-2 w-full max-w-[280px] mx-auto">
+          <Button className=" bg-[#FEE500] text-black hover:bg-[#ffe812]" onClick={onKakao}>
             <Image src="/kakao.png" alt="카카오" width={15} height={15} />
             카카오로 시작하기
           </Button>

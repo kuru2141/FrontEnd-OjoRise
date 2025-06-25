@@ -7,6 +7,7 @@ import {
   PaginationLink,
 } from "@/components/ui/pagination";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { MouseEvent, useCallback, useMemo } from "react";
 
 interface PaginationProps {
   totalPages: number;
@@ -15,38 +16,30 @@ interface PaginationProps {
 }
 
 export function CustomPagination({ totalPages, currentPage, onPageChange }: PaginationProps) {
-  const getDisplayPages = (): number[] => {
-    const pages: number[] = [];
+
+  const pages = useMemo(() => {
     const maxVisible = 5;
 
-    let start = Math.max(currentPage - Math.floor(maxVisible / 2), 1);
-    let end = start + maxVisible - 1;
+    const rawStart = currentPage - Math.floor(maxVisible / 2);
+    const start = Math.max(1, Math.min(rawStart, totalPages - maxVisible + 1));
+    const end = Math.min(totalPages, start + maxVisible - 1);
 
-    if (end > totalPages) {
-      end = totalPages;
-      start = Math.max(end - maxVisible + 1, 1);
-    }
+    return Array.from({ length: end - start + 1 }, (_, i) => i + start);
+  }, [currentPage, totalPages]);
 
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
-  };
-
-  const pages = getDisplayPages();
-
-  const handleClick = (e: React.MouseEvent, page: number, disabled?: boolean) => {
-    e.preventDefault();
-    if (!disabled && page !== currentPage) {
-      onPageChange(page);
-    }
-  };
+  const handleClick = useCallback(
+    (e: MouseEvent, page: number, disabled?: boolean) => {
+      e.preventDefault();
+      if (!disabled && page !== currentPage) {
+        onPageChange(page);
+      }
+    },
+    [currentPage, onPageChange]
+  );
 
   return (
     <Pagination className="mt-5">
       <PaginationContent>
-        {/* Prev */}
         <PaginationItem>
           <PaginationLink
             href="#"
@@ -58,7 +51,6 @@ export function CustomPagination({ totalPages, currentPage, onPageChange }: Pagi
           </PaginationLink>
         </PaginationItem>
 
-        {/* Page numbers */}
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
@@ -71,7 +63,6 @@ export function CustomPagination({ totalPages, currentPage, onPageChange }: Pagi
           </PaginationItem>
         ))}
 
-        {/* Next */}
         <PaginationItem>
           <PaginationLink
             href="#"

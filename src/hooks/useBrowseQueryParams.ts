@@ -28,7 +28,7 @@ export function useBrowseQueryParams() {
       newParams.set("isOnline", params.isOnline.toString());
     }
 
-    router.replace(`${pathname}?${newParams.toString()}`);
+    router.push(`${pathname}?${newParams.toString()}`);
   };
 
   return {
