@@ -380,6 +380,7 @@ function ChatBotModal() {
     currentTextRef.current = "";
     jsonParsedRef.current = false;
     isNewLineRef.current = true;
+    setHistory([]);
     setAmbiguousCount(0);
   }, [initialGuestDialog, initialLoginDialog, isLoggedIn]);
 
@@ -426,7 +427,7 @@ function ChatBotModal() {
 
       mutate(formData);
     }
-  }, [imgFile, mutate]);
+  }, [imgFile]);
 
   const { isOpen, open, close } = useChatBotStore();
 
