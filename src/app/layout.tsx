@@ -33,13 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${pretendard.variable} ${suit.variable} font-pretendard`}>
-        <ProviderWrapper>
-          {children}
-          <div className="w-full sticky bottom-8 flex justify-end pr-8">
-            <ChatBotModal />
-          </div>
-          <Footer />
-        </ProviderWrapper>
+        <ProviderWrapper>{children}</ProviderWrapper>
       </body>
     </html>
   );
