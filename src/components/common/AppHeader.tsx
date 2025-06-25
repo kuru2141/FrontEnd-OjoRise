@@ -3,64 +3,56 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, memo, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import HamburgerIcon from "./HamburgerIcon";
 import OffCanvas from "./OffCanvas";
-import { router } from "next/client";
-
-const menuForLoggedIn = [
-  { label: "마이페이지", href: "/mypage" },
-  { label: "요금제 둘러보기", href: "/" },
-  {
-    label: "로그아웃",
-    href: "#",
-    onClick: () => {
-      console.log("로그아웃 처리 (임시)");
-      // 로그아웃 실제 로직 넣기
-      router.push("/");
-    },
-  },
-];
-
-const menuForLoggedOut = [
-  {
-    label: "카카오 로그인",
-    href: "#",
-    onClick: () => {
-      console.log("카카오 로그인 처리 (임시)");
-      // 로그인 실제 로직 넣기
-      router.push("/");
-    },
-  },
-  { label: "요금제 둘러보기", href: "/" },
-];
-
-const handleKakaoLogin = () => {
-  const kakaoAuthUrl = "http://localhost:8080/ojoRise/auth/kakao/login";
-  window.location.href = kakaoAuthUrl;
-};
+import { useLogout } from "@/hooks/useLogout";
 
 function AppHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const isSurveyed = useAuthStore(state => state.isSurveyed);
+  const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const router = useRouter();
+  const logoutMutation = useLogout();
 
   useEffect(() => {
     const handler = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 0);
     };
     window.addEventListener("scroll", handler);
-    handler();
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // 현재 상태에 따른 메뉴 선택
+  const handleKakaoLogin = () => {
+    const kakaoAuthUrl = process.env.NEXT_PUBLIC_KAKAO_LOGIN_URL;
+    if (!kakaoAuthUrl) {
+      console.error("KAKAO 로그인 URL이 설정되지 않았습니다.");
+      return;
+    }
+    window.location.href = kakaoAuthUrl;
+  };
+
   const currentMenu = useMemo(() => {
-    if (isSurveyed) return menuForLoggedIn;
-    return menuForLoggedOut;
-  }, [isSurveyed]);
+    if (isSurveyed) {
+      return [
+        { label: "마이페이지", href: "/mypage" },
+        { label: "요금제 둘러보기", href: "/explore-plans" },
+        {
+          label: "로그아웃",
+          href: "/",
+          onClick: () => logoutMutation.mutate(),
+        },
+      ];
+    }
+
+    return [
+      {
+        label: "카카오 로그인",
+        href: "#",
+        onClick: handleKakaoLogin,
+      },
+      { label: "요금제 둘러보기", href: "/explore-plans" },
+    ];
+  }, [isSurveyed, logoutMutation]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -72,46 +64,43 @@ function AppHeader() {
         isScrolled ? "border-b border-solid border-[#EAEAEA]" : ""
       }`}
     >
-      <div className="max-w-[1480px] flex items-center justify-between h-[56px] xl:h-[80px] mx-auto px-4 xl:px-[74px]">
-        <div className="text-lg font-bold">
+      <div className="max-w-[100vw] flex items-center justify-between h-[56px] xl:h-[80px] mx-auto px-8 xl:px-[120px]">
+        <Link href="/" className="text-lg font-bold">
           <Image src="/logo.svg" alt="Logo" width={110} height={42} />
-        </div>
+        </Link>
 
         <div className="hidden md:flex items-center space-x-[50px]">
-          <Link
-            href="/"
-            className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
-          >
-            요금제 둘러보기
-          </Link>
-
-          {!isSurveyed && (
-            <button
-              onClick={handleKakaoLogin}
-              className="text-sm bg-yellow-400 hover:bg-yellow-300 px-4 py-2 rounded transition-colors duration-300"
-            >
-              카카오 로그인
-            </button>
-          )}
-
-          {isSurveyed && (
+          {isSurveyed !== null ? (
             <Fragment>
               <Link
-                href="/mypage"
-                className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
+                href="/explore-plans"
+                className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
               >
-                마이페이지
+                요금제 둘러보기
               </Link>
-              <button
-                onClick={() => {
-                  console.log("데스크톱 로그아웃 클릭 (임시)");
-                  router.push("/");
-                }}
-                className="text-sm text-neutral-800 hover:text-gray-600 transition-colors duration-300"
-              >
-                로그아웃
-              </button>
+              {isSurveyed ? (
+                <Fragment>
+                  <Link
+                    href="/mypage"
+                    className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                  >
+                    마이페이지
+                  </Link>
+                  <button
+                    onClick={() => logoutMutation.mutate()}
+                    className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                  >
+                    로그아웃
+                  </button>
+                </Fragment>
+              ) : (
+                <button onClick={handleKakaoLogin}>
+                  <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45} />
+                </button>
+              )}
             </Fragment>
+          ) : (
+            <></>
           )}
         </div>
 

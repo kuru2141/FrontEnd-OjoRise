@@ -67,11 +67,15 @@
   --primary-medium: #ff008c;
   --primary-light: #edb3d2;
   --primary-bright: #fce8f3;
+  --secondary-chatbot-color: #f2edf5;
+  --secondary-userChatbot-color: #e0f7fa;
+  --secondary-hover-color: #d63384;
   --gray-100: #222022;
   --gray-60: #7a797a;
   --gray-40: #a7a6a7;
   --gray-20: #eaeaea;
   --gray-10: #f8f8f8;
+  --gray-chatbot-backgroud: #d9d9d9;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -142,7 +146,7 @@
 @media (max-width: 768px) {
   html,
   body {
-    overflow-y: scroll; /* 스크롤 기능은 유지 */
+    /* overflow-y: scroll; 스크롤 기능은 유지 */
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
@@ -173,5 +177,11 @@
   .font-pretendard {
     font-family: "Pretendard", sans-serif;
     color: var(--gray-100);
+  }
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 1px 1px 15px 0 rgba(234, 234, 234, 1);
   }
 }

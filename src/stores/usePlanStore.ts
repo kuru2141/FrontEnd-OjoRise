@@ -1,15 +1,37 @@
 import { create } from "zustand";
-import type { MyPlan, Plan } from "@/types/plan";
+import { persist } from "zustand/middleware";
+import type { Plan } from "@/types/plan";
+import type { PersistStorage } from "zustand/middleware";
 
-interface PlanStore {
+// 저장 대상 타입만 추출
+type PlanStorePersisted = {
   isCompareWithMine: boolean;
+  selectedPlans: Plan[];
+  recommendedPlans: Plan[];
+};
+
+// sessionStorage 커스텀 정의
+const sessionStoragePersist: PersistStorage<PlanStorePersisted> = {
+  getItem: (name) => {
+    const value = sessionStorage.getItem(name);
+    return value ? JSON.parse(value) : null;
+  },
+  setItem: (name, value) => {
+    sessionStorage.setItem(name, JSON.stringify(value));
+  },
+  removeItem: (name) => {
+    sessionStorage.removeItem(name);
+  },
+};
+
+interface PlanStore extends PlanStorePersisted {
   setIsCompareWithMine: (flag: boolean) => void;
 
-  selectedPlans: Plan[];
   togglePlanSelection: (plan: Plan) => void;
   clearSelectedPlans: () => void;
 
-  recommendedPlans: Plan[];
+  setSelectedPlans: (plans: Plan[]) => void;
+
   setRecommendedPlans: (plans: Plan[]) => void;
   removePlan: (title: string) => void;
 
@@ -18,70 +40,67 @@ interface PlanStore {
   removeLikedPlan: (title: string) => void;
 }
 
-interface MyPlanStore {
-  username: string | null;
-  isGuest: boolean;
-  selectedPlan: MyPlan | null;
-  setUsername: (name: string | null) => void;
-  setGuest: (value: boolean) => void;
-  setSelectedPlan: (plan: MyPlan | null) => void;
-}
+export const usePlanStore = create<PlanStore>()(
+  persist(
+    (set, get) => ({
+      isCompareWithMine: true,
+      setIsCompareWithMine: (flag) => {
+        set({ isCompareWithMine: flag, selectedPlans: [] });
+      },
 
-export const usePlanStore = create<PlanStore>((set, get) => ({
-  isCompareWithMine: true,
-  setIsCompareWithMine: (flag) => {
-    set({ isCompareWithMine: flag, selectedPlans: [] });
-  },
+      selectedPlans: [],
+      setSelectedPlans: (plans: Plan[]) => set({ selectedPlans: plans }),
+      togglePlanSelection: (plan) => {
+        const { selectedPlans, isCompareWithMine } = get();
 
-  selectedPlans: [],
-  togglePlanSelection: (plan) => {
-    const { selectedPlans, isCompareWithMine } = get();
+        const isAlreadySelected = selectedPlans.some(
+          (p) => p.name === plan.name && p.source === plan.source
+        );
 
-    const isAlreadySelected = selectedPlans.some(
-      (p) => p.name === plan.name && p.source === plan.source
-    );
+        let newPlans: Plan[];
 
-    let newPlans: Plan[];
-
-    if (isAlreadySelected) {
-      // 같은 source인 plan만 제거
-      newPlans = selectedPlans.filter((p) => !(p.name === plan.name && p.source === plan.source));
-    } else {
-      if (isCompareWithMine) {
-        newPlans = [plan];
-      } else {
-        if (selectedPlans.length >= 2) {
-          newPlans = [...selectedPlans.slice(1), plan];
+        if (isAlreadySelected) {
+          newPlans = selectedPlans.filter(
+            (p) => !(p.name === plan.name && p.source === plan.source)
+          );
         } else {
-          newPlans = [...selectedPlans, plan];
+          if (isCompareWithMine) {
+            newPlans = [plan];
+          } else {
+            if (selectedPlans.length >= 2) {
+              newPlans = [...selectedPlans.slice(1), plan];
+            } else {
+              newPlans = [...selectedPlans, plan];
+            }
+          }
         }
-      }
+        set({ selectedPlans: newPlans });
+      },
+
+      clearSelectedPlans: () => set({ selectedPlans: [] }),
+
+      recommendedPlans: [],
+      setRecommendedPlans: (plans) => set({ recommendedPlans: plans }),
+      removePlan: (title) =>
+        set((state) => ({
+          recommendedPlans: state.recommendedPlans.filter((plan) => plan.name !== title),
+        })),
+
+      likedPlans: [],
+      setLikedPlans: (plans) => set({ likedPlans: plans }),
+      removeLikedPlan: (title) =>
+        set((state) => ({
+          likedPlans: state.likedPlans.filter((plan) => plan.name !== title),
+        })),
+    }),
+    {
+      name: "plan-store",
+      storage: sessionStoragePersist,
+      partialize: (state) => ({
+        isCompareWithMine: state.isCompareWithMine,
+        selectedPlans: state.selectedPlans,
+        recommendedPlans: state.recommendedPlans,
+      }),
     }
-    set({ selectedPlans: newPlans });
-  },
-
-  clearSelectedPlans: () => set({ selectedPlans: [] }),
-
-  recommendedPlans: [],
-  setRecommendedPlans: (plans) => set({ recommendedPlans: plans }),
-  removePlan: (title) =>
-    set((state) => ({
-      recommendedPlans: state.recommendedPlans.filter((plan) => plan.name !== title),
-    })),
-
-  likedPlans: [],
-  setLikedPlans: (plans) => set({ likedPlans: plans }),
-  removeLikedPlan: (title) =>
-    set((state) => ({
-      likedPlans: state.likedPlans.filter((plan) => plan.name !== title),
-    })),
-}));
-
-export const useMyPlanStore = create<MyPlanStore>((set) => ({
-  username: null,
-  isGuest: false,
-  selectedPlan: null,
-  setUsername: (name) => set({ username: name }),
-  setGuest: (value) => set({ isGuest: value }),
-  setSelectedPlan: (plan) => set({ selectedPlan: plan }),
-}));
+  )
+);

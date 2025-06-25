@@ -3,6 +3,8 @@ import "./globals.css";
 import ProviderWrapper from "@/components/common/wrapper/ProviderWrapper";
 import "react-toastify/dist/ReactToastify.css";
 import localFont from "next/font/local";
+import ChatBotModal from "@/components/common/chatbot/ChatBotModal";
+import Footer from "@/components/common/Footer";
 
 const pretendard = localFont({
   src: "../fonts/pretendard/PretendardVariable.woff2",
