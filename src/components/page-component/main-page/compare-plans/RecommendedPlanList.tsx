@@ -13,21 +13,16 @@ import { useRecommendedPlans } from "@/hooks/useRecommendedPlans";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useAuthStore } from "@/stores/authStore";
-import { useEffect } from "react";
+import { useChatBotStore } from "@/stores/chatBotStore";
 
 export default function RecommendedPlanList() {
   const { recommendedPlans, removePlan } = usePlanStore();
+  const { isLoading, error } = useRecommendedPlans();
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
-  const { refetch, isPending, error } = useRecommendedPlans();
-
-  useEffect(() => {
-    if (isSurveyed) {
-      refetch();
-    }
-  }, [isSurveyed]);
+  const { open } = useChatBotStore();
 
   const hasHydrated = usePlanStoreRehydrated();
-  const showSkeleton = !hasHydrated || isPending;
+  const showSkeleton = !hasHydrated || isLoading;
 
   if (error) return <div>에러 발생!</div>;
 
@@ -54,8 +49,8 @@ export default function RecommendedPlanList() {
           <div className="text-center">
             <p className="text-gray-500 mb-4 text-lg">아직 추천받은 요금제가 없어요.</p>
             <button
-              onClick={() => window.scrollTo({ top: 1, behavior: "smooth" })}
-              className="bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
+              onClick={open}
+              className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
             >
               챗봇으로 추천받기
             </button>

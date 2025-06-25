@@ -4,8 +4,9 @@ import { ageTestResult } from "@/services/ageTest";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import ShareButton from "@/components/common/button/ShareButton";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { PlanDipCard } from "../../explore-plans/PlanDipCard";
+import { saveRecommendedPlan } from "@/lib/recommendationStorage";
 
 interface ResultType {
   age: string;
@@ -41,6 +42,12 @@ export default function AgeTestResult() {
     queryFn: () => ageTestResult(userAge, resultAge),
   });
   const router = useRouter();
+
+  useEffect(() => {
+    if (data?.recommendPlan?.name) {
+      saveRecommendedPlan(data.recommendPlan.name);
+    }
+  }, [data?.recommendPlan?.name]);
 
   const handleClickRetry = useCallback(() => {
     router.push("/test-plan-age");

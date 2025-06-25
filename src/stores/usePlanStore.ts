@@ -1,18 +1,37 @@
 import { create } from "zustand";
-
 import { persist } from "zustand/middleware";
 import type { Plan } from "@/types/plan";
+import type { PersistStorage } from "zustand/middleware";
 
-interface PlanStore {
+// 저장 대상 타입만 추출
+type PlanStorePersisted = {
   isCompareWithMine: boolean;
+  selectedPlans: Plan[];
+  recommendedPlans: Plan[];
+};
+
+// sessionStorage 커스텀 정의
+const sessionStoragePersist: PersistStorage<PlanStorePersisted> = {
+  getItem: (name) => {
+    const value = sessionStorage.getItem(name);
+    return value ? JSON.parse(value) : null;
+  },
+  setItem: (name, value) => {
+    sessionStorage.setItem(name, JSON.stringify(value));
+  },
+  removeItem: (name) => {
+    sessionStorage.removeItem(name);
+  },
+};
+
+interface PlanStore extends PlanStorePersisted {
   setIsCompareWithMine: (flag: boolean) => void;
 
-  selectedPlans: Plan[];
-  setSelectedPlans: (plans: Plan[]) => void;
   togglePlanSelection: (plan: Plan) => void;
   clearSelectedPlans: () => void;
 
-  recommendedPlans: Plan[];
+  setSelectedPlans: (plans: Plan[]) => void;
+
   setRecommendedPlans: (plans: Plan[]) => void;
   removePlan: (title: string) => void;
 
@@ -41,7 +60,6 @@ export const usePlanStore = create<PlanStore>()(
         let newPlans: Plan[];
 
         if (isAlreadySelected) {
-          // 같은 source인 plan만 제거
           newPlans = selectedPlans.filter(
             (p) => !(p.name === plan.name && p.source === plan.source)
           );
@@ -77,6 +95,7 @@ export const usePlanStore = create<PlanStore>()(
     }),
     {
       name: "plan-store",
+      storage: sessionStoragePersist,
       partialize: (state) => ({
         isCompareWithMine: state.isCompareWithMine,
         selectedPlans: state.selectedPlans,

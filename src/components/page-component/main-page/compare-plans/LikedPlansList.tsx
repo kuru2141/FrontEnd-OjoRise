@@ -14,12 +14,14 @@ import { useLikedPlans } from "@/hooks/useLikedPlans";
 import { useEffect } from "react";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
+import { useRouter } from "next/navigation";
 
 export default function LikedPlansList() {
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const { likedPlans, removeLikedPlan } = usePlanStore();
-  const { refetch, isPending } = useLikedPlans();
+  const { refetch, isLoading } = useLikedPlans();
   const hasHydrated = usePlanStoreRehydrated();
+  const router = useRouter();
 
   useEffect(() => {
     if (isSurveyed) {
@@ -27,17 +29,13 @@ export default function LikedPlansList() {
     }
   }, [isSurveyed, refetch]);
 
-  const showSkeleton = !hasHydrated || isPending;
+  const showSkeleton = !hasHydrated || isLoading;
 
   return (
     <section className="w-full mx-auto px-4 mb-9">
       <h2 className="text-2xl font-bold">관심 요금제</h2>
       <div className="relative min-h-[400px] flex items-center justify-center">
-        {isSurveyed === false ? (
-          <div className="text-center">
-            <p className="text-gray-500 mb-4 text-lg">로그인 후 사용 가능한 서비스입니다.</p>
-          </div>
-        ) : showSkeleton ? (
+        {showSkeleton ? (
           <Carousel className="w-full overflow-visible">
             <CarouselContent className="flex -mx-[1px]">
               {Array.from({ length: 2 }).map((_, index) => (
@@ -56,8 +54,8 @@ export default function LikedPlansList() {
           <div className="text-center">
             <p className="text-gray-500 mb-4 text-lg">찜한 요금제가 없습니다!</p>
             <button
-              onClick={() => window.scrollTo({ top: 1, behavior: "smooth" })}
-              className="bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
+              onClick={() => router.push("/explore-plans")}
+              className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
             >
               요금제 둘러보기
             </button>
