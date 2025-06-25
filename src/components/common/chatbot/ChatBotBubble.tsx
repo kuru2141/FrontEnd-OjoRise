@@ -17,6 +17,7 @@ interface ChatBotBubbleProp {
   nextTeller: string;
   prevTeller: string;
   zoom: boolean;
+  isMobile: boolean;
 }
 
 function ChatBotBubble({
@@ -27,6 +28,7 @@ function ChatBotBubble({
   prevTeller,
   zoom,
   children,
+  isMobile,
 }: PropsWithChildren<ChatBotBubbleProp>) {
   type ChatBlock = string | File | { name: string; link: string };
   const isLink = (item: ChatBlock): item is { name: string; link: string } =>
@@ -52,7 +54,7 @@ function ChatBotBubble({
     block.length === 0 && mergedBlocks.length === 1 && mergedBlocks[0].length === 0;
 
   return (
-    <>
+    <div>
       {mergedBlocks.map((group, groupIdx) => {
         const isPlanGroup = group.some((v) => isLink(v));
         const titleIndex = isPlanGroup ? group.findIndex((v) => typeof v === "string") : -1;
@@ -62,7 +64,7 @@ function ChatBotBubble({
             key={`bubble-${groupIdx}`}
             className={`flex ${
               teller === "user" ? "flex-row-reverse items-end" : "flex-row"
-            } w-full`}
+            } w-full mb-2`}
           >
             <div className="flex items-start">
               <div className="flex w-fit h-fit items-end gap-2">
@@ -105,7 +107,7 @@ function ChatBotBubble({
                       ? "rounded-b-[0px]"
                       : ""
                   }
-                  ${zoom ? "max-w-2/5" : "max-w-1/2"}`}
+                  ${zoom ? "max-w-2/5" : isMobile ? "max-w-full" : "max-w-2/3"}`}
               >
                 {groupIdx === 0 && showChildren && children}
 
@@ -174,7 +176,7 @@ function ChatBotBubble({
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
 

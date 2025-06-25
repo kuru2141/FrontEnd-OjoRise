@@ -52,14 +52,14 @@ function ChatBotModal() {
   const [initialLoginDialog, setInitialLoginDialog] = useState<DialogItem>({
     teller: "chatbot",
     block: [
-      "LG U+ 요금제 추천 도우미입니다.\n데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요",
+      "LG U+ 요금제 추천 도우미입니다.\n-데이터 사용량, 가족 결합 여부, 요금 고민 등을 말씀해 주세요.\n-\n-예:\n-- 유튜브를 자주 봐요\n-- 가족 결합할 예정이에요\n-- 무제한 요금제 쓰고 싶어요",
     ],
     time: new Date(),
   });
   const [initialGuestDialog, setInitialGuestDialog] = useState<DialogItem>({
     teller: "chatbot",
     block: [
-      "LG U+ 요금제 추천 도우미입니다.\n사진을 통해 데이터 사용량, 가족 결합 여부, 요금 고민 등을 보내주시면, 그에 맞는 요금제를 추천해드려요.\n\n예:\n- 유튜브를 자주 봐요\n- 가족 결합할 예정이에요\n- 무제한 요금제 쓰고 싶어요",
+      "LG U+ 요금제 추천 도우미입니다.\n-사진을 통해 데이터 사용량, 가족 결합 여부, 요금 고민 등을 보내주시면, 그에 맞는 요금제를 추천해드려요.\n-\n-예:\n-- 유튜브를 자주 봐요\n-- 가족 결합할 예정이에요\n-- 무제한 요금제 쓰고 싶어요",
     ],
     time: new Date(),
   });
@@ -455,8 +455,23 @@ function ChatBotModal() {
           </DrawerClose>
         </DrawerHeader>
 
-        <div className="scroll-hide flex-1 overflow-y-auto px-1 pt-4">
-          <ScrollArea className="flex flex-col gap-2 w-full pr-3">
+        <div className="flex justify-center w-full flex-1 scroll-hide overflow-y-auto px-1 pt-4">
+          <ScrollArea className={`${zoom && !isMobile ? "w-2/3" : "w-full"} gap-2 pr-3`}>
+            <div className="h-full flex justify-center items-center mb-4">
+              <div className="pl-3 md:pl-5 flex text-[14px] md:text-[16px] gap-4 md:gap-8 items-center w-full h-[80px] bg-white mb-4 rounded-[16px] ">
+                <div className="w-fit h-fit rounded-[100px] bg-(--gray-chatbot-backgroud)">
+                  <Image width={50} height={50} src="/chatbot.svg" alt="chatbot" />
+                </div>
+                <div className="w-full font-bold">
+                  <p className="flex items-center">
+                    챗봇 입력창의
+                    <Paperclip className="ml-1 mr-1 text-gray-40 w-[16px] h-[16px]" />
+                    버튼을 눌러
+                  </p>
+                  <p>요금제 캡쳐 이미지 기반의 추천을 받아보세요!</p>
+                </div>
+              </div>
+            </div>
             {dialog.map((item, i) => (
               <div key={`${item}-${i}`}>
                 <ChatBotBubble
@@ -467,6 +482,7 @@ function ChatBotModal() {
                   nextTeller={dialog[i + 1]?.teller}
                   prevTeller={dialog[i - 1]?.teller}
                   zoom={zoom}
+                  isMobile={isMobile}
                 >
                   {<LoadingLine />}
                 </ChatBotBubble>
