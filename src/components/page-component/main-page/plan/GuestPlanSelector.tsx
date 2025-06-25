@@ -2,7 +2,7 @@
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { SelectCarrier } from "@/components/common/survey/SelectCarrier";
@@ -10,11 +10,29 @@ import { PlanCombo } from "@/components/common/survey/PlanCombo";
 import { useGetGuestPlan } from "@/hooks/useGetMyPlan";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { numberParsing } from "@/utils/numberParsing";
+import { useMyPlanStore } from "@/stores/myPlanStore";
 
 export default function GuestPlanSelector() {
     const [open, setOpen] = useState(false);
-    const {telecomProvider, planName} = useSurveyStore().data;
+    const telecomProvider = useSurveyStore(state => state.data.telecomProvider);
+    const planName = useSurveyStore(state => state.data.planName);
+    const {setMyPlan} = useMyPlanStore();
+    const {setField} = useSurveyStore();
     const {data} = useGetGuestPlan({telecomProvider: telecomProvider, planName: planName});
+    const sessionTelecomProvider = sessionStorage.getItem('telecomProvider');
+    const sessionPlanName = sessionStorage.getItem('planName');
+
+    useEffect(() => {
+       if(sessionTelecomProvider && sessionPlanName){
+        setField('telecomProvider', sessionTelecomProvider);
+        setField('planName', sessionPlanName);
+       }
+    },[]);
+
+    useEffect(() => {
+        sessionStorage.setItem('telecomProvider', telecomProvider);
+        sessionStorage.setItem('planName', planName);
+    },[data]);
 
     const parsingMonthlyFee = numberParsing(String(data?.monthlyFee), 'monthlyFee');
     const parsingVoiceCallPrice =  numberParsing(String(data?.voiceCallPrice), 'voiceCallPrice');
@@ -22,6 +40,20 @@ export default function GuestPlanSelector() {
     const parsingThrottleSpeedKbps = numberParsing(String(data?.throttleSpeedKbps), 'throttleSpeedKbps');
     const parsingbaseDataGb = numberParsing(String(data?.baseDataGb), 'baseDataGb');
     const parsingSharingDataGb = numberParsing(String(data?.sharingDataGb), 'sharingDataGb');
+    const parsingBenefit = numberParsing(String(data?.benefit), 'benefit');
+
+    useEffect(() => {
+        setMyPlan({
+          name: data?.name ?? "",
+          baseDataGb: data?.baseDataGb ?? "",
+          monthlyFee: data?.monthlyFee ?? 0,
+          voiceCallPrice: data?.voiceCallPrice ?? "",
+          sharingDataGb: data?.sharingDataGb ?? "",
+          sms: data?.sms ?? "",
+          benefit: data?.benefit ? parsingBenefit : "",
+        });
+      }, [data, parsingBenefit, setMyPlan]);
+
 
     return (
         <div className="w-full md:w-[758px] bg-[#FAFAFA] rounded-xl shadow px-4 py-6 flex flex-col gap-6">
