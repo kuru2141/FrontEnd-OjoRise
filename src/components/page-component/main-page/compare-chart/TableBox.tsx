@@ -4,10 +4,24 @@ import { presentParsing } from "@/utils/presentParsing";
 import Image from "next/image";
 import React, { JSX, memo } from "react";
 import { useBaseAndCompareItem } from "./comparePlan";
+import { ComparePlan } from "@/types/plan";
+
+export function isPlanDefault(plan: ComparePlan) {
+  return (
+    plan.name === "" &&
+    plan.monthlyFee === 0 &&
+    plan.baseDataGb === "" &&
+    plan.voiceCallPrice === "" &&
+    plan.sharingDataGb === "" &&
+    plan.sms === "" &&
+    plan.benefit === ""
+  );
+}
 
 function TableBox() {
   const baseItem = useBaseAndCompareItem().baseItem;
   const compareItem  = useBaseAndCompareItem().compareItem;
+  const isDefaultPlan = isPlanDefault(baseItem) && isPlanDefault(compareItem);
   
   const labelList = {
     name: '이름',
@@ -95,6 +109,8 @@ function TableBox() {
 
   return (
     <>
+    {isDefaultPlan ? <></> :     
+    <>
     <table className="w-full h-[60px] table-fixed text-center">
     <thead>
       <tr className="text-sm font-bold md:text-lg">
@@ -124,6 +140,8 @@ function TableBox() {
           </tbody>
         </table>
       </div>
+    </>}
+
     </>
   )
 }
