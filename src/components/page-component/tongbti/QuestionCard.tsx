@@ -4,35 +4,98 @@ import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { fetchTongBTIInfo, saveTongBTIResult, sendRecommendations } from "@/services/tongbti";
+import { useResultStore } from "@/stores/useResultStore";
+import { saveRecommendedPlan } from "@/lib/recommendationStorage";
+
+const dots = [0, 1, 2];
+
+function AnalyzingDots() {
+  return (
+    <div className="flex items-center justify-center gap-1 mb-2">
+      {dots.map((i) => (
+        <motion.span
+          key={i}
+          className="w-2 h-2 bg-[#FF008C] rounded-full"
+          animate={{ opacity: [0.3, 1, 0.3] }}
+          transition={{
+            repeat: Infinity,
+            duration: 1.2,
+            delay: i * 0.2,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function QuestionCard() {
-  const { currentStep, questions, selectAnswer, goToNext } = useTongBTIStore();
+  const { currentStep, questions, selectAnswer, goToNext, calculateResult } = useTongBTIStore();
+  const { setResultInfo } = useResultStore();
   const router = useRouter();
   const [selected, setSelected] = useState<number | null>(null);
   const question = questions[currentStep - 1];
   const totalQuestions = questions.length;
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     setSelected(null);
   }, [currentStep]);
 
-  const handleClick = (answerIndex: number) => {
-    if (selected !== null) return;
+  const handleClick = async (answerIndex: number) => {
+    if (selected !== null || isAnalyzing) return;
 
     setSelected(answerIndex);
     selectAnswer(question.questionId, answerIndex);
 
     const isLast = currentStep === totalQuestions;
 
-    setTimeout(() => {
-      isLast ? router.push("/tongbti/loading") : goToNext();
-    }, 200);
+    if (isLast) {
+      setIsAnalyzing(true); // 분석중 UI 보여주기
+
+      try {
+        const { resultKey, resultType } = calculateResult();
+        const info = await fetchTongBTIInfo(resultKey);
+
+        setResultInfo(info);
+        if (info.planName) {
+          saveRecommendedPlan(info.planName);
+        }
+
+        const token = sessionStorage.getItem("accessToken");
+        if (token && resultType) {
+          await saveTongBTIResult(resultType);
+
+          const planNames = info.planName ? [info.planName] : [];
+          if (planNames.length > 0) {
+            await sendRecommendations(planNames);
+          }
+        }
+
+        router.push(`/tongbti/result/${resultKey}`);
+      } catch (err) {
+        alert((err as Error).message);
+      }
+    } else {
+      setTimeout(() => {
+        goToNext();
+      }, 200);
+    }
   };
 
   if (!question) return <div>로딩 중...</div>;
 
   return (
     <div className="relative h-screen bg-white flex flex-col items-center justify-center px-4 text-center font-pretend">
+      {isAnalyzing && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+          <div className="w-[150px] h-[150px] rounded-[10px] bg-[#222022]/80 flex flex-col items-center justify-center text-white text-sm font-semibold gap-2">
+            <AnalyzingDots />
+            분석 중
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col items-center gap-y-8 w-full">
         {/* 진행도 바 */}
         <div className="flex flex-col items-center">

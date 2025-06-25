@@ -8,14 +8,15 @@ import { convertToCamelCase } from "@/utils/convertCase";
 
 export default function TongBTIPage() {
   const { data, isLoading, error } = useFetchQuestions();
-  const { setQuestions } = useTongBTIStore();
-
+  const { setQuestions, reset } = useTongBTIStore();
+  console.log("🔥 data from API:", data);
   useEffect(() => {
     if (data) {
+      reset();
       const camelCaseQuestions = data.map(convertToCamelCase);
       setQuestions(camelCaseQuestions);
     }
-  }, [data, setQuestions]);
+  }, [data, setQuestions, reset]);
 
   if (isLoading) {
     return (
