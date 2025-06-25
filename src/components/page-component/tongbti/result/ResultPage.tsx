@@ -111,11 +111,7 @@ export default function ResultPage() {
                   className="p-0 border-none bg-transparent hover:opacity-80 transition"
                   aria-label="링크 복사"
                 >
-                  <img
-                    src="/linkButton.png" // ✅ 경로는 public 기준
-                    alt="링크 복사"
-                    className="w-12 h-12 object-contain"
-                  />
+                  <img src="/linkButton.png" alt="링크 복사" className="w-12 h-12 object-contain" />
                 </button>
               </div>
             </div>
