@@ -90,7 +90,7 @@ export const StepItem = ({
         )}
       </div>
       <div className="ml-4 ">
-        <p className="my-1.5 font-bold text-[20px]" ref={stepRef}>
+        <p className="my-1.5 font-bold text-[16px] sm:text-[20px]" ref={stepRef}>
           {label}
         </p>
         {showContent && (
@@ -100,7 +100,12 @@ export const StepItem = ({
             {isEditMode ? (
               isLast && (
                 <div className="flex justify-between mt-8 mb-10 w-full">
-                  <Button variant="back" size="survey" onClick={handleCancel}>
+                  <Button
+                    variant="back"
+                    size="survey"
+                    onClick={handleCancel}
+                    className="h-[45px] w-[100px] sm:h-[48px] sm:w-[119px]"
+                  >
                     취소
                   </Button>
                   <Button
@@ -108,6 +113,7 @@ export const StepItem = ({
                     size="survey"
                     onClick={handleEditClick}
                     disabled={isNextDisabled}
+                    className="h-[45px] w-[100px] sm:h-[48px] sm:w-[119px]"
                   >
                     수정
                   </Button>
