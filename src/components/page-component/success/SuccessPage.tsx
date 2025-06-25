@@ -28,8 +28,8 @@ export default function SuccessPageRoute() {
 
   useEffect(() => {
     if (!isLoading && isSurveyed !== undefined) {
-      if (isSurveyed) router.push("/");
-      else router.push("/signup");
+      if (isSurveyed) router.replace("/");
+      else router.replace("/signup");
     }
   }, [isSurveyed, isLoading, router]);
 
