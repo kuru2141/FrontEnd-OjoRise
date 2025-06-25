@@ -12,13 +12,11 @@ import PlanCard from "./PlanCard";
 import { useRecommendedPlans } from "@/hooks/useRecommendedPlans";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
-import { useAuthStore } from "@/stores/authStore";
 import { useChatBotStore } from "@/stores/chatBotStore";
 
 export default function RecommendedPlanList() {
   const { recommendedPlans, removePlan } = usePlanStore();
   const { isLoading, error } = useRecommendedPlans();
-  const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const { open } = useChatBotStore();
 
   const hasHydrated = usePlanStoreRehydrated();
