@@ -25,12 +25,14 @@ import { useSurveyStore } from "@/stores/surveyStore";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { Fragment, memo, useEffect, useState } from "react";
+import { useGetMyPlan } from "@/hooks/useGetMyPlan";
 
 interface PlanInfoProps {
   isLogin: boolean;
+  accessToken: string | null;
 }
 
-function PlanInfo({ isLogin }: PlanInfoProps) {
+function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   const [planName, setPlanName] = useState<string>(sessionStorage.getItem("planName") || "");
   const { setInput, input } = useSurveyStore();
   const [selectedTelecomProvider, setSelectedTelecomProvider] = useState<string>(
@@ -38,11 +40,7 @@ function PlanInfo({ isLogin }: PlanInfoProps) {
   );
   const [open, setOpen] = useState(false);
 
-  const { data: userData } = useQuery({
-    queryKey: ["getMyPlans"],
-    queryFn: getMyPlan,
-    enabled: !!isLogin,
-  });
+  const { data: userData } = useGetMyPlan(accessToken);
   const { data: userName } = useQuery({
     queryKey: ["user/name"],
     queryFn: getName,

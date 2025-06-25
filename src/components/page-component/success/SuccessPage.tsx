@@ -11,7 +11,7 @@ export default function SuccessPageRoute() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const accessToken = searchParams.get("accessToken");
-  const { data: isSurveyed, isLoading } = useGetIsSurveyedQuery();
+  const { data: isSurveyed, isLoading } = useGetIsSurveyedQuery(accessToken);
 
   useEffect(() => {
     if (accessToken) {
@@ -28,8 +28,8 @@ export default function SuccessPageRoute() {
 
   useEffect(() => {
     if (!isLoading && isSurveyed !== undefined) {
-      if (isSurveyed) router.push("/");
-      else router.push("/signup");
+      if (isSurveyed) router.replace("/");
+      else router.replace("/signup");
     }
   }, [isSurveyed, isLoading, router]);
 

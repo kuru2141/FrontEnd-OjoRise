@@ -3,11 +3,17 @@
 import VerticalLinearStepper from "@/components/common/survey/VerticalLinearStepper";
 import { useSurveyResult } from "@/hooks/useSurveyResult";
 import { useSurveyStore } from "@/stores/surveyStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { typedEntries } from "@/utils/typeEntries";
 
 const EditSurveyPage = () => {
-  const { data: surveyData } = useSurveyResult();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAccessToken(sessionStorage.getItem("accessToken"));
+    }
+  }, []);
+  const { data: surveyData } = useSurveyResult(accessToken);
 
   useEffect(() => {
     if (surveyData) {

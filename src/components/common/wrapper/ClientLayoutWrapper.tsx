@@ -10,10 +10,10 @@ import { isAccessTokenExpired } from "@/lib/auth";
 import { useRefreshToken } from "@/hooks/useRefreshToken";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
-  const { isSurveyed, setIsSurveyed } = useAuthStore();
-  const { data: survey } = useGetIsSurveyedQuery();
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const { refetch } = useRefreshToken();
+  const { isSurveyed, setIsSurveyed } = useAuthStore();
+  const { data: survey } = useGetIsSurveyedQuery(accessToken);
+  const { refetch } = useRefreshToken(accessToken);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -29,8 +29,11 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       refetch().then((res) => {
         if (res.data?.accessToken) {
           sessionStorage.setItem("accessToken", res.data.accessToken);
+          setAccessToken(res.data.accessToken);
           console.log("토큰 재발급");
         } else {
+          sessionStorage.removeItem("accessToken");
+          setAccessToken(null);
           console.error("토큰 재발급 실패");
         }
       });
@@ -41,7 +44,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     const token = sessionStorage.getItem("accessToken");
 
     if (token && isSurveyed === null && survey !== undefined) setIsSurveyed(survey);
-  }, [survey, isSurveyed, setIsSurveyed]);
+  }, [survey, isSurveyed, setIsSurveyed, accessToken]);
 
   return (
     <Fragment>

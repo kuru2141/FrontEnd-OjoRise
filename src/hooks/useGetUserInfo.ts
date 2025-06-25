@@ -1,10 +1,11 @@
 import { getIsSurveyed, getName } from "@/services/auth";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetIsSurveyedQuery = () => {
+export const useGetIsSurveyedQuery = (accessToken: string | null) => {
   return useQuery<boolean, Error>({
     queryKey: ["user"],
     queryFn: getIsSurveyed,
+    enabled: !!accessToken
   });
 };
 
