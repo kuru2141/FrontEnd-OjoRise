@@ -146,7 +146,7 @@
 @media (max-width: 768px) {
   html,
   body {
-    overflow-y: scroll; /* 스크롤 기능은 유지 */
+    /* overflow-y: scroll; 스크롤 기능은 유지 */
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
