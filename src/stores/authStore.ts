@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { PersistStorage, StorageValue } from "zustand/middleware";
+import type { PersistStorage } from "zustand/middleware";
 import type { MyPlan } from "@/types/plan";
 
 // 🔹 저장할 상태만 분리 (함수 제외)

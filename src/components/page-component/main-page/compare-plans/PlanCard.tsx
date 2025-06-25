@@ -15,7 +15,7 @@ export default function PlanCard(props: Plan) {
     sharingDataGb,
     monthlyFee,
     voiceCallPrice,
-    sms, 
+    sms,
     benefit,
     description,
     mobileType,
@@ -48,8 +48,8 @@ export default function PlanCard(props: Plan) {
   return (
     <div
       onClick={handleSelect}
-      className={`relative w-full max-w-[320px] h-[340px] rounded-2xl border-2 p-6 border-gray-200 bg-white flex flex-col gap-3 cursor-pointer transition-colors duration-200 ease-in-out ${
-        isSelected ? "border-pink-500" : " shadow-md hover:shadow-lg"
+      className={`relative w-full m-3 max-w-[320px] h-[340px] rounded-2xl border-2 p-6 border-gray-20 bg-white flex flex-col gap-3 cursor-pointer transition-colors duration-200 ease-in-out ${
+        isSelected ? "shadow-soft-pink" : "hover:shadow-soft-pink"
       }`}
     >
       {onRemove && (
@@ -71,7 +71,7 @@ export default function PlanCard(props: Plan) {
               console.error("삭제 실패:", err);
             }
           }}
-          className="absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10"
+          className="absolute top-2 right-3 text-gray-400 hover:text-red-500 z-10"
         >
           ✕
         </button>

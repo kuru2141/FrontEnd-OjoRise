@@ -26,6 +26,7 @@ import { isSameFile } from "@/utils/isSameFile";
 import { api } from "@/lib/axios";
 import Image from "next/image";
 import { useChatBotStore } from "@/stores/chatBotStore";
+import { saveRecommendedPlan } from "@/lib/recommendationStorage";
 
 interface DialogItem {
   teller: "user" | "chatbot";
@@ -200,7 +201,7 @@ function ChatBotModal() {
           : [...prev.slice(0, -1), newEntry];
       });
 
-      const res = await fetch(`${process.env.PYTHON_SERVER_URL}/search`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_PYTHON_SERVER_URL}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: message, userProfile, history, ambiguousCount }),
@@ -228,17 +229,21 @@ function ChatBotModal() {
 
           if (itemsRef.current) {
             const plans = itemsRef.current.map((item) => item.name);
-            try {
-              const res = await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recommendations`, {
-                method: "POST",
-                data: { planNames: plans },
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-              console.log(res.status);
-            } catch (error) {
-              console.log(error);
+            if (isLoggedIn) {
+              try {
+                const res = await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recommendations`, {
+                  method: "POST",
+                  data: { planNames: plans },
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                });
+                console.log(res.status);
+              } catch (error) {
+                console.log(error);
+              }
+            } else {
+              plans.map((item) => saveRecommendedPlan(item));
             }
           }
 
@@ -375,6 +380,7 @@ function ChatBotModal() {
     currentTextRef.current = "";
     jsonParsedRef.current = false;
     isNewLineRef.current = true;
+    setHistory([]);
     setAmbiguousCount(0);
   }, [initialGuestDialog, initialLoginDialog, isLoggedIn]);
 
@@ -421,7 +427,7 @@ function ChatBotModal() {
 
       mutate(formData);
     }
-  }, [imgFile, mutate]);
+  }, [imgFile]);
 
   const { isOpen, open, close } = useChatBotStore();
 

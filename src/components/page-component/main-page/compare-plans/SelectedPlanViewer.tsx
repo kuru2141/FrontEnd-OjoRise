@@ -30,14 +30,16 @@ export default function SelectedPlanViewer() {
       <h2 className="text-2xl font-bold mb-4">선택한 요금제</h2>
       {selectedPlans.length === 1 ? (
         <div className="flex justify-start w-full">
-          <div className="min-w-[330px] px-10 py-6 rounded-xl bg-white text-xl font-semibold text-center w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-            {selectedPlans[0]?.name}
+          <div className="min-w-[330px] px-8 py-4 rounded-xl bg-white w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+            <div className="text-gray-40 text-sm">기준 요금제</div>
+            <div className="text-xl font-semibold">{selectedPlans[0]?.name}</div>
           </div>
         </div>
       ) : selectedPlans.length === 2 ? (
         <div className="flex items-center justify-center gap-2">
-          <div className="min-w-[330px] px-10 py-6 rounded-xl bg-white text-xl font-semibold text-center w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-            {selectedPlans[0]?.name}
+          <div className="min-w-[330px] px-8 py-4 rounded-xl bg-white w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+            <div className="text-gray-40 text-sm">기준 요금제</div>
+            <div className="text-xl font-semibold">{selectedPlans[0]?.name}</div>
           </div>
 
           <button
@@ -48,8 +50,9 @@ export default function SelectedPlanViewer() {
             <ArrowLeftRight size={24} />
           </button>
 
-          <div className="min-w-[330px] px-10 py-6 rounded-xl bg-white text-xl font-semibold text-center w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-            {selectedPlans[1]?.name}
+          <div className="min-w-[330px] px-8 py-4 rounded-xl bg-white w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+            <div className="text-gray-40 text-sm">비교 요금제</div>
+            <div className="text-xl font-semibold">{selectedPlans[1]?.name}</div>
           </div>
         </div>
       ) : (

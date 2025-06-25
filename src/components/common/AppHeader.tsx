@@ -70,38 +70,34 @@ function AppHeader() {
         </Link>
 
         <div className="hidden md:flex items-center space-x-[50px]">
-          {isSurveyed !== null ? (
-            <Fragment>
-              <Link
-                href="/explore-plans"
-                className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
-              >
-                요금제 둘러보기
-              </Link>
-              {isSurveyed ? (
-                <Fragment>
-                  <Link
-                    href="/mypage"
-                    className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
-                  >
-                    마이페이지
-                  </Link>
-                  <button
-                    onClick={() => logoutMutation.mutate()}
-                    className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
-                  >
-                    로그아웃
-                  </button>
-                </Fragment>
-              ) : (
-                <button onClick={handleKakaoLogin}>
-                  <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45} />
+          <Fragment>
+            <Link
+              href="/explore-plans"
+              className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+            >
+              요금제 둘러보기
+            </Link>
+            {isSurveyed ? (
+              <Fragment>
+                <Link
+                  href="/mypage"
+                  className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                >
+                  마이페이지
+                </Link>
+                <button
+                  onClick={() => logoutMutation.mutate()}
+                  className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                >
+                  로그아웃
                 </button>
-              )}
-            </Fragment>
-          ) : (
-            <></>
-          )}
+              </Fragment>
+            ) : (
+              <button onClick={handleKakaoLogin}>
+                <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45} />
+              </button>
+            )}
+          </Fragment>
         </div>
 
         <div className="md:hidden flex items-center">
