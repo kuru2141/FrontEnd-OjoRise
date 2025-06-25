@@ -2,7 +2,7 @@
 
 import { useSurvey } from "@/hooks/useSurvey";
 import { useTongBTI } from "@/hooks/useTongBTI";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WithdrawModal from "./WithdrawModal";
 import { useWithdraw } from "@/hooks/useWithdraw";
 import LinearProgress from "@/components/common/progress/LinearProgress";
@@ -19,9 +19,16 @@ const MyPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const { data: survey, isPending: isSurveyPending, isError: isSurveyError } = useSurvey();
-  const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI();
-  const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAccessToken(sessionStorage.getItem("accessToken"));
+    }
+  }, []);
+
+  const { data: survey, isPending: isSurveyPending, isError: isSurveyError } = useSurvey(accessToken);
+  const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI(accessToken);
+  const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge(accessToken);
   const { mutate: withdraw } = useWithdraw();
   const { mutate: logout } = useLogout();
   const { data: username } = useGetName();

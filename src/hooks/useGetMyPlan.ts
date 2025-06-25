@@ -2,10 +2,11 @@ import { getGuestPlan, getMyPlan } from "@/services/myPlan";
 import { guestPlan, MyPlan } from "@/types/plan";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetMyPlan = () => {
+export const useGetMyPlan = (accessToken: string | null) => {
     return(useQuery<MyPlan, Error>({
         queryKey: ['getMyPlans'],
         queryFn: getMyPlan,
+        enabled: !!accessToken,
       }));
 } 
 

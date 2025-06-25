@@ -11,7 +11,7 @@ export default function SuccessPageRoute() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const accessToken = searchParams.get("accessToken");
-  const { data: isSurveyed, isLoading } = useGetIsSurveyedQuery();
+  const { data: isSurveyed, isLoading } = useGetIsSurveyedQuery(accessToken);
 
   useEffect(() => {
     if (accessToken) {
