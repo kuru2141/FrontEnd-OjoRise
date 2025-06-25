@@ -13,21 +13,14 @@ import { useRecommendedPlans } from "@/hooks/useRecommendedPlans";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useAuthStore } from "@/stores/authStore";
-import { useEffect } from "react";
 
 export default function RecommendedPlanList() {
   const { recommendedPlans, removePlan } = usePlanStore();
+  const { isLoading, error } = useRecommendedPlans();
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
-  const { refetch, isPending, error } = useRecommendedPlans();
-
-  useEffect(() => {
-    if (isSurveyed) {
-      refetch();
-    }
-  }, [isSurveyed]);
 
   const hasHydrated = usePlanStoreRehydrated();
-  const showSkeleton = !hasHydrated || isPending;
+  const showSkeleton = !hasHydrated || isLoading;
 
   if (error) return <div>에러 발생!</div>;
 
