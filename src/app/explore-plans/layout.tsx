@@ -1,3 +1,4 @@
+import FloatingActionButton from "@/components/common/FloatingActionButton";
 import Footer from "@/components/common/Footer";
 import ClientLayoutWrapper from "@/components/common/wrapper/ClientLayoutWrapper";
 
@@ -9,6 +10,7 @@ export default function MainLayout({
   return (
     <ClientLayoutWrapper>
       {children}
+      <FloatingActionButton />
       <Footer />
     </ClientLayoutWrapper>
   );
