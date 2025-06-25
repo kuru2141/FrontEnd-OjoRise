@@ -1,9 +1,20 @@
 "use client";
 
 import { usePlanStore } from "@/stores/usePlanStore";
+import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 
 export default function CompareModeToggle() {
   const { isCompareWithMine, setIsCompareWithMine } = usePlanStore();
+  const rehydrated = usePlanStoreRehydrated();
+
+  if (!rehydrated) {
+    return (
+      <div className="flex gap-3 mb-8">
+        <div className="rounded-full px-4 py-3 bg-gray-200 animate-pulse w-[150px] h-[42px]" />
+        <div className="rounded-full px-4 py-3 bg-gray-200 animate-pulse w-[180px] h-[42px]" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-3 mb-8">

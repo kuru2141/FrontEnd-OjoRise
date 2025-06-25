@@ -26,7 +26,7 @@ function ScrollChart() {
   }, [isCompareWithMine, selectedPlans, isSelectedFull]);
   
   return (
-    <div ref={scrollRef} className="flex flex-col g-[45px] w-full" >
+    <div ref={scrollRef} className="flex flex-col md:g-[45px] w-full" >
       <RadarChart />
       <TableBox />
   </div>
