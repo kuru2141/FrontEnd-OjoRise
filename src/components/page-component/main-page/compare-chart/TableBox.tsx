@@ -7,15 +7,7 @@ import { useBaseAndCompareItem } from "./comparePlan";
 import { ComparePlan } from "@/types/plan";
 
 export function isPlanDefault(plan: ComparePlan) {
-  return (
-    plan.name === "" &&
-    plan.monthlyFee === 0 &&
-    plan.baseDataGb === "" &&
-    plan.voiceCallPrice === "" &&
-    plan.sharingDataGb === "" &&
-    plan.sms === "" &&
-    plan.benefit === ""
-  );
+  return Object.values(plan).every((item) => item === "" || item === 0);
 }
 
 function TableBox() {

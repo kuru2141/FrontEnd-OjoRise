@@ -210,7 +210,7 @@ function RadarChart() {
     return () => clearTimeout(timeout);
   }, [chartKey, compareData, data]);
 
-  if (!baseReady || !data) {
+  if (!(baseReady && data)) {
     return (
       <div ref={chartRef} className="h-[300px] md:h-[432px]">
         <div className="w-full h-full rounded-xl animate-pulse flex align-center justify-center bg-gray-10 text-center text-sm md:text-lg ">
