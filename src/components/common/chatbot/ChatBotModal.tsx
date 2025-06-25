@@ -26,8 +26,9 @@ import { UserProfile } from "@/types/UserProfile";
 import { ResultItem } from "@/types/ocr";
 import { useOCRToGptMutation } from "@/hooks/useOCRToGptMutation";
 import { isSameFile } from "@/utils/isSameFile";
-import {api} from "@/lib/axios";
+import { api } from "@/lib/axios";
 import Image from "next/image";
+import { useChatBotStore } from "@/stores/chatBotStore";
 
 interface DialogItem {
   teller: "user" | "chatbot";
@@ -407,13 +408,13 @@ function ChatBotModal() {
     }
   }, [imgFile, mutate]);
 
+  const { isOpen, open, close } = useChatBotStore();
+
   return (
-    <Drawer modal={false}>
-      <DrawerTrigger asChild>
-        <Fab color="primary" aria-label="add">
-          <Image fill src="/chatbot.svg" alt="chatbot" />
-        </Fab>
-      </DrawerTrigger>
+    <Drawer open={isOpen} onOpenChange={(open) => !open && close()} modal={false}>
+      <Fab color="primary" aria-label="add" onClick={open}>
+        <Image fill src="/chatbot.svg" alt="chatbot" />
+      </Fab>
       <DrawerContent
         className={`${
           !isMobile
