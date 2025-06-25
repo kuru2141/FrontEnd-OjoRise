@@ -14,15 +14,16 @@ interface ItemSelectorProps {
   value: string;
   selectList: string[];
   handler: (value: string) => void;
+  placehoder: string;
   isSelect: boolean;
 }
 
-function ItemSelector({ selectList, value, handler, isSelect }: ItemSelectorProps) {
+function ItemSelector({ selectList, value, handler, isSelect, placehoder }: ItemSelectorProps) {
   if (isSelect)
     return (
       <Select onValueChange={handler} value={value}>
         <SelectTrigger className="text-5xl text-primary-medium border-primary-medium">
-          <SelectValue placeholder="통신사" className="h-[250px]" />
+          <SelectValue placeholder={placehoder} className="h-[250px]" />
         </SelectTrigger>
         <SelectContent>
           {selectList.map((item, i) => (
@@ -52,7 +53,7 @@ function ItemSelector({ selectList, value, handler, isSelect }: ItemSelectorProp
         if (typeof option === "string") return option;
         return (option as ApiPlan).name;
       }}
-      renderInput={(params) => <TextField {...params} variant="outlined" />}
+      renderInput={(params) => <TextField {...params} variant="outlined" label={placehoder} />}
       onChange={handleChange}
       onInputChange={handleChange}
       value={value}

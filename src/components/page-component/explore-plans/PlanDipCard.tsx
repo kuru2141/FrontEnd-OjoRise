@@ -6,26 +6,28 @@ import { useAuthStore } from "@/stores/authStore";
 
 interface PlanDipCardProps {
   plan: DipCardPlan;
-  isLiked: boolean;
-  onToggle: (planId: number) => void;
-  openModal: () => void;
+  isLiked?: boolean;
+  isRecommended?: boolean;
+  onToggle?: (planId: number) => void;
+  openModal?: () => void;
 }
 
-export const PlanDipCard = ({ plan, isLiked, onToggle, openModal }: PlanDipCardProps) => {
+export const PlanDipCard = ({
+  plan,
+  isLiked,
+  onToggle,
+  openModal,
+  isRecommended,
+}: PlanDipCardProps) => {
   const { isSurveyed } = useAuthStore();
 
-  const handleHeartClick = () => {
-    if (!isSurveyed) {
-      openModal(); // 설문 안 했으면 모달 열기
-      return;
-    }
-    onToggle(plan.planId); // 설문 했으면 찜 등록
-  };
+  const handleHeartClick = async () =>
+    !isSurveyed ? openModal?.() : await onToggle?.(plan.planId);
 
   const renderDataInfo = () => {
     if (plan.baseDataGb === "무제한") {
       return "데이터 무제한";
-    } else if (plan.baseDataGb === '0') {
+    } else if (plan.baseDataGb === "0") {
       return `데이터 매일 ${plan.dailyDataGb}GB`;
     } else {
       return `데이터 ${plan.baseDataGb}GB`;
@@ -33,7 +35,7 @@ export const PlanDipCard = ({ plan, isLiked, onToggle, openModal }: PlanDipCardP
   };
 
   const renderSharingInfo = () => {
-    if (plan.sharingDataGb === '0') return "";
+    if (plan.sharingDataGb === "0") return "";
     return ` + 테더링/쉐어링 ${plan.sharingDataGb}GB`;
   };
 
@@ -46,12 +48,14 @@ export const PlanDipCard = ({ plan, isLiked, onToggle, openModal }: PlanDipCardP
           </span>
           <span className="text-sm text-black font-medium">{plan.name}</span>
         </div>
-        <Heart
-          onClick={handleHeartClick}
-          className={`w-5 h-5 cursor-pointer ${
-            isLiked ? "text-primary-medium fill-primary-medium" : "text-gray-300"
-          }`}
-        />
+        {!isRecommended && (
+          <Heart
+            onClick={handleHeartClick}
+            className={`w-5 h-5 cursor-pointer ${
+              isLiked ? "text-primary-medium fill-primary-medium" : "text-gray-300"
+            }`}
+          />
+        )}
       </div>
 
       <div>

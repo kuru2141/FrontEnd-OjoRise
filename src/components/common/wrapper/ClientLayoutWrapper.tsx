@@ -2,10 +2,8 @@
 
 import { Fragment, useEffect, useState } from "react";
 import AppHeader from "@/components/common/AppHeader";
-import Footer from "@/components/common/Footer";
 import { ToastContainer } from "react-toastify";
 import LinearProgress from "@/components/common/progress/LinearProgress";
-import ChatBotModal from "@/components/common/chatbot/ChatBotModal";
 import { useAuthStore } from "@/stores/authStore";
 import { useGetIsSurveyedQuery } from "@/hooks/useGetUserInfo";
 import { isAccessTokenExpired } from "@/lib/auth";
@@ -51,10 +49,6 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       <LinearProgress colorClassName="bg-[black]" />
       <ToastContainer position="top-right" autoClose={2000} newestOnTop />
       {children}
-      <div className="fixed bottom-8 right-8">
-        <ChatBotModal />
-      </div>
-      <Footer />
     </Fragment>
   );
 }
