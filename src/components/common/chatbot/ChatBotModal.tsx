@@ -11,7 +11,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "../../ui/drawer";
 import { ChangeEvent, KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import ChatBotBubble from "./ChatBotBubble";
@@ -24,7 +23,6 @@ import { UserProfile } from "@/types/UserProfile";
 import { ResultItem } from "@/types/ocr";
 import { useOCRToGptMutation } from "@/hooks/useOCRToGptMutation";
 import { isSameFile } from "@/utils/isSameFile";
-import { api } from "@/lib/axios";
 import { api } from "@/lib/axios";
 import Image from "next/image";
 import { useChatBotStore } from "@/stores/chatBotStore";
