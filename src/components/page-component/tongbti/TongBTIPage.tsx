@@ -9,7 +9,7 @@ import { convertToCamelCase } from "@/utils/convertCase";
 export default function TongBTIPage() {
   const { data, isLoading, error } = useFetchQuestions();
   const { setQuestions, reset } = useTongBTIStore();
-  console.log("🔥 data from API:", data);
+
   useEffect(() => {
     if (data) {
       reset();

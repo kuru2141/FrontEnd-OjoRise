@@ -32,7 +32,7 @@ export default function ShareButton({ title, description, url, imageUrl }: Share
   return (
     <button
       onClick={handleKakaoShare}
-      className="w-15 h-15 p-0 flex items-center justify-center transition"
+      className="w-15 h-15 p-0 flex items-center justify-center transition hover:opacity-80 hover:cursor-pointer"
       aria-label="카카오 공유하기"
     >
       <img

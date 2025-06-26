@@ -67,6 +67,7 @@ export default function ResultPage() {
                   <PlanDipCard
                     isRecommended={true}
                     plan={{
+                      planId: resultInfo.planId,
                       name: resultInfo.planName,
                       baseDataGb: resultInfo.baseDataGb,
                       dailyDataGb: resultInfo.dailyDataGb,
@@ -108,7 +109,7 @@ export default function ResultPage() {
                       alert("링크가 클립보드에 복사되었습니다!");
                     });
                   }}
-                  className="p-0 border-none bg-transparent hover:opacity-80 transition"
+                  className="p-0 border-none bg-transparent hover:opacity-80 transition hover:cursor-pointer"
                   aria-label="링크 복사"
                 >
                   <img src="/linkButton.png" alt="링크 복사" className="w-12 h-12 object-contain" />
