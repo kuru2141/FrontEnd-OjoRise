@@ -72,6 +72,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     sharingDataGb,
     sms,
     voiceCallPrice,
+    setPlanReset,
   } = useMyPlanStore();
 
   useEffect(() => {
@@ -82,11 +83,16 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   const handleTelecomChange = (telecomProvider: string) => {
     setSelectedTelecomProvider(telecomProvider);
     sessionStorage.setItem("telecomProvider", telecomProvider);
+    setPlanName("");
+    sessionStorage.removeItem("my-plan-store");
+    sessionStorage.removeItem("planName");
+    setPlanReset();
   };
 
   const handlePlanSelect = (currentValue: string) => {
     setPlanName(currentValue);
     sessionStorage.setItem("planName", currentValue);
+    setOpen(false);
   };
 
   return (
@@ -152,8 +158,8 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
                     <ChevronDown className="text-gray-300 w-4 h-4" />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-[300px] p-0">
-                  <Command className="w-[260px]">
+                <PopoverContent className="p-0">
+                  <Command>
                     <CommandInput
                       placeholder="요금제"
                       value={input}
