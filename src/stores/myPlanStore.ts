@@ -35,7 +35,7 @@ export const useMyPlanStore = create<MyPlanState>()(
       benefit: "",
       telecomProvider: "LG",
       throttleSpeedKbps: 0,
-      eligibility: "ALL",
+      eligibility: "",
       setName: (name) => set({ name: name ?? "" }),
       setBaseDataGb: (baseDataGb) => set({ baseDataGb: baseDataGb ?? "" }),
       setMonthlyFee: (monthlyFee) => set({ monthlyFee: monthlyFee ?? 0 }),

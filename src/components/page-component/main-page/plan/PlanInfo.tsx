@@ -24,8 +24,9 @@ import { useMyPlanStore } from "@/stores/myPlanStore";
 import { useSurveyStore } from "@/stores/surveyStore";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
-import { Fragment, memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
+import { displayValue } from "@/utils/numberParsing";
 
 interface PlanInfoProps {
   isLogin: boolean;
@@ -65,7 +66,6 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     setMyPlan,
     name,
     baseDataGb,
-    telecomProvider,
     throttleSpeedKbps,
     eligibility,
     monthlyFee,
@@ -90,121 +90,138 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   };
 
   return (
-    <div className="w-full max-w-[758px] bg-[#FAFAFA] rounded-xl shadow px-6 py-6 flex flex-col gap-6">
+    <div className="w-full max-w-[758px] bg-gray-10 rounded-xl px-8 py-9 flex flex-col gap-6">
       {/* 상단 문장 */}
-      <div className="text-base md:text-lg font-semibold leading-6 md:leading-7">
-        {isLogin ? userName : "고객"}님께서 사용 중인 요금제는
-        {isLogin ? (
-          <Fragment>
-            <span className="text-[#EF3E7D] font-bold text-lg md:text-xl">{telecomProvider}</span>
-          </Fragment>
-        ) : (
-          <div>
-            <Select value={selectedTelecomProvider} onValueChange={handleTelecomChange}>
-              <SelectTrigger
-                className={cn(
-                  "w-[260px] text-[16px] px-3 py-6 cursor-pointer",
-                  "w-[136px] border border-[#F7ADC3] text-[18px] md:text-[20px] rounded-md  font-bold text-[#EF3E7D] bg-white"
-                )}
-              >
-                <SelectValue placeholder={"통신사"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>통신사</SelectLabel>
-                  <SelectItem value="LG" className="text-[16px]">
-                    LG U+
-                  </SelectItem>
-                  <SelectItem value="SKT" className="text-[16px]">
-                    SKT
-                  </SelectItem>
-                  <SelectItem value="KT" className="text-[16px]">
-                    KT
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+      {isLogin ? (
+        <div className="text-sm md:text-2xl font-semibold leading-6 md:leading-7">
+          {userName}님께서 사용 중인 요금제는
+          <div className="flex flex-col md:flex-row md:justify-between md:items-end w-full">
+            <div className="flex items-end">
+              <span className="text-primary-medium text-base md:text-3xl">{name}</span>
+              <span className="ml-1">입니다</span>
+            </div>
+            {/* 가격 */}
+            <div className="text-sm md:text-2xl font-bold">월 {monthlyFee.toLocaleString()}원</div>
           </div>
-        )}
-        의 <br />
-        {isLogin ? (
-          <span className="text-[#EF3E7D] font-bold text-lg md:text-xl">{name}</span>
-        ) : (
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <div
-                className={cn(
-                  "mt-1 text-[18px] md:text-[20px] font-bold text-[#EF3E7D] bg-white px-2 py-1 h-auto border border-[#F7ADC3] rounded-md inline-flex items-center gap-1 cursor-pointer"
-                )}
-              >
-                {planName ?? "요금제 선택"}
-                <ChevronDown className="w-4 h-4" />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0">
-              <Command className="w-[260px]">
-                <CommandInput
-                  placeholder="요금제"
-                  value={input}
-                  onInput={(e) => setInput(e.currentTarget.value)}
-                  className="h-[50px] justify-between text-[16px] "
-                />
-                <CommandList>
-                  <CommandEmpty>해당 요금제가 없습니다.</CommandEmpty>
-                  <CommandGroup>
-                    {planList &&
-                      planList.map((plan) => (
-                        <CommandItem
-                          key={plan.planId}
-                          value={plan.name}
-                          onSelect={() => handlePlanSelect(plan.name)}
-                        >
-                          {plan.name}
-                        </CommandItem>
-                      ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        )}
-        입니다
-      </div>
-
-      {/* 가격 */}
-      <div className="text-2xl font-bold text-black self-end">월 {monthlyFee}</div>
+        </div>
+      ) : (
+        <div className="text-sm md:text-2xl font-semibold leading-6 md:leading-7">
+          <div className="flex-col md:flex-row md:items-center">
+            <span> 고객님께서 사용 중인 요금제는 </span>
+            {/* 통신사 선택 */}
+            <span className="pr-1 md:px-2">
+              <Select value={selectedTelecomProvider} onValueChange={handleTelecomChange}>
+                <SelectTrigger
+                  className={cn(
+                    "mt-1 text-[12px] md:text-[24px] font-bold text-primary-medium bg-white px-2 py-1 h-auto border border-primary-medium rounded-md inline-flex items-center gap-1 cursor-pointer"
+                  )}
+                >
+                  <SelectValue placeholder={"통신사"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>통신사</SelectLabel>
+                    <SelectItem value="LG" className="text-[16px]">
+                      LG U+
+                    </SelectItem>
+                    <SelectItem value="SKT" className="text-[16px]">
+                      SKT
+                    </SelectItem>
+                    <SelectItem value="KT" className="text-[16px]">
+                      KT
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </span>
+            {/*  */}
+            <span>의</span>
+          </div>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-end w-full">
+            <div className="flex items-end">
+              {/* 요금제 선택 */}
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <div
+                    className={cn(
+                      "mt-1 text-[12px] md:text-[24px] font-bold text-primary-medium bg-white px-2 py-1 h-auto border border-primary-medium rounded-md inline-flex items-center gap-1 cursor-pointer",
+                      !planName && "text-[#737373]"
+                    )}
+                  >
+                    {planName ? planName : "요금제 선택"}
+                    <ChevronDown className="text-gray-300 w-4 h-4" />
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] p-0">
+                  <Command className="w-[260px]">
+                    <CommandInput
+                      placeholder="요금제"
+                      value={input}
+                      onInput={(e) => setInput(e.currentTarget.value)}
+                      className="h-[50px] justify-between text-[16px] "
+                    />
+                    <CommandList>
+                      <CommandEmpty>해당 요금제가 없습니다.</CommandEmpty>
+                      <CommandGroup>
+                        {planList &&
+                          planList.map((plan) => (
+                            <CommandItem
+                              key={plan.planId}
+                              value={plan.name}
+                              onSelect={() => handlePlanSelect(plan.name)}
+                            >
+                              {plan.name}
+                            </CommandItem>
+                          ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {/*  */}
+              <span className="ml-1">입니다</span>
+            </div>
+            {/* 가격 */}
+            <div className="text-base md:text-2xl pt-2 md:pt-0 font-bold">
+              월 {monthlyFee.toLocaleString()}원
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 통화/문자/통신기술 */}
       <div className="bg-white rounded-md p-4 w-full max-w-[400px]">
-        <div className="flex justify-between text-sm font-medium">
+        <div className="flex justify-between text-[10px] sm:text-sm">
           <div>
-            <p className="text-gray-500">통화</p>
-            <p>{voiceCallPrice}</p>
+            <p className="font-bold text-gray-60">통화</p>
+            <p className="text-sm sm:text-lg">{displayValue(voiceCallPrice, "voiceCallPrice")}</p>
           </div>
           <div>
-            <p className="text-gray-500">문자</p>
-            <p>{sms}</p>
+            <p className="font-bold text-gray-60">문자</p>
+            <p className="text-sm sm:text-lg">{sms || "-"}</p>
           </div>
           <div>
-            <p className="text-gray-500">통신 기술</p>
-            <p>{eligibility}</p>
+            <p className="font-bold text-gray-60">통신 기술</p>
+            <p className="text-sm sm:text-lg">{eligibility || "-"}</p>
           </div>
         </div>
       </div>
 
       {/* 하단 정보 */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-2 text-sm font-medium">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-2 text-[12px] sm:text-sm font-medium">
         <div className="text-gray-500">데이터 제공량</div>
-        <div className="text-[#EF3E7D]">{baseDataGb}</div>
+        <div className="text-primary-medium">{displayValue(baseDataGb, "baseDataGb")}</div>
 
         <div className="text-gray-500">쉐어링 데이터</div>
-        <div className="text-[#EF3E7D]">{sharingDataGb}</div>
+        <div className="text-primary-medium">{displayValue(sharingDataGb, "sharingDataGb")}</div>
 
         <div className="text-gray-500">데이터 소진시</div>
-        <div className="text-[#EF3E7D]">{throttleSpeedKbps}</div>
+        <div className="text-primary-medium">
+          {displayValue(throttleSpeedKbps, "throttleSpeedKbps")}
+        </div>
 
         <div className="text-gray-500">자격 요건</div>
-        <div className="text-[#EF3E7D]">{eligibility}</div>
+        <div className="text-primary-medium">{eligibility || "-"}</div>
       </div>
     </div>
   );
