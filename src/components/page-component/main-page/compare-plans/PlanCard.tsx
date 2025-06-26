@@ -6,6 +6,7 @@ import FiveGIcon from "@mui/icons-material/FiveG";
 import LteMobiledataIcon from "@mui/icons-material/LteMobiledata";
 import { deleteRecommendedPlan } from "@/services/recommenendPlanService";
 import { dipPlan } from "@/services/dipPlanService";
+import { useCallback } from "react";
 
 export default function PlanCard(props: Plan) {
   const {
@@ -19,6 +20,7 @@ export default function PlanCard(props: Plan) {
     benefit,
     description,
     mobileType,
+    planUrl,
     onRemove,
     source,
   } = props;
@@ -40,10 +42,16 @@ export default function PlanCard(props: Plan) {
       benefit,
       description,
       mobileType,
+      planUrl,
       onRemove,
       source,
     });
   };
+
+  const handleClick = useCallback(() => {
+    console.log(planUrl);
+    window.open(planUrl, "_blank");
+  }, [planUrl]);
 
   return (
     <div
@@ -119,6 +127,7 @@ export default function PlanCard(props: Plan) {
       </div>
 
       <button
+        onClick={handleClick}
         className="mt-auto text-white font-semibold rounded-lg py-3 text-sm transition-colors"
         style={{ backgroundColor: "#FF008C" }}
       >

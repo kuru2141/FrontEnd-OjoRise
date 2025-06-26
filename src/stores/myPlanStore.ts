@@ -9,7 +9,7 @@ interface MyPlanState {
   sharingDataGb: string;
   sms: string;
   benefit: string;
-  telecom: string;
+  telecomProvider: string;
   throttleSpeedKbps: number;
   eligibility: string;
   setName: (name: string) => void;
@@ -19,7 +19,7 @@ interface MyPlanState {
   setSharingDataGb: (sharingDataGb: string) => void;
   setSms: (sms: string) => void;
   setBenefit: (benefit: string) => void;
-  setTelecom: (telecom: string) => void;
+  setTelecomProvider: (telecom: string) => void;
   setMyPlan: (plan: Partial<MyPlanState>) => void;
 }
 
@@ -33,7 +33,7 @@ export const useMyPlanStore = create<MyPlanState>()(
       sharingDataGb: "",
       sms: "",
       benefit: "",
-      telecom: "",
+      telecomProvider: "LG",
       throttleSpeedKbps: 0,
       eligibility: "",
       setName: (name) => set({ name: name ?? "" }),
@@ -43,7 +43,7 @@ export const useMyPlanStore = create<MyPlanState>()(
       setSharingDataGb: (sharingDataGb) => set({ sharingDataGb: sharingDataGb ?? "" }),
       setSms: (sms) => set({ sms: sms ?? "" }),
       setBenefit: (benefit) => set({ benefit: benefit ?? "" }),
-      setTelecom: (telecom) => set({ telecom: telecom ?? "" }),
+      setTelecomProvider: (telecom) => set({ telecomProvider: telecom ?? "" }),
       setMyPlan: (plan) => set(plan),
     }),
     {
