@@ -12,7 +12,15 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "../../ui/drawer";
-import { ChangeEvent, KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ChatBotBubble from "./ChatBotBubble";
 import { ScrollArea } from "../../ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
@@ -94,6 +102,7 @@ function ChatBotModal() {
         telecomProvider: result.통신사,
         planName: result["요금제 이름"],
       });
+      setHistory([]);
     }
     setDialog((prev) => [
       ...prev,
@@ -134,12 +143,15 @@ function ChatBotModal() {
       if (isLoggedIn) {
         const accessToken = sessionStorage.getItem("accessToken");
         if (accessToken) {
-          const res = await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          const res = await api(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
           if (res.status !== 200) {
             setGuestDialog();
@@ -203,15 +215,26 @@ function ChatBotModal() {
           : [...prev.slice(0, -1), newEntry];
       });
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_PYTHON_SERVER_URL}/search`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: message, userProfile, history, ambiguousCount }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_PYTHON_SERVER_URL}/search`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: message,
+            userProfile,
+            history,
+            ambiguousCount,
+          }),
+        }
+      );
 
       if (!res.body) {
         const errorBlock = ["응답이 없습니다."];
-        setDialog((prev) => [...prev, { teller: "chatbot", block: errorBlock, time: new Date() }]);
+        setDialog((prev) => [
+          ...prev,
+          { teller: "chatbot", block: errorBlock, time: new Date() },
+        ]);
         return;
       }
 
@@ -236,13 +259,16 @@ function ChatBotModal() {
             const plans = itemsRef.current.map((item) => item.name);
             if (isLoggedIn) {
               try {
-                const res = await api(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recommendations`, {
-                  method: "POST",
-                  data: { planNames: plans },
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                });
+                const res = await api(
+                  `${process.env.NEXT_PUBLIC_SERVER_URL}/api/recommendations`,
+                  {
+                    method: "POST",
+                    data: { planNames: plans },
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
                 refetchRecommend();
                 console.log(res.status);
               } catch (error) {
@@ -289,7 +315,9 @@ function ChatBotModal() {
 
                   if (trimmedLine) {
                     const last = botBlock[botBlock.length - 1];
-                    if (!(typeof last === "string" && last.trim() === trimmedLine)) {
+                    if (
+                      !(typeof last === "string" && last.trim() === trimmedLine)
+                    ) {
                       botBlock.push(fullLine);
                       throttledUpdateDialog(botBlock);
                     }
@@ -393,7 +421,10 @@ function ChatBotModal() {
     jsonParsedRef.current = false;
     isNewLineRef.current = true;
 
-    setDialog((prev) => [...prev, { teller: "user", block: [message], time: new Date() }]);
+    setDialog((prev) => [
+      ...prev,
+      { teller: "user", block: [message], time: new Date() },
+    ]);
 
     try {
       await mutateAsync(message);
@@ -401,7 +432,11 @@ function ChatBotModal() {
       console.log(error);
       setDialog((prev) => [
         ...prev.slice(0, prev.length - 1),
-        { teller: "chatbot", block: ["네트워크 오류가 발생했습니다."], time: new Date() },
+        {
+          teller: "chatbot",
+          block: ["네트워크 오류가 발생했습니다."],
+          time: new Date(),
+        },
       ]);
     }
 
@@ -409,7 +444,8 @@ function ChatBotModal() {
   }, [input, mutateAsync]);
 
   const handleEnter = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && !disableButton && handleClick(),
+    (e: KeyboardEvent<HTMLInputElement>) =>
+      e.key === "Enter" && !disableButton && handleClick(),
     [handleClick, disableButton]
   );
 
@@ -445,7 +481,10 @@ function ChatBotModal() {
         return;
       }
 
-      setDialog((prev) => [...prev, { teller: "user", block: [file], time: new Date() }]);
+      setDialog((prev) => [
+        ...prev,
+        { teller: "user", block: [file], time: new Date() },
+      ]);
 
       if (isSameFile(file, imgFile)) {
         setDialog((prev) => [
@@ -483,7 +522,11 @@ function ChatBotModal() {
   const { isOpen, open, close } = useChatBotStore();
 
   return (
-    <Drawer open={isOpen} onOpenChange={(open) => !open && close()} modal={false}>
+    <Drawer
+      open={isOpen}
+      onOpenChange={(open) => !open && close()}
+      modal={false}
+    >
       <Fab color="primary" aria-label="add" onClick={open}>
         <Image fill src="/chatbot.svg" alt="chatbot" />
       </Fab>
@@ -499,9 +542,17 @@ function ChatBotModal() {
         <DrawerHeader className="flex flex-row justify-between border-b border-gray-200 bg-gray-10">
           <div onClick={handleZoom}>
             {zoom ? (
-              <Minimize2 className={`text-gray-40 ${!isMobile ? "visible" : "invisible"}`} />
+              <Minimize2
+                className={`text-gray-40 ${
+                  !isMobile ? "visible" : "invisible"
+                }`}
+              />
             ) : (
-              <Maximize2 className={`text-gray-40 ${!isMobile ? "visible" : "invisible"}`} />
+              <Maximize2
+                className={`text-gray-40 ${
+                  !isMobile ? "visible" : "invisible"
+                }`}
+              />
             )}
           </div>
           <div className="text-[16px] flex flex-col items-center w-full">
@@ -513,11 +564,18 @@ function ChatBotModal() {
         </DrawerHeader>
 
         <div className="flex justify-center w-full flex-1 scroll-hide overflow-y-auto px-1 pt-4">
-          <ScrollArea className={`${zoom && !isMobile ? "w-2/3" : "w-full"} gap-2 pr-3`}>
+          <ScrollArea
+            className={`${zoom && !isMobile ? "w-2/3" : "w-full"} gap-2 pr-3`}
+          >
             <div className="h-full flex justify-center items-center mb-4">
               <div className="pl-3 md:pl-5 flex text-[14px] md:text-[16px] gap-4 md:gap-8 items-center w-full h-[80px] bg-white mb-4 rounded-[16px] ">
                 <div className="w-fit h-fit rounded-[100px] bg-(--gray-chatbot-backgroud)">
-                  <Image width={50} height={50} src="/chatbot.svg" alt="chatbot" />
+                  <Image
+                    width={50}
+                    height={50}
+                    src="/chatbot.svg"
+                    alt="chatbot"
+                  />
                 </div>
                 <div className="w-full font-bold">
                   <p className="flex items-center">
@@ -575,7 +633,12 @@ function ChatBotModal() {
                 disableButton ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
-              <input type="file" className="hidden" onChange={handleOCR} ref={fileInputRef} />
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleOCR}
+                ref={fileInputRef}
+              />
               <Paperclip className="w-[20px] h-[20px] text-gray-40" />
             </button>
 
