@@ -101,7 +101,7 @@ export default function PlanCard(props: Plan) {
           )}
         </div>
 
-        <div className="flex gap-2 text-xs md:text-sm font-medium mt-1 mb-2 flex-wrap justify-center">
+        <div className="flex gap-2 text-xs md:text-sm font-medium  mb-2 flex-wrap justify-center">
           <span className="flex flex-col md:flex-row items-center md:items-center gap-0.5 md:gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold min-w-[60px] justify-center">
             {mobileType === "5G" ? (
               <>
@@ -143,7 +143,7 @@ export default function PlanCard(props: Plan) {
         </div>
         <button
           onClick={handleClick}
-          className="w-full mt-2 text-white font-semibold rounded-lg py-3 text-[10px] md:text-sm transition-colors"
+          className="w-full mt-2 text-white font-semibold rounded-lg py-3 text-[10px] md:text-sm transition-colors cursor-pointer"
           style={{ backgroundColor: "#FF008C" }}
         >
           신청하기
