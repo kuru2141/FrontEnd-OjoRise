@@ -10,17 +10,17 @@ type telecomProvider = 'LG U+' | 'KT' | 'SKT';
 const data = {
   "LG U+": {
     "image": '/lg.svg',
-    "height": 350,
+    "height": 363,
     "way":'당신의 U+ 앱'
   },
   "KT": {
     "image": '/kt.svg',
-    "height": 359,
+    "height": 270,
     "way":'마이 KT > 마이 > 요금/서비스 > 내 모바일 요금제'
   },
   "SKT": {
     "image": '/skt.svg',
-    "height": 301,
+    "height": 226,
     "way":'T world 앱 > 마이페이지'
   },
 };
@@ -40,7 +40,7 @@ function PopoverBox() {
           이미지 업로드 전 안내사항 보기
         </div>
       </PopoverTrigger>
-      <PopoverContent  className="w-[471px] p-[20px] bg-gray-10">
+      <PopoverContent  className="w-[300px] md:w-[471px] p-[20px] bg-gray-10">
         <div className="flex gap-[5px]">
           {_.map(['LG U+', 'KT', 'SKT'], (telecomProvider:telecomProvider) => (
             <div
@@ -54,13 +54,18 @@ function PopoverBox() {
           ))}
         </div> 
         <div className="flex gap-[20px] pt-[15px]">
-          <Image src={data[selected].image} height={data[selected].height} width={168} alt={selected} />
+          <Image src={data[selected].image} height={data[selected].height} width={126} className={
+          selected === "LG U+"
+          ? "h-[209px] md:h-[263px] w-[100px] md:w-[126px]"
+          : selected === "SKT"
+          ? "h-[179px] md:h-[226px] w-[100px] md:w-[126px]"
+          : "h-[214px] md:h-[270px] w-[100px] md:w-[126px]"} alt={selected} />
           <div className="flex flex-col justify-between">
             <div className="flex flex-col gap-[3px]">
-              <div className="text-gray-60 text-base h-[50px]">요금제 이름과 실 납부 금액이 보이도록 캡처해 주세요.</div>
-              <WayParsing text={data[selected].way} className="text-base font-bold"/>
+              <div className="text-gray-60 text-xs md:text-base h-[50px]">요금제 이름과 실 납부 금액이 보이도록 캡처해 주세요.</div>
+              <WayParsing text={data[selected].way} className="text-xs md:text-basefont-bold"/>
             </div>
-            <div className="border border-primary-medium bg-primary-bright p-[10px] rounded-[5px] text-base ">
+            <div className="border border-primary-medium bg-primary-bright p-[10px] rounded-[5px] text-xs md:text-base ">
               업로드한 이미지는 통신사/요금제 이름/금액 등을 AI로 분석하기 위해 사용됩니다. 이미지를 업로드함으로써 이에 동의한 것으로 간주합니다.
             </div>
           </div>
