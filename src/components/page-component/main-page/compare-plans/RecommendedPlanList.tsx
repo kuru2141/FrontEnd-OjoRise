@@ -17,7 +17,12 @@ import { useEffect, useState, useRef } from "react";
 import { Plan } from "@/types/plan";
 import { api } from "@/lib/axios";
 
-export default function RecommendedPlanList() {
+export interface ListProps {
+  handleClick?: () => void;
+}
+
+
+export default function RecommendedPlanList({ handleClick } : ListProps) {
   const { removePlan } = usePlanStore();
   const { isLoading, error } = useRecommendedPlans();
   const { open } = useChatBotStore();
@@ -90,7 +95,7 @@ export default function RecommendedPlanList() {
                   className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
                 >
                   <div className="w-full max-w-[320px]">
-                    <PlanCardSkeleton />
+                    <PlanCardSkeleton/>
                   </div>
                 </CarouselItem>
               ))}
@@ -114,7 +119,7 @@ export default function RecommendedPlanList() {
                   key={index}
                   className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
                 >
-                  <div className="w-full max-w-[320px]">
+                  <div className="w-full max-w-[320px]" onClick={handleClick}>
                     <PlanCard
                       key={plan.name}
                       {...plan}

@@ -16,7 +16,11 @@ import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useRouter } from "next/navigation";
 
-export default function LikedPlansList() {
+export interface ListProps {
+  handleClick?: () => void;
+}
+
+export default function LikedPlansList({ handleClick } : ListProps) {
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const { likedPlans, removeLikedPlan } = usePlanStore();
   const { refetch, isLoading } = useLikedPlans();
@@ -68,7 +72,7 @@ export default function LikedPlansList() {
                   key={index}
                   className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
                 >
-                  <div className="w-full max-w-[320px]">
+                  <div className="w-full max-w-[320px]" onClick={handleClick}>
                     <PlanCard
                       key={plan.name}
                       {...plan}
