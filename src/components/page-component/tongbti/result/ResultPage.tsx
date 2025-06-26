@@ -43,7 +43,7 @@ export default function ResultPage() {
     <>
       <KakaoInitializer />
       <div className="min-h-screen bg-[#F8F8F8] flex items-center justify-center px-4 py-12 font-pretend">
-        <div className="relative w-[758px] mt-60">
+        <div className="relative w-[350px] md:w-[758px] mt-60">
           {/* 이미지가 카드 위에 걸쳐지도록 absolute로 이동 */}
           <Image
             src={`/TongBTI/${typeKey}.svg`}
@@ -58,7 +58,7 @@ export default function ResultPage() {
               <h2 className="text-sm text-gray-500 font-semibold mb-1">나의 통BTI는</h2>
               <h1 className="text-3xl font-bold text-[#FF008C] mb-6">{resultInfo.tongName}</h1>
 
-              <p className="text-center text-black text-base leading-relaxed max-w-lg mb-4">
+              <p className="text-center text-black text-sm md:text-base  leading-relaxed max-w-lg mb-4">
                 {formatDescription(resultInfo.tongDescription)}
               </p>
 
@@ -67,7 +67,7 @@ export default function ResultPage() {
                   <PlanDipCard
                     isRecommended={true}
                     plan={{
-                      planId: resultInfo.planId,
+                      planId: 0,
                       name: resultInfo.planName,
                       baseDataGb: resultInfo.baseDataGb,
                       dailyDataGb: resultInfo.dailyDataGb,
@@ -112,7 +112,7 @@ export default function ResultPage() {
                   className="p-0 border-none bg-transparent hover:opacity-80 transition hover:cursor-pointer"
                   aria-label="링크 복사"
                 >
-                  <img src="/linkButton.png" alt="링크 복사" className="w-12 h-12 object-contain" />
+                  <Image src="/linkButton.png" alt="링크 복사" className="w-12 h-12 object-contain" width={80} height={80} />
                 </button>
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function ResultPage() {
   );
 }
 
-function formatDescription(text: string): React.ReactNode {
+export function formatDescription(text: string): React.ReactNode {
   if (!text) return null;
 
   const parts = text.split(/\.\s*/).filter(Boolean);

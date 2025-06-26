@@ -22,7 +22,7 @@ function MotionSelectLine({ state, children }: PropsWithChildren<MotionSelectLin
       initial="next"
       variants={variants}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="w-full flex justify-center items-center py-6"
+      className="w-full flex justify-start items-start py-6"
     >
       {children}
     </motion.div>
