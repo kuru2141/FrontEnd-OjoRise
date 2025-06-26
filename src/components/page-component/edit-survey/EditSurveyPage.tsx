@@ -21,7 +21,8 @@ const EditSurveyPage = () => {
         ...surveyData,
         birthdate: surveyData.birthdate.replace(/-/g, "."),
         familyBundle: surveyData.familyBundle === "할 예정이에요" ? "yes" : "no",
-        familyNum: surveyData.familyNum.replace("대", ""),
+        familyNum:
+          surveyData.familyNum === "4대 이상" ? "4" : surveyData.familyNum.replace("대", ""),
       };
 
       typedEntries(normalized).forEach(([key, value]) => {
