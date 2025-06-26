@@ -103,7 +103,7 @@ export default function RecommendedPlanList({ handleClick } : ListProps) {
           </Carousel>
         ) : recommendedPlans.length === 0 ? (
           <div className="text-center">
-            <p className="text-gray-500 mb-4 text-sm md:text-lg">아직 추천받은 요금제가 없어요.</p>
+            <p className="text-gray-500 mb-4 text-sm md:text-lg">아직 추천받은 요금제가 없습니다</p>
             <button
               onClick={open}
               className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full text-sm md:text-lg"
