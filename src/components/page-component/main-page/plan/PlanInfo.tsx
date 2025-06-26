@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { getName } from "@/services/auth";
-import { getGuestPlan, getMyPlan } from "@/services/myPlan";
+import { getGuestPlan } from "@/services/myPlan";
 import { Plans } from "@/services/survey";
 import { useMyPlanStore } from "@/stores/myPlanStore";
 import { useSurveyStore } from "@/stores/surveyStore";
@@ -46,7 +46,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     queryFn: getName,
     enabled: !!isLogin,
   });
-  console.log("login", isLogin, "userData", userName);
+
   const { data: planList } = useQuery({
     queryKey: ["survey/plan", selectedTelecomProvider],
     queryFn: () => Plans(selectedTelecomProvider),
@@ -65,7 +65,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     setMyPlan,
     name,
     baseDataGb,
-    telecom,
+    telecomProvider,
     throttleSpeedKbps,
     eligibility,
     monthlyFee,
@@ -96,7 +96,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
         {isLogin ? userName : "고객"}님께서 사용 중인 요금제는
         {isLogin ? (
           <Fragment>
-            <span className="text-[#EF3E7D] font-bold text-lg md:text-xl">{telecom}</span>
+            <span className="text-[#EF3E7D] font-bold text-lg md:text-xl">{telecomProvider}</span>
           </Fragment>
         ) : (
           <div>
