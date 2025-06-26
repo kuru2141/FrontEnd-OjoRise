@@ -24,7 +24,7 @@ export default function SelectedPlanViewer() {
       {visibleLength === 0 ? (
         <div className="flex justify-center w-full">
           <div className="min-w-[330px] px-8 py-4 h-[82px] flex items-center justify-center text-center">
-            <p className="text-gray-500 text-sm md:text-lg">아직 선택된 요금제가 없습니다.</p>
+            <p className="text-gray-500 text-sm md:text-lg">아직 선택된 요금제가 없습니다</p>
           </div>
         </div>
       ) : selectedPlans.length === 1 ? (
