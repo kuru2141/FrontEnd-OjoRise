@@ -117,14 +117,16 @@ export default function PlanCard(props: Plan) {
 
       <p className="text-sm tracking-tighter text-gray-800">{description}</p>
 
-      <div className="flex justify-between items-end mt-3">
-        <p className="text-xl font-bold">월 {monthlyFee.toLocaleString()}원</p>
-        {monthlyFee && (
-          <p className="text-xs text-gray-400 whitespace-nowrap">
-            약정 할인 시 월 {monthlyFee.toLocaleString()}원
-          </p>
-        )}
-      </div>
+      <div className="flex flex-col flex-grow justify-between mt-3 gap-2">
+        {/* 요금 정보: 항상 버튼 위에 위치 */}
+        <div>
+          <p className="text-xl font-bold">월 {monthlyFee.toLocaleString()}원</p>
+          {monthlyFee && (
+            <p className="text-xs text-gray-400 whitespace-nowrap">
+              약정 할인 시 월 {monthlyFee.toLocaleString()}원
+            </p>
+          )}
+        </div>
 
       <button
         onClick={handleClick}
