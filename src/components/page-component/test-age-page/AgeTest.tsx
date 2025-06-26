@@ -96,34 +96,41 @@ function AgeTest() {
   ];
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center relative overflow-hidden  px-4 py-2 rounded-xl shadow-lg">
-      {lines.map(({ prompt, selectList, handler, value, placeHolder }, i) => {
-        const state = i < current ? "previous" : i === current ? "active" : "next";
-
-        return (
-          <MotionSelectLine key={i} state={state}>
-            <div className="flex flex-row text-black  text-5xl">
-              {prompt[0]}
-              <ItemSelector
-                handler={handler}
-                isSelect={i !== 1}
-                selectList={selectList}
-                value={value}
-                placehoder={placeHolder}
-              />
-              {prompt[1]}
-            </div>
-          </MotionSelectLine>
-        );
-      })}
-      <Button
-        className={`absolute bottom-10 ${
-          current === 3 || selectedPlan !== "" ? "" : "hidden"
-        } text-white`}
-        onClick={handleClickSubmit}
-      >
-        확인하러 가기
-      </Button>
+    <div className="flex flex-col justify-center items-center">
+      <div className="w-screen px-[20px] md:w-[531px] md:px-0 mt-[100px] text-gray-100 font-bold text-[20px] md:text-[32px]">
+        <span>나의 <span className="text-primary-medium">통신 연령</span>은?</span>
+        <div className="w-full flex flex-wrap font-medium mt-[35px] text-[14px] md:text-[18px]">내 요금제 정보와 나이를 입력하면<br/>
+        내 요금제를 통한 통신 연령과 실제 나이를 통한 추천 요금제를 알려드립니다.</div>
+        <div className="h-[480px] md:h-[602px] flex flex-col justify-center relative">
+          {lines.map(({ prompt, selectList, handler, value, placeHolder }, i) => {
+            const state = i < current ? "previous" : i === current ? "active" : "next";
+            
+            return (
+            <MotionSelectLine key={i} state={state}>
+              <div className="flex flex-row gap-[10px] md:gap-[15px] items-center">
+                {prompt[0]}
+                <ItemSelector
+                  handler={handler}
+                  isSelect={i !== 1}
+                  selectList={selectList}
+                  value={value}
+                  placehoder={placeHolder}
+                />
+                {prompt[1]}
+              </div>
+            </MotionSelectLine>
+          );
+        })}
+        <Button
+          className={`absolute bottom-10 w-full h-[55px] md:h-[70px] text-[18px] md:text-[24px] ${
+           current === 3 && selectedPlan !== "" ? "" : "hidden"
+          } text-white`}
+          onClick={handleClickSubmit}
+        >
+          분석받기
+        </Button>
+      </div>
+      </div>
     </div>
   );
 }
