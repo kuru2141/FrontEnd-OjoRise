@@ -12,6 +12,7 @@ interface MyPlan {
   telecomProvider: string;
   throttleSpeedKbps: number;
   eligibility: string;
+  mobileType: string;
 }
 
 interface MyPlanState extends MyPlan {
@@ -38,6 +39,7 @@ const initialState: MyPlan = {
   telecomProvider: "LG",
   throttleSpeedKbps: 0,
   eligibility: "",
+  mobileType: "",
 };
 
 export const useMyPlanStore = create<MyPlanState>()(
