@@ -19,6 +19,7 @@ export const useLogout = () => {
         likedPlans: [],
       });
       localStorage.removeItem("plan-store");
+      sessionStorage.removeItem("my-plan-store");
 
       window.location.href = "/";
     },
