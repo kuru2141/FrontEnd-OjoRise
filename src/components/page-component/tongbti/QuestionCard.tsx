@@ -8,10 +8,12 @@ import { fetchTongBTIInfo, saveTongBTIResult, sendRecommendations } from "@/serv
 import { useResultStore } from "@/stores/useResultStore";
 import { saveRecommendedPlan } from "@/lib/recommendationStorage";
 import TestProgress from "@/components/common/progress/TestProgress";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function QuestionCard() {
   const { currentStep, questions, selectAnswer, goToNext, calculateResult } = useTongBTIStore();
   const { setResultInfo } = useResultStore();
+  const { isSurveyed } = useAuthStore();
   const router = useRouter();
   const [selected, setSelected] = useState<number | null>(null);
   const question = questions[currentStep - 1];
@@ -38,7 +40,7 @@ export default function QuestionCard() {
         const info = await fetchTongBTIInfo(resultKey);
 
         setResultInfo(info);
-        if (info.planName) {
+        if (!isSurveyed && info.planName) {
           saveRecommendedPlan(info.planName);
         }
 
@@ -67,9 +69,7 @@ export default function QuestionCard() {
 
   return (
     <div className="relative h-screen bg-white flex flex-col items-center justify-center px-4 text-center font-pretend">
-      {isAnalyzing && (
-        <TestProgress/>
-      )}
+      {isAnalyzing && <TestProgress />}
 
       <div className="flex flex-col items-center gap-y-8 w-full">
         {/* 진행도 바 */}

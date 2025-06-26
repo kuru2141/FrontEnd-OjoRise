@@ -13,7 +13,7 @@ import { useRecommendedPlans } from "@/hooks/useRecommendedPlans";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useChatBotStore } from "@/stores/chatBotStore";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { Plan } from "@/types/plan";
 import { api } from "@/lib/axios";
 
@@ -21,10 +21,10 @@ export interface ListProps {
   handleClick?: () => void;
 }
 
-
-export default function RecommendedPlanList({ handleClick } : ListProps) {
+export default function RecommendedPlanList({ handleClick }: ListProps) {
   const { removePlan } = usePlanStore();
-  const { isLoading, error } = useRecommendedPlans();
+  const { isLoading, error, data, refetch } = useRecommendedPlans();
+  const { setRefetchRecommend } = usePlanStore();
   const { open } = useChatBotStore();
 
   const [recommendedPlans, setRecommendedPlans] = useState<Plan[]>([]);
@@ -78,7 +78,24 @@ export default function RecommendedPlanList({ handleClick } : ListProps) {
   }, [planNames]);
 
   const hasHydrated = usePlanStoreRehydrated();
-  const showSkeleton = !hasHydrated || isLoading;
+  const showSkeleton = useMemo(() => !hasHydrated || isLoading, [hasHydrated, isLoading]);
+
+  const handleRemovePlan = useCallback(
+    (planName: string) => {
+      removePlan(planName);
+      // sessionStorage.setItem(
+      //   "recommendedPlans",
+      //   JSON.stringify(planNames.filter((name) => name !== planName))
+      // );
+      setRecommendedPlans((prev: Plan[]) => prev.filter((item) => item.name !== planName));
+      refetch();
+    },
+    [refetch, removePlan]
+  );
+
+  useEffect(() => {
+    setRefetchRecommend(refetch);
+  }, [data, refetch, setRefetchRecommend]);
 
   if (error) return <div>에러 발생!</div>;
 
@@ -95,15 +112,15 @@ export default function RecommendedPlanList({ handleClick } : ListProps) {
                   className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
                 >
                   <div className="w-full max-w-[320px]">
-                    <PlanCardSkeleton/>
+                    <PlanCardSkeleton />
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
           </Carousel>
-        ) : recommendedPlans.length === 0 ? (
+        ) : recommendedPlans.length === 0 && (!data || data.length === 0) ? (
           <div className="text-center">
-            <p className="text-gray-500 mb-4 text-sm md:text-lg">아직 추천받은 요금제가 없습니다</p>
+            <p className="text-gray-500 mb-4 text-sm md:text-lg">아직 추천받은 요금제가 없어요.</p>
             <button
               onClick={open}
               className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full text-sm md:text-lg"
@@ -114,21 +131,37 @@ export default function RecommendedPlanList({ handleClick } : ListProps) {
         ) : (
           <Carousel className="w-full overflow-visible">
             <CarouselContent className="flex -mx-[1px]">
-              {recommendedPlans.map((plan, index) => (
-                <CarouselItem
-                  key={index}
-                  className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
-                >
-                  <div className="w-full max-w-[320px]" onClick={handleClick}>
-                    <PlanCard
-                      key={plan.name}
-                      {...plan}
-                      source="recommend"
-                      onRemove={() => removePlan(plan.name)}
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
+              {data && data.length !== 0
+                ? data.map((item) => (
+                    <CarouselItem
+                      key={item.planId}
+                      className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
+                    >
+                      <div className="w-full max-w-[320px]" onClick={handleClick}>
+                        <PlanCard
+                          key={item.name}
+                          {...item}
+                          source="recommend"
+                          onRemove={() => handleRemovePlan(item.name)}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))
+                : recommendedPlans.map((plan, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
+                    >
+                      <div className="w-full max-w-[320px]" onClick={handleClick}>
+                        <PlanCard
+                          key={plan.name}
+                          {...plan}
+                          source="recommend"
+                          onRemove={() => handleRemovePlan(plan.name)}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
             </CarouselContent>
             <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 z-10" />
             <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 z-10" />

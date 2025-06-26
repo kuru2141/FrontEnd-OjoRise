@@ -34,10 +34,11 @@ interface PlanStore extends PlanStorePersisted {
 
   setRecommendedPlans: (plans: Plan[]) => void;
   removePlan: (title: string) => void;
-
+  refetchRecommend: () => void;
   likedPlans: Plan[];
   setLikedPlans: (plans: Plan[]) => void;
   removeLikedPlan: (title: string) => void;
+  setRefetchRecommend: (refetch: () => void) => void;
 }
 
 export const usePlanStore = create<PlanStore>()(
@@ -81,13 +82,19 @@ export const usePlanStore = create<PlanStore>()(
 
       recommendedPlans: [],
       setRecommendedPlans: (plans) => set({ recommendedPlans: plans }),
-      removePlan: (title) =>
+      removePlan: (title) => {
         set((state) => ({
           recommendedPlans: state.recommendedPlans.filter((plan) => plan.name !== title),
-        })),
+          selectedPlans: state.selectedPlans.filter((plan) => plan.name !== title),
+        }));
+        sessionStorage.setItem("plan-store", JSON.stringify(get()));
+      },
 
       likedPlans: [],
       setLikedPlans: (plans) => set({ likedPlans: plans }),
+
+      setRefetchRecommend: (refetch) => set({ refetchRecommend: refetch }),
+      refetchRecommend: () => console.log("refetch not defined"),
       removeLikedPlan: (title) =>
         set((state) => ({
           likedPlans: state.likedPlans.filter((plan) => plan.name !== title),
