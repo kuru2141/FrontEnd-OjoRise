@@ -63,7 +63,7 @@ function PopoverBox() {
           <div className="flex flex-col justify-between">
             <div className="flex flex-col gap-[3px]">
               <div className="text-gray-60 text-xs md:text-base h-[50px]">요금제 이름과 실 납부 금액이 보이도록 캡처해 주세요.</div>
-              <WayParsing text={data[selected].way} className="text-xs md:text-basefont-bold"/>
+              <WayParsing text={data[selected].way} className="text-xs md:text-base font-bold"/>
             </div>
             <div className="border border-primary-medium bg-primary-bright p-[10px] rounded-[5px] text-xs md:text-base ">
               업로드한 이미지는 통신사/요금제 이름/금액 등을 AI로 분석하기 위해 사용됩니다. 이미지를 업로드함으로써 이에 동의한 것으로 간주합니다.
