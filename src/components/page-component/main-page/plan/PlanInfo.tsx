@@ -72,6 +72,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     sharingDataGb,
     sms,
     voiceCallPrice,
+    setPlanReset,
   } = useMyPlanStore();
 
   useEffect(() => {
@@ -82,11 +83,16 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   const handleTelecomChange = (telecomProvider: string) => {
     setSelectedTelecomProvider(telecomProvider);
     sessionStorage.setItem("telecomProvider", telecomProvider);
+    setPlanName("");
+    sessionStorage.removeItem("my-plan-store");
+    sessionStorage.removeItem("planName");
+    setPlanReset();
   };
 
   const handlePlanSelect = (currentValue: string) => {
     setPlanName(currentValue);
     sessionStorage.setItem("planName", currentValue);
+    setOpen(false);
   };
 
   return (
