@@ -26,7 +26,11 @@ const MyPage = () => {
     }
   }, []);
 
-  const { data: survey, isPending: isSurveyPending, isError: isSurveyError } = useSurvey(accessToken);
+  const {
+    data: survey,
+    isPending: isSurveyPending,
+    isError: isSurveyError,
+  } = useSurvey(accessToken);
   const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI(accessToken);
   const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge(accessToken);
   const { mutate: withdraw } = useWithdraw();
@@ -73,7 +77,7 @@ const MyPage = () => {
     "와이파이 유목민": "wifiNomad",
     "무제한의 민족": "unlimitedTribe",
     "중간값 장인": "midrangeMaster",
-    "가성비교 신도": "valueSeeker",
+    "가성비 교신도": "valueSeeker",
     "보조금 헌터": "subsidyHunter",
   };
 

@@ -6,9 +6,9 @@ import FiveGIcon from "@mui/icons-material/FiveG";
 import LteMobiledataIcon from "@mui/icons-material/LteMobiledata";
 import { deleteRecommendedPlan } from "@/services/recommenendPlanService";
 import { dipPlan } from "@/services/dipPlanService";
-import { useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 
-export default function PlanCard(props: Plan) {
+function PlanCard(props: Plan) {
   const {
     planId,
     name,
@@ -28,9 +28,12 @@ export default function PlanCard(props: Plan) {
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
 
-  const isSelected = selectedPlans.some((p) => p.name === name && p.source === source);
+  const isSelected = useMemo(
+    () => selectedPlans.some((p) => p.name === name && p.source === source),
+    [name, selectedPlans, source]
+  );
 
-  const handleSelect = () => {
+  const handleSelect = useCallback(() => {
     togglePlanSelection({
       planId,
       name,
@@ -46,10 +49,24 @@ export default function PlanCard(props: Plan) {
       onRemove,
       source,
     });
-  };
+  }, [
+    baseDataGb,
+    benefit,
+    description,
+    mobileType,
+    monthlyFee,
+    name,
+    onRemove,
+    planId,
+    planUrl,
+    sharingDataGb,
+    sms,
+    source,
+    togglePlanSelection,
+    voiceCallPrice,
+  ]);
 
   const handleClick = useCallback(() => {
-    console.log(planUrl);
     window.open(planUrl, "_blank");
   }, [planUrl]);
 
@@ -141,3 +158,5 @@ export default function PlanCard(props: Plan) {
     </div>
   );
 }
+
+export default memo(PlanCard);

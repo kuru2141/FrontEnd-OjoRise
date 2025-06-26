@@ -66,7 +66,7 @@ function AppHeader() {
             alt="Logo"
             width={80}
             height={30}
-            className="w-[80px] h-[30px] xl:w-[110px] xl:h-[42px]"
+            className="w-[80px] h-[30px] xl:w-[110px] xl:h-[42px] hover:cursor-pointer"
           />
         </Link>
 
@@ -74,7 +74,7 @@ function AppHeader() {
           <Fragment>
             <Link
               href="/explore-plans"
-              className="text-[16px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+              className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 hover:cursor-pointer transition-colors duration-300"
             >
               요금제 둘러보기
             </Link>
@@ -82,19 +82,19 @@ function AppHeader() {
               <Fragment>
                 <Link
                   href="/mypage"
-                  className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                  className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300 hover:cursor-pointer"
                 >
                   마이페이지
                 </Link>
                 <button
                   onClick={() => logoutMutation.mutate()}
-                  className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300"
+                  className="text-[18px] font-pretendard text-neutral-800 hover:text-gray-100 transition-colors duration-300 hover:cursor-pointer"
                 >
                   로그아웃
                 </button>
               </Fragment>
             ) : (
-              <button onClick={handleKakaoLogin}>
+              <button onClick={handleKakaoLogin} className="hover:cursor-pointer">
                 <Image src="/kakaologinBtn.png" alt="kakao login" width={183} height={45} />
               </button>
             )}
