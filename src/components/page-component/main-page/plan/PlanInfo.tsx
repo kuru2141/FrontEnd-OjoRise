@@ -152,8 +152,8 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
                     <ChevronDown className="text-gray-300 w-4 h-4" />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-[300px] p-0">
-                  <Command className="w-[260px]">
+                <PopoverContent className="p-0">
+                  <Command>
                     <CommandInput
                       placeholder="요금제"
                       value={input}
