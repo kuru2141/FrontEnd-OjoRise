@@ -20,8 +20,12 @@ export default function SelectedPlanViewer() {
   if (visibleLength === 0)
     return (
       <section className="mt-10 mb-10">
-        <h2 className="text-2xl font-bold mb-4">선택한 요금제</h2>
-        <p className="text-gray-500 mt-4">아직 선택된 요금제가 없습니다.</p>
+        <h2 className="text-xl md:text-2xl font-bold mb-4">선택한 요금제</h2>
+        <div className="text-center">
+          <p className="text-gray-500 mb-4mt-4 text-sm md:text-lg">
+            아직 선택된 요금제가 없습니다.
+          </p>
+        </div>
       </section>
     );
 
