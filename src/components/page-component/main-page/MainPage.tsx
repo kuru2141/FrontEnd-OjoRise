@@ -34,7 +34,7 @@ export default function MainPage() {
 
   return (
     <main className="flex flex-col items-center bg-white px-4 pb-20">
-      <section className="w-full max-w-[768px] mt-30 flex flex-col items-center gap-20">
+      <section className="w-full max-w-[768px] mt-30 flex flex-col items-center gap-[33px]">
         <PlanBox />
         <BannerCarousel />
       </section>

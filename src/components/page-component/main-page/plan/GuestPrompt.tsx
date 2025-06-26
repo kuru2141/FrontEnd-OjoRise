@@ -47,7 +47,7 @@ export default function GuestPrompt() {
   };
 
   return (
-    <div className="w-full max-w-[758px] bg-gray-10 rounded-xl flex flex-col justify-between px-4 py-6 md:px-8 md:py-6 shadow mx-auto">
+    <div className="w-full max-w-[758px] bg-gray-10 rounded-xl flex flex-col justify-between px-4 py-6 md:px-8 md:py-6 mx-auto">
       <p className="text-base md:text-lg text-left mb-5 mt-7 md:pl-4">
         <span className="font-bold text-[18px] md:text-[20px]" style={{ color: "#ff008c" }}>
           로그인
