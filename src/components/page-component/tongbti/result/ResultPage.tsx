@@ -67,6 +67,7 @@ export default function ResultPage() {
                   <PlanDipCard
                     isRecommended={true}
                     plan={{
+                      planId: 0,
                       name: resultInfo.planName,
                       baseDataGb: resultInfo.baseDataGb,
                       dailyDataGb: resultInfo.dailyDataGb,
@@ -122,7 +123,7 @@ export default function ResultPage() {
   );
 }
 
-function formatDescription(text: string): React.ReactNode {
+export function formatDescription(text: string): React.ReactNode {
   if (!text) return null;
 
   const parts = text.split(/\.\s*/).filter(Boolean);
