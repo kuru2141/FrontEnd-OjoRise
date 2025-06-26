@@ -17,22 +17,17 @@ export default function SelectedPlanViewer() {
     setSelectedPlans([...selectedPlans].reverse());
   };
 
-  if (visibleLength === 0)
-    return (
-      <section className="text-xl md:text-2xl mt-10 mb-10">
-        <h2 className="text-xl md:text-2xl font-bold mb-4">선택한 요금제</h2>
-        <div className="text-center">
-          <p className="text-gray-500 mb-4mt-4 text-sm md:text-lg">
-            아직 선택된 요금제가 없습니다.
-          </p>
-        </div>
-      </section>
-    );
-
   return (
     <section className="mt-10 mb-10">
       <h2 className="text-xl md:text-2xl font-bold mb-4">선택한 요금제</h2>
-      {selectedPlans.length === 1 ? (
+
+      {visibleLength === 0 ? (
+        <div className="flex justify-center w-full">
+          <div className="min-w-[330px] px-8 py-4 h-[82px] flex items-center justify-center text-center">
+            <p className="text-gray-500 text-sm md:text-lg">아직 선택된 요금제가 없습니다.</p>
+          </div>
+        </div>
+      ) : selectedPlans.length === 1 ? (
         <div className="flex justify-start w-full">
           <div className="min-w-[330px] px-8 py-4 rounded-xl bg-white w-fit border border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
             <div className="text-gray-40 text-sm">기준 요금제</div>

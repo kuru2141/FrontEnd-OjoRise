@@ -14,7 +14,7 @@ export default function Head({ params }: { params: { typeKey: string } }) {
       />
       <meta property="og:image" content={imageUrl} />
       <meta property="og:url" content={url} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={imageUrl} />
       <meta name="twitter:card" content="summary_large_image" />
     </>
   );
