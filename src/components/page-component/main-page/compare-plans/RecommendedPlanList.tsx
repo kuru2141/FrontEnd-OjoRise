@@ -13,11 +13,64 @@ import { useRecommendedPlans } from "@/hooks/useRecommendedPlans";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useChatBotStore } from "@/stores/chatBotStore";
+import { useEffect, useState, useRef } from "react";
+import { Plan } from "@/types/plan";
+import { api } from "@/lib/axios";
 
 export default function RecommendedPlanList() {
-  const { recommendedPlans, removePlan } = usePlanStore();
+  const { removePlan } = usePlanStore();
   const { isLoading, error } = useRecommendedPlans();
   const { open } = useChatBotStore();
+
+  const [recommendedPlans, setRecommendedPlans] = useState<Plan[]>([]);
+  const [planNames, setPlanNames] = useState<string[]>([]);
+  const prevSessionValue = useRef<string>("");
+
+  useEffect(() => {
+    const getPlanNames = () => {
+      const session = sessionStorage.getItem("recommendedPlans") ?? "[]";
+      prevSessionValue.current = session;
+      const parsed = JSON.parse(session);
+      setPlanNames(parsed);
+    };
+
+    // 초기 실행
+    getPlanNames();
+
+    // storage 변경 감지 (다른 탭에서만 동작)
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "recommendedPlans") {
+        getPlanNames();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // 같은 탭에서도 변경 감지 (polling)
+    const interval = setInterval(() => {
+      const session = sessionStorage.getItem("recommendedPlans") ?? "[]";
+      if (prevSessionValue.current !== session) {
+        getPlanNames();
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (planNames.length === 0) return;
+
+    const getRecommendPlans = async () => {
+      const params = new URLSearchParams();
+      planNames.forEach((name) => params.append("id", name));
+      const res = await api.get(`/plan/info?${params.toString()}`);
+      setRecommendedPlans(res.data);
+    };
+
+    getRecommendPlans();
+  }, [planNames]);
 
   const hasHydrated = usePlanStoreRehydrated();
   const showSkeleton = !hasHydrated || isLoading;
@@ -26,7 +79,7 @@ export default function RecommendedPlanList() {
 
   return (
     <section className="w-full mx-auto px-4 mb-9">
-      <h2 className="text-2xl font-bold">추천하는 요금제</h2>
+      <h2 className="text-xl md:text-2xl font-bold">추천하는 요금제</h2>
       <div className="relative min-h-[400px] flex items-center justify-center">
         {showSkeleton ? (
           <Carousel className="w-full overflow-visible">
@@ -45,10 +98,10 @@ export default function RecommendedPlanList() {
           </Carousel>
         ) : recommendedPlans.length === 0 ? (
           <div className="text-center">
-            <p className="text-gray-500 mb-4 text-lg">아직 추천받은 요금제가 없어요.</p>
+            <p className="text-gray-500 mb-4 text-sm md:text-lg">아직 추천받은 요금제가 없어요.</p>
             <button
               onClick={open}
-              className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
+              className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full text-sm md:text-lg"
             >
               챗봇으로 추천받기
             </button>

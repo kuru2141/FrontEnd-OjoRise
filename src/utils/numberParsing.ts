@@ -21,3 +21,23 @@ export function numberParsing(value: string, key: string): string{
       });
     
 }
+
+/**
+ * 숫자 값에 단위를 붙여 문자열로 반환하는 함수입니다.
+ * 주어진 key에 따라 단위를 자동으로 판단하고, 숫자는 toLocaleString() 형식으로 포맷합니다.
+ *
+ * @param value - 포맷할 숫자 값 (문자열 또는 숫자)
+ * @param key - 단위 종류를 식별하기 위한 키 (예: "baseDataGb", "throttleSpeedKbps" 등)
+ * @returns 단위가 포함된 포맷된 문자열 (예: "1,000Gb", "2.5Mbps")
+ *
+ * @example
+ * numberParsing("1000", "baseDataGb"); // "1,000Gb"
+ * numberParsing(2000, "throttleSpeedKbps"); // "2Mbps"
+ */
+export function displayValue(value: string | number | null | undefined, key: string): string {
+  if (value === null || value === undefined || value === "" || value === 0 || value === "0") {
+    return "-";
+  }
+
+  return numberParsing(value.toString(), key);
+}

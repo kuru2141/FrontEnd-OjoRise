@@ -19,7 +19,7 @@ export default function CompareModeToggle() {
   return (
     <div className="flex gap-3 mb-8">
       <button
-        className={`rounded-full px-4 py-3 cursor-pointer hover:shadow-lg text-sm font-semibold ${
+        className={`rounded-full px-4 py-3 cursor-pointer hover:shadow-lg text-xs md:text-sm font-semibold ${
           isCompareWithMine ? "bg-black text-white" : "bg-white text-black border"
         }`}
         onClick={() => setIsCompareWithMine(true)}
@@ -27,7 +27,7 @@ export default function CompareModeToggle() {
         내 요금제랑 비교하기
       </button>
       <button
-        className={`rounded-full px-4 py-3 cursor-pointer hover:shadow-lg text-sm font-semibold ${
+        className={`rounded-full px-4 py-3 cursor-pointer hover:shadow-lg text-xs md:text-sm font-semibold ${
           !isCompareWithMine ? "bg-black text-white" : "bg-white text-black border"
         }`}
         onClick={() => setIsCompareWithMine(false)}
