@@ -90,7 +90,16 @@ export default function PlanCard(props: Plan) {
         <span className="inline-block text-xs font-semibold px-3 py-1 bg-[#FAD0E1] text-[#E2217E] rounded w-fit">
           {mobileType}
         </span>
-        <h3 className="text-2xl font-bold">{name}</h3>
+        <div className="scroll-text-container">
+          {name.length > 12 ? (
+            <div className="scroll-text-content">
+              <span className="text-2xl font-bold">{name}</span>
+              <span className="text-2xl font-bold">{name}</span>
+            </div>
+          ) : (
+            <h3 className="text-2xl font-bold truncate">{name}</h3>
+          )}
+        </div>
 
         <div className="flex gap-2 text-sm font-medium mt-1 mb-2">
           <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
