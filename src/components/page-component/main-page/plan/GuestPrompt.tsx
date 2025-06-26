@@ -48,7 +48,7 @@ export default function GuestPrompt() {
 
   return (
     <div className="w-full max-w-[758px] bg-gray-10 rounded-xl flex flex-col justify-between px-4 py-6 md:px-8 md:py-6 shadow mx-auto">
-      <p className="text-base md:text-lg text-left mb-5 mt-7 pl-4 md:pl-10">
+      <p className="text-base md:text-lg text-left mb-5 mt-7 md:pl-4">
         <span className="font-bold text-[18px] md:text-[20px]" style={{ color: "#ff008c" }}>
           로그인
         </span>
@@ -89,24 +89,19 @@ export default function GuestPrompt() {
       <div className="flex flex-col md:flex-row gap-2 md:gap-4 mt-6 justify-center items-center w-full">
         <Button
           onClick={() => setIsGuest(true)}
-          className="w-full max-w-[203px] h-[50px] bg-black text-white text-sm hover:opacity-90"
+          className="w-full max-w-[203px] h-[50px] bg-black text-white text-[16px] hover:bg-black cursor-pointer"
         >
           비회원으로 이용하기
         </Button>
-
-        <button
-          onClick={handleKakaoLogin}
-          className="w-full max-w-[203px] h-[50px] bg-transparent hover:bg-transparent shadow-none flex items-center justify-center"
-          aria-label="카카오 로그인"
-        >
+        <div onClick={handleKakaoLogin}>
           <Image
             src="/kakaologinBtn.png"
             alt="카카오 로그인"
             width={203}
             height={50}
-            className="object-contain w-full h-full"
+            className="cursor-pointer"
           />
-        </button>
+        </div>
       </div>
     </div>
   );
