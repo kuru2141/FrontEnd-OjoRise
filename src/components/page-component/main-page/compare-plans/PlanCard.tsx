@@ -73,7 +73,7 @@ function PlanCard(props: Plan) {
   return (
     <div
       onClick={handleSelect}
-      className={`relative w-full m-3 max-w-[320px] h-[340px] rounded-2xl border-2 p-6 border-gray-20 bg-white flex flex-col gap-3 cursor-pointer transition-colors duration-200 ease-in-out ${
+      className={`relative w-full m-3 max-w-[280px] md:max-w-[320px] h-[365px] md:h-[340px] rounded-2xl border-2 p-6 border-gray-20 bg-white flex flex-col gap-3 cursor-pointer transition-colors duration-200 ease-in-out ${
         isSelected ? "shadow-soft-pink" : "hover:shadow-soft-pink"
       }`}
     >
@@ -107,34 +107,45 @@ function PlanCard(props: Plan) {
         <span className="inline-block text-xs font-semibold px-3 py-1 bg-[#FAD0E1] text-[#E2217E] rounded w-fit">
           {mobileType}
         </span>
-        <h3 className="text-2xl font-bold">{name}</h3>
+        <div className="scroll-text-container">
+          {name.length > 12 ? (
+            <div className="scroll-text-content">
+              <span className="text-lg md:text-2xl font-bold">{name}</span>
+              <span className="text-lg md:text-2xl font-bold">{name}</span>
+            </div>
+          ) : (
+            <h3 className="text-lg md:text-2xl font-bold truncate">{name}</h3>
+          )}
+        </div>
 
-        <div className="flex gap-2 text-sm font-medium mt-1 mb-2">
-          <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
+        <div className="flex gap-2 text-xs md:text-sm font-medium  mb-2 flex-wrap justify-center">
+          <span className="flex flex-col md:flex-row items-center md:items-center gap-0.5 md:gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold min-w-[60px] justify-center">
             {mobileType === "5G" ? (
               <>
                 <FiveGIcon fontSize="small" style={{ color: "black" }} />
-                {baseDataGb?.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
+                <span>{baseDataGb?.includes("무제한") ? "무제한" : `${baseDataGb}GB`}</span>
               </>
             ) : (
               <>
                 <LteMobiledataIcon fontSize="small" style={{ color: "black" }} />
-                {baseDataGb?.includes("무제한") ? "무제한" : `${baseDataGb}GB`}
+                <span>{baseDataGb?.includes("무제한") ? "무제한" : `${baseDataGb}GB`}</span>
               </>
             )}
           </span>
-          <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
+
+          <span className="flex flex-col md:flex-row items-center md:items-center gap-0.5 md:gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold min-w-[60px] justify-center">
             <TextsmsIcon fontSize="small" style={{ color: "black" }} />
-            {sms}
+            <span>{sms}</span>
           </span>
-          <span className="flex items-center gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold">
+
+          <span className="flex flex-col md:flex-row items-center md:items-center gap-0.5 md:gap-1 px-2 py-2 bg-pink-50 text-gray-700 rounded-md font-bold min-w-[60px] justify-center">
             <LocalPhoneIcon fontSize="small" style={{ color: "black" }} />
-            {voiceCallPrice}
+            <span>{voiceCallPrice}</span>
           </span>
         </div>
 
         {/* 설명 */}
-        <p className="text-sm tracking-tighter text-gray-800 leading-snug line-clamp-2">
+        <p className="text-sm tracking-tighter text-gray-800 leading-snug whitespace-normal break-words">
           {description}
         </p>
       </div>
@@ -142,14 +153,14 @@ function PlanCard(props: Plan) {
       {/* 하단 고정 영역 */}
       <div className="mt-3">
         <div className="mt-3 mb-1 flex justify-between items-end">
-          <p className="text-xl font-bold">월 {monthlyFee.toLocaleString()}원</p>
-          <p className="text-xs text-gray-400 whitespace-nowrap">
+          <p className="text-base md:text-xl font-bold">월 {monthlyFee.toLocaleString()}원</p>
+          <p className="text-[10px] md:text-xs text-gray-400 whitespace-nowrap">
             약정 할인 시 월 {(monthlyFee * 0.75).toLocaleString()}원
           </p>
         </div>
         <button
           onClick={handleClick}
-          className="w-full mt-2 text-white font-semibold rounded-lg py-3 text-sm transition-colors"
+          className="w-full mt-2 text-white font-semibold rounded-lg py-3 text-[10px] md:text-sm transition-colors cursor-pointer"
           style={{ backgroundColor: "#FF008C" }}
         >
           신청하기

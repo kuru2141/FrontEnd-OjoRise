@@ -33,6 +33,15 @@ interface PlanInfoProps {
   accessToken: string | null;
 }
 
+const ELIGIBILITY_MAPPER: { [key: string]: string } = {
+  ALL: "일반 요금제",
+  KID: "키즈 요금제",
+  BOY: "청소년 요금제",
+  YOUTH: "청년 요금제",
+  OLD: "시니어 요금제",
+  SOLDIER: "군인 요금제",
+};
+
 function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   const [planName, setPlanName] = useState<string>(sessionStorage.getItem("planName") || "");
   const { setInput, input } = useSurveyStore();
@@ -67,9 +76,10 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     name,
     baseDataGb,
     throttleSpeedKbps,
-    eligibility,
+    mobileType,
     monthlyFee,
     sharingDataGb,
+    eligibility,
     sms,
     voiceCallPrice,
     setPlanReset,
@@ -208,7 +218,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
           </div>
           <div>
             <p className="font-bold text-gray-60">통신 기술</p>
-            <p className="text-sm sm:text-lg">{eligibility || "-"}</p>
+            <p className="text-sm sm:text-lg">{mobileType || "-"}</p>
           </div>
         </div>
       </div>
@@ -227,7 +237,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
         </div>
 
         <div className="text-gray-500">자격 요건</div>
-        <div className="text-primary-medium">{eligibility || "-"}</div>
+        <div className="text-primary-medium">{ELIGIBILITY_MAPPER[eligibility] || "-"}</div>
       </div>
     </div>
   );

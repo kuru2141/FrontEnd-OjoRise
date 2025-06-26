@@ -52,7 +52,7 @@ export default function LikedPlansList() {
           </Carousel>
         ) : likedPlans.length === 0 ? (
           <div className="text-center">
-            <p className="text-gray-500 mb-4 text-sm md:text-lg">찜한 요금제가 없습니다!</p>
+            <p className="text-gray-500 mb-4 text-sm md:text-lg">관심 요금제가 없습니다</p>
             <button
               onClick={() => router.push("/explore-plans")}
               className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full text-sm md:text-lg"
