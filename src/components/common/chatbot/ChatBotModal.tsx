@@ -221,8 +221,11 @@ function ChatBotModal() {
         const { done, value } = await reader.read();
         if (done) {
           if (botBlock.length === 0) {
-            if (ambiguousCount < 3) botBlock.push("질문을 잘 알아듣지 못했어요.");
-            else botBlock.push("질문을 잘 알아듣지 못했어요. 고객센터로 연결해드리겠습니다.");
+            if (ambiguousCount < 3) botBlock.push("질문을 이해하지 못했어요.");
+            else
+              botBlock.push(
+                "질문을 이해하지 못했어요. 더 정확한 안내는 LG U+ 고객센터에 문의해주시기 바랍니다."
+              );
           }
 
           if (statusRef.current) setHistory((prev) => [...prev, message]);
@@ -258,7 +261,8 @@ function ChatBotModal() {
           const newlineIndex = textBufferRef.current.indexOf("\n");
           if (newlineIndex !== -1) {
             const jsonLine = textBufferRef.current.slice(0, newlineIndex);
-            textBufferRef.current = textBufferRef.current.slice(newlineIndex + 1);
+
+            // JSON 파싱 성공 시
             try {
               const parsed = JSON.parse(jsonLine);
               if (Array.isArray(parsed.item)) {
@@ -268,6 +272,50 @@ function ChatBotModal() {
               if (typeof parsed.status === "boolean") {
                 statusRef.current = parsed.status;
                 setAmbiguousCount((prev) => (parsed.status ? 0 : prev + 1));
+              }
+
+              const restLine = textBufferRef.current.slice(newlineIndex + 1);
+              textBufferRef.current = "";
+
+              for (const char of restLine) {
+                if (char === "\n") {
+                  const fullLine = currentTextRef.current;
+                  const trimmedLine = fullLine.trim();
+                  currentTextRef.current = "";
+                  isNewLineRef.current = true;
+
+                  if (trimmedLine) {
+                    const last = botBlock[botBlock.length - 1];
+                    if (!(typeof last === "string" && last.trim() === trimmedLine)) {
+                      botBlock.push(fullLine);
+                      throttledUpdateDialog(botBlock);
+                    }
+
+                    if (trimmedLine.startsWith("-")) {
+                      const plan = itemsRef.current[itemIndexRef.current];
+                      botBlock.push(plan);
+                      itemIndexRef.current++;
+                      throttledUpdateDialog(botBlock);
+                    }
+                  }
+                } else {
+                  currentTextRef.current += char;
+
+                  if (isNewLineRef.current) {
+                    botBlock.push(char);
+                    isNewLineRef.current = false;
+                  } else {
+                    const last = botBlock[botBlock.length - 1];
+                    if (typeof last === "string") {
+                      botBlock[botBlock.length - 1] = last + char;
+                    } else {
+                      botBlock.push(char);
+                    }
+                  }
+
+                  throttledUpdateDialog(botBlock);
+                  await new Promise((r) => setTimeout(r, 5));
+                }
               }
             } catch {
               continue;

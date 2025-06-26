@@ -17,18 +17,13 @@ export default function SuccessPageRoute() {
     if (accessToken) {
       sessionStorage.setItem("accessToken", accessToken);
       queryClient.invalidateQueries({ queryKey: ["user"] });
-    }
-  }, [accessToken, queryClient]);
-
-  useEffect(() => {
-    if (!isLoading && isSurveyed === true) {
       handleLoginSuccess();
     }
   }, [isSurveyed, isLoading]);
 
   useEffect(() => {
     if (!isLoading && isSurveyed !== undefined) {
-      if (isSurveyed) router.replace("/");
+      if (isSurveyed) router.back();
       else router.replace("/signup");
     }
   }, [isSurveyed, isLoading, router]);
