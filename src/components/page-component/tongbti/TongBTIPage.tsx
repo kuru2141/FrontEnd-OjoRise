@@ -8,25 +8,35 @@ import { convertToCamelCase } from "@/utils/convertCase";
 
 export default function TongBTIPage() {
   const { data, isLoading, error } = useFetchQuestions();
-  const { setQuestions } = useTongBTIStore();
-
+  const { setQuestions, reset } = useTongBTIStore();
+  console.log("🔥 data from API:", data);
   useEffect(() => {
     if (data) {
+      reset();
       const camelCaseQuestions = data.map(convertToCamelCase);
       setQuestions(camelCaseQuestions);
     }
-  }, [data, setQuestions]);
+  }, [data, setQuestions, reset]);
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-[#fcff63]/20 flex justify-center items-center px-4">
-        <div className="w-full max-w-md animate-pulse space-y-6 text-left">
-          <div className="h-8 bg-[#FF008C]/30 rounded w-1/4" />
-          <div className="h-6 bg-gray-300 rounded w-3/4" />
-          <div className="h-6 bg-gray-300 rounded w-5/6" />
-          <div className="h-14 bg-white rounded-md border border-gray-200" />
-          <div className="h-14 bg-white rounded-md border border-gray-200" />
-          <div className="h-2 w-full bg-gray-200 rounded-full" />
+      <div className="h-screen bg-white flex flex-col items-center justify-center px-4 text-center font-pretend">
+        <div className="flex flex-col items-center gap-y-8 w-full max-w-lg animate-pulse">
+          {/* 진행도 바 */}
+          <div className="flex flex-col items-center w-full">
+            <div className="h-6 bg-gray-300 rounded w-1/4 mb-2" />
+            <div className="w-[220px] h-2 bg-gray-200 rounded-full" />
+          </div>
+
+          {/* 캐릭터 이미지 */}
+          <div className="w-[140px] h-[140px] rounded-full bg-gray-200" />
+
+          {/* 질문 영역 */}
+          <div className="w-full min-h-[90px] bg-gray-200 rounded-md" />
+
+          {/* 답변 버튼 2개 */}
+          <div className="w-full max-w-md h-20 bg-gray-200 rounded-2xl" />
+          <div className="w-full max-w-md h-20 bg-gray-200 rounded-2xl" />
         </div>
       </div>
     );
