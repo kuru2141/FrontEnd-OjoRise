@@ -8,12 +8,14 @@ import { useAuthStore } from "@/stores/authStore";
 import { useGetIsSurveyedQuery } from "@/hooks/useGetUserInfo";
 import { isAccessTokenExpired } from "@/lib/auth";
 import { useRefreshToken } from "@/hooks/useRefreshToken";
+import { useLogout } from "@/hooks/useLogout";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const { isSurveyed, setIsSurveyed } = useAuthStore();
   const { data: survey } = useGetIsSurveyedQuery(accessToken);
   const { refetch } = useRefreshToken(accessToken);
+  const {mutate: logout} = useLogout();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -32,6 +34,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
           setAccessToken(res.data.accessToken);
           console.log("토큰 재발급");
         } else {
+          logout();
           sessionStorage.removeItem("accessToken");
           setAccessToken(null);
           console.error("토큰 재발급 실패");
