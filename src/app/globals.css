@@ -185,3 +185,13 @@
     box-shadow: 1px 1px 15px 0 rgba(234, 234, 234, 1);
   }
 }
+
+@layer utilities {
+  .shadow-soft-pink {
+    box-shadow: 1px 1px 15px 0 rgba(255, 0, 140, 0.2);
+  }
+
+  .hover\:shadow-soft-pink:hover {
+    box-shadow: 1px 1px 15px 0 rgba(255, 0, 140, 0.2);
+  }
+}

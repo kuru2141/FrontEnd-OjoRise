@@ -32,10 +32,14 @@ export default function ShareButton({ title, description, url, imageUrl }: Share
   return (
     <button
       onClick={handleKakaoShare}
-      className="bg-pink-200 px-4 py-2 rounded-md font-semibold w-full 
-             hover:bg-pink-300 hover:cursor-pointer transition-colors duration-200"
+      className="w-15 h-15 p-0 flex items-center justify-center transition hover:opacity-80 hover:cursor-pointer"
+      aria-label="카카오 공유하기"
     >
-      나의 결과 공유하기
+      <img
+        src="/kakaoButton.png" // ← public 경로에 맞춰 수정하세요!
+        alt="카카오 공유"
+        className="w-12 h-12"
+      />
     </button>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useSurvey } from "@/hooks/useSurvey";
 import { useTongBTI } from "@/hooks/useTongBTI";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WithdrawModal from "./WithdrawModal";
 import { useWithdraw } from "@/hooks/useWithdraw";
 import LinearProgress from "@/components/common/progress/LinearProgress";
@@ -19,9 +19,16 @@ const MyPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const { data: survey, isPending: isSurveyPending, isError: isSurveyError } = useSurvey();
-  const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI();
-  const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAccessToken(sessionStorage.getItem("accessToken"));
+    }
+  }, []);
+
+  const { data: survey, isPending: isSurveyPending, isError: isSurveyError } = useSurvey(accessToken);
+  const { data: tongBTI, isPending: isTongPending, isError: isTongError } = useTongBTI(accessToken);
+  const { data: planAge, isPending: isAgePending, isError: isAgeError } = usePlanAge(accessToken);
   const { mutate: withdraw } = useWithdraw();
   const { mutate: logout } = useLogout();
   const { data: username } = useGetName();
@@ -77,7 +84,9 @@ const MyPage = () => {
       <div className="w-full max-w-sm mt-30 md:max-w-3xl flex flex-col items-start text-left overflow-hidden">
         <div>
           <p className="text-[20px] md:text-[24px] mb-2">안녕하세요</p>
-          <p className="font-bold text-[20px] md:text-[24px]">{username} 님의 마이페이지입니다.</p>
+          <p className="font-bold text-[20px] md:text-[24px]">
+            {username || "-"}님의 마이페이지입니다.
+          </p>
         </div>
         <p className="font-bold text-[14px] md:text-[18px] mb-2 md:mb-5 mt-10">회원 정보</p>
         <div className="flex flex-col rounded-[14px] md:rounded-[20px] border-2 md:border-3 border-gray-10 p-3 md:p-5 gap-3 md:gap-5 w-full">
@@ -206,8 +215,8 @@ const MyPage = () => {
                 src={`/planAge/${planAge.age}.svg`}
                 alt="캐릭터"
                 width={100}
-                height={100}
-                className="w-[100px] h-[100px] md:w-[160px] md:h-[160px]"
+                height={80}
+                className="w-[100px] h-[80px] md:w-[200px] md:h-[150px]"
               />
               <span className="text-primary-medium">{planAge.age}</span>
               <p>입니다</p>
@@ -229,7 +238,7 @@ const MyPage = () => {
               </Button>
             </div>
             <Image
-              src="/BannerIMG.png"
+              src="/agetest.svg"
               alt="plan"
               width={220}
               height={220}
