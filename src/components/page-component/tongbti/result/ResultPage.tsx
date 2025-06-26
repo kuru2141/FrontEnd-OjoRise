@@ -7,7 +7,6 @@ import { useTongBTIStore } from "@/stores/useTongBTIStore";
 import KakaoInitializer from "@/components/common/kakao/KakaoInitializer";
 import ShareButton from "@/components/common/button/ShareButton";
 import { fetchTongBTIInfo } from "@/services/tongbti";
-import { typeKeyMap } from "@/utils/tongbtiMap";
 import Image from "next/image";
 import { PlanDipCard } from "../../explore-plans/PlanDipCard";
 
@@ -112,7 +111,13 @@ export default function ResultPage() {
                   className="p-0 border-none bg-transparent hover:opacity-80 transition hover:cursor-pointer"
                   aria-label="링크 복사"
                 >
-                  <Image src="/linkButton.png" alt="링크 복사" className="w-12 h-12 object-contain" width={80} height={80} />
+                  <Image
+                    src="/linkButton.png"
+                    alt="링크 복사"
+                    className="w-12 h-12 object-contain"
+                    width={80}
+                    height={80}
+                  />
                 </button>
               </div>
             </div>
