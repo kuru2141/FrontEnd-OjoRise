@@ -16,6 +16,7 @@ import { useChatBotStore } from "@/stores/chatBotStore";
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { Plan } from "@/types/plan";
 import { api } from "@/lib/axios";
+import { useAuthStore } from "@/stores/authStore";
 
 export interface ListProps {
   handleClick?: () => void;
@@ -24,6 +25,7 @@ export interface ListProps {
 export default function RecommendedPlanList({ handleClick }: ListProps) {
   const { removePlan } = usePlanStore();
   const { isLoading, error, data, refetch } = useRecommendedPlans();
+  const { isSurveyed } = useAuthStore();
   const { setRefetchRecommend } = usePlanStore();
   const { open } = useChatBotStore();
 
@@ -83,14 +85,10 @@ export default function RecommendedPlanList({ handleClick }: ListProps) {
   const handleRemovePlan = useCallback(
     (planName: string) => {
       removePlan(planName);
-      // sessionStorage.setItem(
-      //   "recommendedPlans",
-      //   JSON.stringify(planNames.filter((name) => name !== planName))
-      // );
       setRecommendedPlans((prev: Plan[]) => prev.filter((item) => item.name !== planName));
-      refetch();
+      if (isSurveyed) refetch();
     },
-    [refetch, removePlan]
+    [isSurveyed, refetch, removePlan]
   );
 
   useEffect(() => {

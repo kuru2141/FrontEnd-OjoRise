@@ -7,6 +7,7 @@ import LteMobiledataIcon from "@mui/icons-material/LteMobiledata";
 import { deleteRecommendedPlan } from "@/services/recommenendPlanService";
 import { dipPlan } from "@/services/dipPlanService";
 import { memo, useCallback, useMemo } from "react";
+import { useAuthStore } from "@/stores/authStore";
 
 function PlanCard(props: Plan) {
   const {
@@ -24,6 +25,7 @@ function PlanCard(props: Plan) {
     onRemove,
     source,
   } = props;
+  const { isSurveyed } = useAuthStore();
 
   const selectedPlans = usePlanStore((state) => state.selectedPlans);
   const togglePlanSelection = usePlanStore((state) => state.togglePlanSelection);
@@ -84,7 +86,7 @@ function PlanCard(props: Plan) {
 
             try {
               if (props.source === "recommend") {
-                await deleteRecommendedPlan(planId);
+                if (isSurveyed) await deleteRecommendedPlan(planId);
               } else if (props.source === "like") {
                 await dipPlan(planId);
               } else {
