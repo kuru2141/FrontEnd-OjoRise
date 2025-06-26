@@ -37,7 +37,7 @@ export default function ResultPage() {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const shareUrl = `${baseUrl}/tongbti/result/${typeKey}`;
-  const imageUrl = `${baseUrl}${typeKeyMap[typeKey as string]?.image || "/default.png"}`;
+  const imageUrl = `${baseUrl}/TongBTI/${typeKey}.png`;
 
   return (
     <>
