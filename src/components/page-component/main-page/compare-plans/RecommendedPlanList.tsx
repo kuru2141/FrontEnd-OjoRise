@@ -13,11 +13,64 @@ import { useRecommendedPlans } from "@/hooks/useRecommendedPlans";
 import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useChatBotStore } from "@/stores/chatBotStore";
+import { useEffect, useState, useRef } from "react";
+import { Plan } from "@/types/plan";
+import { api } from "@/lib/axios";
 
 export default function RecommendedPlanList() {
-  const { recommendedPlans, removePlan } = usePlanStore();
+  const { removePlan } = usePlanStore();
   const { isLoading, error } = useRecommendedPlans();
   const { open } = useChatBotStore();
+
+  const [recommendedPlans, setRecommendedPlans] = useState<Plan[]>([]);
+  const [planNames, setPlanNames] = useState<string[]>([]);
+  const prevSessionValue = useRef<string>("");
+
+  useEffect(() => {
+    const getPlanNames = () => {
+      const session = sessionStorage.getItem("recommendedPlans") ?? "[]";
+      prevSessionValue.current = session;
+      const parsed = JSON.parse(session);
+      setPlanNames(parsed);
+    };
+
+    // 초기 실행
+    getPlanNames();
+
+    // storage 변경 감지 (다른 탭에서만 동작)
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "recommendedPlans") {
+        getPlanNames();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // 같은 탭에서도 변경 감지 (polling)
+    const interval = setInterval(() => {
+      const session = sessionStorage.getItem("recommendedPlans") ?? "[]";
+      if (prevSessionValue.current !== session) {
+        getPlanNames();
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (planNames.length === 0) return;
+
+    const getRecommendPlans = async () => {
+      const params = new URLSearchParams();
+      planNames.forEach((name) => params.append("id", name));
+      const res = await api.get(`/plan/info?${params.toString()}`);
+      setRecommendedPlans(res.data);
+    };
+
+    getRecommendPlans();
+  }, [planNames]);
 
   const hasHydrated = usePlanStoreRehydrated();
   const showSkeleton = !hasHydrated || isLoading;
