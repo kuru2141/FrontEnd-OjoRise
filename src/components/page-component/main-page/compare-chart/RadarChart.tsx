@@ -16,10 +16,16 @@ import { Radar } from "react-chartjs-2";
 import { useBaseAndCompareItem } from "./comparePlan";
 import { ComparePlan } from "@/types/plan";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores/authStore";
+import { usePlanStore } from "@/stores/usePlanStore";
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
-function RadarChart() {
+interface RadarChartProps{
+  handleScrollList: () => void;
+}
+
+function RadarChart({handleScrollList} : RadarChartProps) {
   const [dpr, setDpr] = useState<number>();
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartKey, setChartKey] = useState(0);
@@ -27,11 +33,21 @@ function RadarChart() {
   const [fontsize, setFontsize] = useState<number>(14);
   const [labelsize, setLabelsize] = useState<number>(18);
   const [labelGap, setLabelGap] = useState<number>(84);
+  const { isSurveyed } = useAuthStore();
+  const isCompareWithMine = usePlanStore((store) => store.isCompareWithMine);
+  const selectedPlans = usePlanStore((state) => state.selectedPlans);
+  
+  const isSelectedFull = useMemo(() => {
+    return (
+      (isCompareWithMine && selectedPlans.length === 1)
+      || (!isCompareWithMine && selectedPlans.length === 2));
+  }, [isCompareWithMine, selectedPlans]);
+
     
-    const handleScrollTop = () => {
+  const handleScrollTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" })
   }
-   
+
   useEffect(() => {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
@@ -210,15 +226,23 @@ function RadarChart() {
     return () => clearTimeout(timeout);
   }, [chartKey, compareData, data]);
 
+  if(isSurveyed && !isSelectedFull){
+
+  }
+
   if (!(baseReady && data)) {
     return (
       <div ref={chartRef} className="h-[300px] md:h-[432px]">
         <div className="w-full h-full rounded-xl animate-pulse flex align-center justify-center bg-gray-10 text-center text-sm md:text-lg ">
           <div className="flex flex-wrap p-[10px] flex flex-col items-center justify-center gap-[30px]">
+            {isSurveyed && !isSelectedFull ?
             <span>
+            추천 요금제를 선택하면<br />
+            <span className="text-primary-medium font-bold">비교 그래프</span>를 볼 수 있습니다</span>:
+           <span>
             나의 요금제를 입력하거나 추천 요금제를 선택하면<br />
-            <span className="text-primary-medium font-bold">비교 그래프</span>를 볼 수 있습니다</span>
-            <Button variant={'outline'} className="text-sm font-bold h-[40px] w-full md:text-lg md:h-[50px]" onClick={handleScrollTop}>나의 요금제 선택하기</Button>
+            <span className="text-primary-medium font-bold">비교 그래프</span>를 볼 수 있습니다</span>}
+            <Button variant={'outline'} className="text-sm font-bold h-[40px] w-full md:text-lg md:h-[50px]" onClick={isSurveyed && !isSelectedFull ? handleScrollList : handleScrollTop}>{isSurveyed && !isSelectedFull ? '추천 요금제 선택하기' : '나의 요금제 선택하기'}</Button>
           </div>
         </div>
       </div>
