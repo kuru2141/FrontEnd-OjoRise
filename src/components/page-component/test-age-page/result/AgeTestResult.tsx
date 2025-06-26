@@ -9,6 +9,7 @@ import { PlanDipCard } from "../../explore-plans/PlanDipCard";
 import { saveRecommendedPlan } from "@/lib/recommendationStorage";
 import Image from "next/image";
 import { formatDescription } from "../../tongbti/result/ResultPage";
+import { useAuthStore } from "@/stores/authStore";
 
 interface ResultType {
   age: string;
@@ -39,6 +40,7 @@ export default function AgeTestResult() {
   const params = useSearchParams();
   const userAge = params.get("userAge") || "10대";
   const resultAge = params.get("resultAge") || "10대";
+  const { isSurveyed } = useAuthStore();
   const { data } = useQuery<AgeTestResultProps>({
     queryKey: ["age", userAge, resultAge],
     queryFn: () => ageTestResult(userAge, resultAge),
@@ -46,10 +48,10 @@ export default function AgeTestResult() {
   const router = useRouter();
 
   useEffect(() => {
-    if (data?.recommendPlan?.name) {
+    if (!isSurveyed && data?.recommendPlan?.name) {
       saveRecommendedPlan(data.recommendPlan.name);
     }
-  }, [data?.recommendPlan?.name]);
+  }, [data?.recommendPlan.name, isSurveyed]);
 
   const handleClickRetry = useCallback(() => {
     router.push("/test-plan-age");
@@ -58,7 +60,6 @@ export default function AgeTestResult() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const shareUrl = `${baseUrl}/test-plan-age/result?userAge=${userAge}&resultAge=${resultAge}`;
   const imageUrl = `${baseUrl}/${data?.result.age || "default.png"}`;
-
 
   return (
     <>
@@ -70,7 +71,7 @@ export default function AgeTestResult() {
             src={`/planAge/${data?.result.age}.svg`}
             width={289}
             height={289}
-            alt={data?.result.age ?? 'age'}
+            alt={data?.result.age ?? "age"}
             className="absolute -top-47 left-1/2 transform -translate-x-1/2 w-60 h-auto"
           />
 
@@ -80,14 +81,14 @@ export default function AgeTestResult() {
               <h1 className="text-3xl font-bold text-[#FF008C] mb-6">{data?.result.age}</h1>
 
               <p className="text-center text-black text-sm md:text-base leading-relaxed max-w-lg mb-4">
-                {formatDescription(data?.result.description ?? '')}
+                {formatDescription(data?.result.description ?? "")}
               </p>
 
               <div className="flex justify-center">
                 <div className="w-full max-w-md min-w-[280px]">
-                {data?.recommendPlan && (
-                  <PlanDipCard isRecommended={true} plan={data.recommendPlan} />
-                )}
+                  {data?.recommendPlan && (
+                    <PlanDipCard isRecommended={true} plan={data.recommendPlan} />
+                  )}
                 </div>
               </div>
 
@@ -99,12 +100,12 @@ export default function AgeTestResult() {
               </button>
 
               <div className="flex gap-4 mt-10">
-              <ShareButton
-              title={`나의 통신 연령은 ${data?.result.age}`}
-              description="LG U+ 요금제 나이 테스트로 내 요금제 나이도 보고 요금제까지 추천받아보세요!"
-              url={shareUrl}
-              imageUrl={imageUrl}
-              />
+                <ShareButton
+                  title={`나의 통신 연령은 ${data?.result.age}`}
+                  description="LG U+ 요금제 나이 테스트로 내 요금제 나이도 보고 요금제까지 추천받아보세요!"
+                  url={shareUrl}
+                  imageUrl={imageUrl}
+                />
                 <button
                   onClick={() => {
                     const url = window.location.href;
@@ -115,7 +116,13 @@ export default function AgeTestResult() {
                   className="p-0 border-none bg-transparent hover:opacity-80 transition cursor-pointer"
                   aria-label="링크 복사"
                 >
-                  <Image src="/linkButton.png" alt="링크 복사" className="w-12 h-12 object-contain" width={80} height={80} />
+                  <Image
+                    src="/linkButton.png"
+                    alt="링크 복사"
+                    className="w-12 h-12 object-contain"
+                    width={80}
+                    height={80}
+                  />
                 </button>
               </div>
             </div>
