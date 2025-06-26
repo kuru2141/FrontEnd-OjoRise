@@ -33,7 +33,7 @@ export default function LikedPlansList() {
 
   return (
     <section className="w-full mx-auto px-4 mb-9">
-      <h2 className="text-2xl font-bold">관심 요금제</h2>
+      <h2 className="text-xl md:text-2xl font-bold">관심 요금제</h2>
       <div className="relative min-h-[400px] flex items-center justify-center">
         {showSkeleton ? (
           <Carousel className="w-full overflow-visible">
@@ -52,10 +52,10 @@ export default function LikedPlansList() {
           </Carousel>
         ) : likedPlans.length === 0 ? (
           <div className="text-center">
-            <p className="text-gray-500 mb-4 text-lg">찜한 요금제가 없습니다!</p>
+            <p className="text-gray-500 mb-4 text-sm md:text-lg">찜한 요금제가 없습니다!</p>
             <button
               onClick={() => router.push("/explore-plans")}
-              className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full"
+              className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full text-sm md:text-lg"
             >
               요금제 둘러보기
             </button>

@@ -37,11 +37,11 @@ export default function OffCanvas({ isOpen, onCloseAction, menuItems }: OffCanva
         fixed top-[56px] left-0 z-40 w-full h-[calc(100vh-56px)]
         bg-white transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
-      `}
+        `}
             role="dialog"
             aria-modal="true"
         >
-            <nav className="flex flex-col items-center text-[24px] mt-15 h-full w-full space-y-8 cursor-pointer text-lg font-bold text-black">
+            <nav className="flex flex-col items-center text-[18px] mt-15 h-full w-full space-y-8 cursor-pointer text-lg font-bold text-black">
                 {menuItems.map(({ label, href, onClick }) => (
                     <Link
                         key={label}

@@ -22,9 +22,13 @@ export type TongBTIResultInfo = {
   planName: string;
   planDescription: string;
   monthlyFee: number;
-  telecomProvider: string;
+  telecomProvider: string; // → mobileType으로 사용됨
+
   baseDataGb: string;
+  dailyDataGb: string; // 🔹 새로 추가
+  sharingDataGb: string; // 🔹 새로 추가
   voiceCallPrice: string;
   sms: string;
   planUrl: string;
+  online: boolean;
 };
