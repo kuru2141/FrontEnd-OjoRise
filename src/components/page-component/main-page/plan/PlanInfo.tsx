@@ -46,7 +46,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     queryFn: getName,
     enabled: !!isLogin,
   });
-  console.log("login", isLogin, "userData", userName);
+
   const { data: planList } = useQuery({
     queryKey: ["survey/plan", selectedTelecomProvider],
     queryFn: () => Plans(selectedTelecomProvider),
