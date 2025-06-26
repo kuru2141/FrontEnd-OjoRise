@@ -127,7 +127,7 @@ export default function PlanCard(props: Plan) {
         <div className="mt-3 mb-1 flex justify-between items-end">
           <p className="text-xl font-bold">월 {monthlyFee.toLocaleString()}원</p>
           <p className="text-xs text-gray-400 whitespace-nowrap">
-            약정 할인 시 월 {monthlyFee.toLocaleString()}원
+            약정 할인 시 월 {(monthlyFee * 0.75).toLocaleString()}원
           </p>
         </div>
         <button
