@@ -16,7 +16,11 @@ import { usePlanStoreRehydrated } from "@/hooks/useStoreRehydrated";
 import PlanCardSkeleton from "./PlanCardSkeleton";
 import { useRouter } from "next/navigation";
 
-export default function LikedPlansList() {
+export interface ListProps {
+  handleClick?: () => void;
+}
+
+export default function LikedPlansList({ handleClick } : ListProps) {
   const isSurveyed = useAuthStore((state) => state.isSurveyed);
   const { likedPlans, removeLikedPlan } = usePlanStore();
   const { refetch, isLoading } = useLikedPlans();
@@ -52,7 +56,7 @@ export default function LikedPlansList() {
           </Carousel>
         ) : likedPlans.length === 0 ? (
           <div className="text-center">
-            <p className="text-gray-500 mb-4 text-sm md:text-lg">찜한 요금제가 없습니다!</p>
+            <p className="text-gray-500 mb-4 text-sm md:text-lg">관심 요금제가 없습니다</p>
             <button
               onClick={() => router.push("/explore-plans")}
               className="cursor-pointer bg-[#FF008C] hover:bg-[#E01F7C] text-white px-4 py-2 rounded-full text-sm md:text-lg"
@@ -68,7 +72,7 @@ export default function LikedPlansList() {
                   key={index}
                   className="basis-full sm:basis-1/2 shrink-0 px-[1px] flex justify-center"
                 >
-                  <div className="w-full max-w-[320px]">
+                  <div className="w-full max-w-[320px]" onClick={handleClick}>
                     <PlanCard
                       key={plan.name}
                       {...plan}

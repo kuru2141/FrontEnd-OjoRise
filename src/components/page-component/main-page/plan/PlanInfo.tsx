@@ -26,15 +26,26 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
-import { displayValue } from "@/utils/numberParsing";
+import { displayValue, numberParsing } from "@/utils/numberParsing";
+import { useSurveyResult } from "@/hooks/useSurveyResult";
 
 interface PlanInfoProps {
   isLogin: boolean;
   accessToken: string | null;
 }
 
+const ELIGIBILITY_MAPPER: { [key: string]: string } = {
+  ALL: "일반 요금제",
+  KID: "키즈 요금제",
+  BOY: "청소년 요금제",
+  YOUTH: "청년 요금제",
+  OLD: "시니어 요금제",
+  SOLDIER: "군인 요금제",
+};
+
 function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   const [planName, setPlanName] = useState<string>(sessionStorage.getItem("planName") || "");
+  const {data: survey} = useSurveyResult(accessToken);
   const { setInput, input } = useSurveyStore();
   const [selectedTelecomProvider, setSelectedTelecomProvider] = useState<string>(
     sessionStorage.getItem("telecomProvider") || ""
@@ -67,9 +78,10 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
     name,
     baseDataGb,
     throttleSpeedKbps,
-    eligibility,
+    mobileType,
     monthlyFee,
     sharingDataGb,
+    eligibility,
     sms,
     voiceCallPrice,
     setPlanReset,
@@ -107,7 +119,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
               <span className="ml-1">입니다</span>
             </div>
             {/* 가격 */}
-            <div className="text-sm md:text-2xl font-bold">월 {monthlyFee.toLocaleString()}원</div>
+            <div className="text-sm md:text-2xl font-bold">월 {numberParsing(String(survey?.planPrice), 'monthlyFee')}</div>
           </div>
         </div>
       ) : (
@@ -189,7 +201,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
             </div>
             {/* 가격 */}
             <div className="text-base md:text-2xl pt-2 md:pt-0 font-bold">
-              월 {monthlyFee.toLocaleString()}원
+              월 {numberParsing(String(monthlyFee), 'monthlyFee')}
             </div>
           </div>
         </div>
@@ -208,7 +220,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
           </div>
           <div>
             <p className="font-bold text-gray-60">통신 기술</p>
-            <p className="text-sm sm:text-lg">{eligibility || "-"}</p>
+            <p className="text-sm sm:text-lg">{mobileType || "-"}</p>
           </div>
         </div>
       </div>
@@ -227,7 +239,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
         </div>
 
         <div className="text-gray-500">자격 요건</div>
-        <div className="text-primary-medium">{eligibility || "-"}</div>
+        <div className="text-primary-medium">{ELIGIBILITY_MAPPER[eligibility] || "-"}</div>
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ function TableBox() {
         const arr = presentParsing(String(value));
         return (<div className="w-full">
           {arr.map((item, idx) => (
-            <p key={idx}>{numberParsing(item, key)}</p>
+            <p key={idx}>-{numberParsing(item, key)}</p>
           ))}
         </div>);
       }

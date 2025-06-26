@@ -27,6 +27,7 @@ import { api } from "@/lib/axios";
 import Image from "next/image";
 import { useChatBotStore } from "@/stores/chatBotStore";
 import { saveRecommendedPlan } from "@/lib/recommendationStorage";
+import { usePlanStore } from "@/stores/usePlanStore";
 
 interface DialogItem {
   teller: "user" | "chatbot";
@@ -69,6 +70,7 @@ function ChatBotModal() {
   const [input, setInput] = useState("");
   const [dialog, setDialog] = useState<DialogItem[]>([]);
   const [history, setHistory] = useState<string[]>([]);
+  const { refetchRecommend } = usePlanStore();
 
   const setGuestDialog = useCallback(() => {
     setUserProfile(initialProfile);
@@ -241,6 +243,7 @@ function ChatBotModal() {
                     "Content-Type": "application/json",
                   },
                 });
+                refetchRecommend();
                 console.log(res.status);
               } catch (error) {
                 console.log(error);
