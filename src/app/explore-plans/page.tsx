@@ -2,7 +2,7 @@ import ExplorePlansPage from "@/components/page-component/explore-plans/ExploreP
 import { Suspense } from "react";
 
 export const metadata = {
-  title: "요금제 둘러보기",
+  title: "YoPle - 요금제 둘러보기",
 };
 
 export default function ExplorePlansPageRoute() {

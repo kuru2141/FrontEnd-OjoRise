@@ -16,7 +16,7 @@ export default function MainPage() {
         <BannerCarousel />
       </section>
       <section className="w-full max-w-[768px] mt-10">
-        <h2 className="text-3xl font-bold mb-4 mt-10">요금제 비교하기</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 mt-10">요금제 비교하기</h2>
         <CompareModeToggle />
         <RecommendedPlanList />
         <LikedPlansList />

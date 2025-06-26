@@ -10,12 +10,13 @@ interface SurveyResponse {
   familyNum: string;
 }
 
-export const useSurvey = () => {
+export const useSurvey = (accessToken: string | null) => {
   return useQuery<SurveyResponse>({
     queryKey: ["survey"],
     queryFn: async () => {
       const { data } = await api.get("/survey/result", {});
       return data;
     },
+    enabled: !!accessToken
   });
 };
