@@ -26,7 +26,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
-import { displayValue } from "@/utils/numberParsing";
+import { displayValue, numberParsing } from "@/utils/numberParsing";
+import { useSurveyResult } from "@/hooks/useSurveyResult";
 
 interface PlanInfoProps {
   isLogin: boolean;
@@ -44,6 +45,7 @@ const ELIGIBILITY_MAPPER: { [key: string]: string } = {
 
 function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
   const [planName, setPlanName] = useState<string>(sessionStorage.getItem("planName") || "");
+  const {data: survey} = useSurveyResult(accessToken);
   const { setInput, input } = useSurveyStore();
   const [selectedTelecomProvider, setSelectedTelecomProvider] = useState<string>(
     sessionStorage.getItem("telecomProvider") || ""
@@ -117,7 +119,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
               <span className="ml-1">입니다</span>
             </div>
             {/* 가격 */}
-            <div className="text-sm md:text-2xl font-bold">월 {monthlyFee.toLocaleString()}원</div>
+            <div className="text-sm md:text-2xl font-bold">월 {numberParsing(String(survey?.planPrice), 'monthlyFee')}</div>
           </div>
         </div>
       ) : (
@@ -199,7 +201,7 @@ function PlanInfo({ isLogin, accessToken }: PlanInfoProps) {
             </div>
             {/* 가격 */}
             <div className="text-base md:text-2xl pt-2 md:pt-0 font-bold">
-              월 {monthlyFee.toLocaleString()}원
+              월 {numberParsing(String(monthlyFee), 'monthlyFee')}
             </div>
           </div>
         </div>
