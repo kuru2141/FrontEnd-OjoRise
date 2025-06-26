@@ -9,7 +9,7 @@ const Account = [
     title: "요금제 유지",
     description: (
       <>
-        사용자의 요금제 <span className="text-pink-500 font-semibold">계속 유지되어</span>
+        사용자의 요금제 <span className="text-pink-500 font-semibold">계속 유지</span>되어
         <br />
         추천 요금제와 비교하기 편리해요.
       </>
@@ -28,10 +28,11 @@ const Account = [
     ),
   },
   {
-    title: "요금제 찜!",
+    title: "관심있는 요금제 저장!",
     description: (
       <>
-        원하는 <span className="text-pink-500 font-semibold">요금제를 찜하고</span>,<br />
+        <span className="text-pink-500 font-semibold">관심있는 요금제를 저장</span>하고,
+        <br />
         원하는 요금제와 비교할 수 있어요.
       </>
     ),
@@ -48,7 +49,9 @@ export default function GuestPrompt() {
   return (
     <div className="w-full max-w-[758px] bg-gray-10 rounded-xl flex flex-col justify-between px-4 py-6 md:px-8 md:py-6 shadow mx-auto">
       <p className="text-base md:text-lg text-left mb-5 mt-7 pl-4 md:pl-10">
-        <span className="font-bold text-[18px] md:text-[20px]" style={{ color: '#ff008c' }}>로그인</span>
+        <span className="font-bold text-[18px] md:text-[20px]" style={{ color: "#ff008c" }}>
+          로그인
+        </span>
         <span className="font-bold text-[18px] md:text-[20px]">하고 아래 혜택을 누려보세요!</span>
       </p>
 
@@ -64,7 +67,8 @@ export default function GuestPrompt() {
                 {i === 0 ? (
                   <>
                     <p className="text-[12px] leading-snug mb-0">
-                      사용자의 요금제가 <span className="text-pink-500 font-semibold">계속 유지되어</span>
+                      사용자의 요금제가{" "}
+                      <span className="text-pink-500 font-semibold">계속 유지되어</span>
                     </p>
                     <p className="text-[12px] text-gray-500 leading-snug mt-0">
                       추천 요금제와 비교하기 편리해요.
@@ -102,9 +106,8 @@ export default function GuestPrompt() {
             height={50}
             className="object-contain w-full h-full"
           />
-          </button>
-        </div>
-
+        </button>
+      </div>
     </div>
   );
 }
